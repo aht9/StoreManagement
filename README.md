@@ -65,7 +65,7 @@ Domain-Driven Design, CQRS/MediatR, EF Core, AutoMapper and Material Design in X
     dotnet build
 
     
-## Installation
+## Configuration
 
 - MediatR handlers and repositories are auto‐registered by scanning assemblies.
 
