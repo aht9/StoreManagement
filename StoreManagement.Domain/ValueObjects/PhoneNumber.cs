@@ -1,5 +1,14 @@
 ﻿namespace StoreManagement.Domain.ValueObjects;
 
+/// <summary>
+/// Represents a phone number as a value object in the domain.
+/// A value object is immutable and defined by its properties rather than its identity.
+/// </summary>
+/// <remarks>
+/// This class encapsulates the logic for creating, validating, and formatting Iranian phone numbers.
+/// It ensures that phone numbers conform to the expected format and provides utility methods
+/// for cleaning and formatting phone numbers.
+/// </remarks>
 public class PhoneNumber : ValueObject
 {
     public string Value { get; }
