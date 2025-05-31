@@ -32,7 +32,7 @@ public class BaseEntity
     public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; private set; } = DateTime.UtcNow;
 
-    private void UpdateTimestamp()
+    protected void UpdateTimestamp()
     {
         UpdatedAt = DateTime.UtcNow;
     }
@@ -65,15 +65,6 @@ public class BaseEntity
         UpdateTimestamp();
     }
 
-    // model behavior
-    public void UpdateEntity(Action<BaseEntity>? updateAction = null)
-    {
-        if (updateAction != null)
-        {
-            updateAction(this);
-        }
-        UpdateTimestamp();
-    }
 
     public void ValidateEntity(Func<BaseEntity, bool> validationLogic)
     {

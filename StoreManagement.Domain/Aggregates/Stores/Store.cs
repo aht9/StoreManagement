@@ -115,7 +115,7 @@ namespace StoreManagement.Domain.Aggregates.Stores
             Email = email;
             PhoneNumber = phoneNumber;
             Address = address;
-            UpdateEntity();
+            UpdateTimestamp();
         }
     }
 }
