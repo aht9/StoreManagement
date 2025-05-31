@@ -3,9 +3,6 @@
 public abstract class Invoice<TItem> : BaseEntity, IAggregateRoot
     where TItem : InvoiceItem
 {
-    public long CustomerId { get; private set; }
-    public Customer Customer { get; private set; }
-
     public string InvoiceNumber { get; private set; }
     public DateTime InvoiceDate { get; private set; }
     public decimal TotalAmount { get; private set; }
@@ -22,9 +19,8 @@ public abstract class Invoice<TItem> : BaseEntity, IAggregateRoot
     }
 
     // Constructor
-    protected Invoice(long customerId, string invoiceNumber, DateTime invoiceDate, PaymentType paymentType)
+    protected Invoice(string invoiceNumber, DateTime invoiceDate, PaymentType paymentType)
     {
-        CustomerId = customerId;
         InvoiceNumber = invoiceNumber;
         InvoiceDate = invoiceDate;
         PaymentType = paymentType;

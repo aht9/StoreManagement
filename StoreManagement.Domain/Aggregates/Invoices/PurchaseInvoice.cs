@@ -9,9 +9,8 @@ public class PurchaseInvoice : Invoice<PurchaseInvoiceItem>
     private PurchaseInvoice() { }
 
 
-    public PurchaseInvoice(long customerId,
-        string invoiceNumber, DateTime invoiceDate,
-        PaymentType paymentType, long storeId) : base(customerId, invoiceNumber, invoiceDate, paymentType)
+    public PurchaseInvoice(string invoiceNumber, DateTime invoiceDate,
+        PaymentType paymentType, long storeId) : base(invoiceNumber, invoiceDate, paymentType)
     {
         if (storeId <= 0)
             throw new ArgumentOutOfRangeException(nameof(storeId), "Invalid store ID.");
