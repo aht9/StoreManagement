@@ -66,9 +66,12 @@ public class BaseEntity
     }
 
     // model behavior
-    public void UpdateEntity(Action<BaseEntity> updateAction)
+    public void UpdateEntity(Action<BaseEntity>? updateAction = null)
     {
-        updateAction(this);
+        if (updateAction != null)
+        {
+            updateAction(this);
+        }
         UpdateTimestamp();
     }
 
@@ -79,4 +82,6 @@ public class BaseEntity
             throw new InvalidOperationException("Entity validation failed.");
         }
     }
+
+
 }
