@@ -1,6 +1,4 @@
-﻿using StoreManagement.Domain.Aggregates.Products;
-
-namespace StoreManagement.Domain.Aggregates.Invoices;
+﻿namespace StoreManagement.Domain.Aggregates.Invoices;
 
 public abstract class InvoiceItem : BaseEntity
 {

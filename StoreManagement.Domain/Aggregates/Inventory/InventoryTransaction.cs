@@ -1,11 +1,9 @@
-﻿using StoreManagement.Domain.Aggregates.Products;
-
-namespace StoreManagement.Domain.Aggregates.Inventory;
+﻿namespace StoreManagement.Domain.Aggregates.Inventory;
 
 public class InventoryTransaction : BaseEntity, IAggregateRoot
 {
     public long ProductVariantId { get; private set; }
-    private ProductVariant ProductVariant { get; set; }
+    public ProductVariant ProductVariant { get; private set; }
 
     public DateTime TransactionDate { get; private set; }
 
