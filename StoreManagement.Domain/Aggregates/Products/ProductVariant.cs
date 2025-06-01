@@ -6,21 +6,20 @@ public class ProductVariant : BaseEntity
     /// Gets the SKU (Stock Keeping Unit) of the product variant.
     /// </summary>
     public string SKU { get; private set; }
-    public string Color { get; private set; }
-    public string Size { get; private set; }
+    public string? Color { get; private set; }
+    public string? Size { get; private set; }
     public int ProductId { get; private set; }
     public Product Product { get; private set; }
 
     private ProductVariant() { }
 
     // Constructor for creating a new ProductVariant
-    public ProductVariant(string sku, string color, string size, int productId, Product product)
+    public ProductVariant(string sku, string? color, string? size, int productId)
     {
         SKU = sku ?? throw new ArgumentNullException(nameof(sku));
         Color = color ?? throw new ArgumentNullException(nameof(color));
         Size = size ?? throw new ArgumentNullException(nameof(size));
         ProductId = productId;
-        Product = product ?? throw new ArgumentNullException(nameof(product));
     }
 
     // Method to update the SKU
