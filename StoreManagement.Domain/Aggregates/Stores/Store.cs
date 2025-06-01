@@ -1,5 +1,4 @@
-﻿using StoreManagement.Domain.Common.Interface;
-using StoreManagement.Domain.ValueObjects;
+﻿using StoreManagement.Domain.Aggregates.Invoices;
 
 namespace StoreManagement.Domain.Aggregates.Stores
 {
@@ -90,6 +89,30 @@ namespace StoreManagement.Domain.Aggregates.Stores
             }
         }
 
+        // Navigation properties for related entities
+
+        private List<PurchaseInvoice> _purchaseInvoices = new List<PurchaseInvoice>();
+        public IReadOnlyCollection<PurchaseInvoice> PurchaseInvoices => _purchaseInvoices.AsReadOnly();
+
+        public void AddPurchaseInvoice(PurchaseInvoice invoice)
+        {
+            if (invoice == null)
+                throw new ArgumentNullException(nameof(invoice), "Purchase invoice cannot be null.");
+            _purchaseInvoices.Add(invoice);
+            UpdateTimestamp();
+        }
+
+        public void RemovePurchaseInvoice(PurchaseInvoice invoice)
+        {
+            if (invoice == null)
+                throw new ArgumentNullException(nameof(invoice), "Purchase invoice cannot be null.");
+            if (!_purchaseInvoices.Remove(invoice))
+                throw new InvalidOperationException("Purchase invoice not found in the store.");
+            UpdateTimestamp();
+        }
+
+
+        // Private constructor for EF Core
         private Store()
         {
         }

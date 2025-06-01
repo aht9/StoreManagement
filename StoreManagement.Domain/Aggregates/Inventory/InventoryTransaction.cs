@@ -1,5 +1,4 @@
 ﻿using StoreManagement.Domain.Aggregates.Products;
-using StoreManagement.Domain.Common.Interface;
 
 namespace StoreManagement.Domain.Aggregates.Inventory;
 

@@ -1,5 +1,4 @@
-﻿using StoreManagement.Domain.Common.Interface;
-using StoreManagement.Domain.ValueObjects;
+﻿using StoreManagement.Domain.Aggregates.Invoices;
 
 namespace StoreManagement.Domain.Aggregates.Customers
 {
@@ -91,6 +90,25 @@ namespace StoreManagement.Domain.Aggregates.Customers
                 _nationalCode = value;
             }
         }
+
+        // Navigation properties for relationships (if any)
+        private List<SalesInvoice> _salesInvoices = new List<SalesInvoice>();
+        public IReadOnlyCollection<SalesInvoice> SalesInvoices => _salesInvoices.AsReadOnly();
+
+        public void AddSalesInvoice(SalesInvoice invoice)
+        {
+            if (invoice == null)
+                throw new ArgumentNullException(nameof(invoice), "Sale invoice cannot be null.");
+            _salesInvoices.Add(invoice);
+        }
+
+        public void RemoveSalesInvoice(SalesInvoice invoice)
+        {
+            if (invoice == null)
+                throw new ArgumentNullException(nameof(invoice), "Sale invoice cannot be null.");
+            _salesInvoices.Remove(invoice);
+        }
+
 
         // Parameterless constructor for EF Core or serialization
         private Customer() { }

@@ -3,7 +3,7 @@
 public class PurchaseInvoice : Invoice<PurchaseInvoiceItem>
 {
     public long StoreId { get; private set; }
-    protected Store Store { get; private set; }
+    public Store Store { get; private set; }
 
 
     private PurchaseInvoice() { }

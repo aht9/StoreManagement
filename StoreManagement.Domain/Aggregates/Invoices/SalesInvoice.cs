@@ -3,7 +3,7 @@
 public class SalesInvoice : Invoice<SalesInvoiceItem>
 {
     public long CustomerId { get; private set; }
-    protected Customer Customer { get; private set; }
+    public Customer Customer { get; private set; }
     private SalesInvoice() { }
     public SalesInvoice(long customerId, string invoiceNumber, 
         DateTime invoiceDate, PaymentType paymentType): base(invoiceNumber, invoiceDate, paymentType)

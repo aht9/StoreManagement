@@ -1,6 +1,4 @@
-﻿using StoreManagement.Domain.Common.Interface;
-
-namespace StoreManagement.Domain.Aggregates.Products;
+﻿namespace StoreManagement.Domain.Aggregates.Products;
 
 public class Product : BaseEntity, IAggregateRoot
 {

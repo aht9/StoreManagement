@@ -1,6 +1,4 @@
-﻿using StoreManagement.Domain.Common.Interface;
-
-namespace StoreManagement.Domain.Aggregates.Installments;
+﻿namespace StoreManagement.Domain.Aggregates.Installments;
 
 public class Installment : BaseEntity, IAggregateRoot
 {
