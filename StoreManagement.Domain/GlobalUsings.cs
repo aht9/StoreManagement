@@ -11,4 +11,5 @@ global using StoreManagement.Domain.Common.Interface;
 global using StoreManagement.Domain.Enums;
 global using StoreManagement.Domain.Events.BankAccounts;
 global using StoreManagement.Domain.SD;
+global using StoreManagement.Domain.Specifications.CommonSpec;
 global using StoreManagement.Domain.ValueObjects;

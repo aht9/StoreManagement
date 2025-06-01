@@ -18,4 +18,13 @@ public abstract class ExpressionSpecification<T> : IExpressionSpecification<T>
 
     public ExpressionSpecification<T> Not()
         => new NotExpressionSpecification<T>(this);
+
+    public static ExpressionSpecification<T> Default()
+        => new DefaultExpressionSpecification<T>();
+
+    public static ExpressionSpecification<T> Create(Expression<Func<T, bool>> predicate)
+        => new CustomExpressionSpecification<T>(predicate);
+
+    public override string ToString()
+        => ToExpression().ToString();
 }

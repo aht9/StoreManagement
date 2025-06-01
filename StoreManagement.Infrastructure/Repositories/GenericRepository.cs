@@ -1,20 +1,26 @@
 ﻿namespace StoreManagement.Infrastructure.Repositories;
 
-public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity, new()
+public class GenericRepository<T>(ApplicationDbContext ctx) : IGenericRepository<T>
+    where T : BaseEntity, new()
 {
-    private readonly ApplicationDbContext _ctx;
-    public GenericRepository(ApplicationDbContext ctx)
-        => _ctx = ctx;
+    private readonly IFilterStrategy<T> _filterStrategy = new SoftDeleteFilterStrategy<T>();
+
+    public async Task<IEnumerable<T>> GetAllAsync()
+    {
+        var baseSpecification = new DefaultExpressionSpecification<T>(); 
+        var filteredSpecification = _filterStrategy.ApplyFilter(baseSpecification);
+        return await ctx.Set<T>().Where(filteredSpecification.ToExpression()).ToListAsync();
+    }
 
     public async Task AddAsync(T entity)
-        => await _ctx.Set<T>().AddAsync(entity);
+        => await ctx.Set<T>().AddAsync(entity);
 
     public void Delete(T entity)
-        => _ctx.Set<T>().Remove(entity);
+        => ctx.Set<T>().Remove(entity);
 
     public async Task<T> GetByIdAsync(int id)
-        => await _ctx.Set<T>().FindAsync(id);
+        => await ctx.Set<T>().FindAsync(id);
 
     public void Update(T entity)
-        => _ctx.Set<T>().Update(entity);
+        => ctx.Set<T>().Update(entity);
 }

@@ -12,6 +12,7 @@
 
     <ItemGroup>
       <Folder Include="Data\DbContexts\" />
+      <Folder Include="Strategies\" />
       <Folder Include="Repositories\" />
     </ItemGroup>
 
