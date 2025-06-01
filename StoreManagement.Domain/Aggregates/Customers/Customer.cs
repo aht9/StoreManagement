@@ -1,4 +1,5 @@
-﻿using StoreManagement.Domain.ValueObjects;
+﻿using StoreManagement.Domain.Common.Interface;
+using StoreManagement.Domain.ValueObjects;
 
 namespace StoreManagement.Domain.Aggregates.Customers
 {

@@ -1,4 +1,6 @@
-﻿namespace StoreManagement.Domain.Aggregates.Invoices;
+﻿using StoreManagement.Domain.Common.Interface;
+
+namespace StoreManagement.Domain.Aggregates.Invoices;
 
 public abstract class Invoice<TItem> : BaseEntity, IAggregateRoot
     where TItem : InvoiceItem

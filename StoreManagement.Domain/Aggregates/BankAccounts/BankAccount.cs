@@ -1,4 +1,6 @@
-﻿namespace StoreManagement.Domain.Aggregates.BankAccounts;
+﻿using StoreManagement.Domain.Common.Interface;
+
+namespace StoreManagement.Domain.Aggregates.BankAccounts;
 
 public class BankAccount : BaseEntity, IAggregateRoot
 {

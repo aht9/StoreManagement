@@ -2,8 +2,8 @@
 
 public enum InvoiceStatus
 {
-    Draft,
-    Pending,
-    Paid,      
-    Cancelled
+    Draft,       // پیش‌ فاکتور
+    Pending,     // در انتظار پرداخت
+    Paid,        // پرداخت شده
+    Cancelled    // لغو شده  
 }

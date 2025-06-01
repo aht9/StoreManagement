@@ -1,4 +1,4 @@
-﻿namespace StoreManagement.Domain.Common;
+﻿namespace StoreManagement.Domain.Common.Interface;
 
 /// <summary>
 /// Marker interface to indicate that a class is an aggregate root in the domain.
