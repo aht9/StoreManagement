@@ -2,14 +2,10 @@
 
 namespace StoreManagement.Infrastructure.Data.DbContexts;
 
-public class ApplicationDbContext : DbContext, IUnitOfWork
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IMediator mediator)
+    : DbContext(options), IUnitOfWork
 {
-    private readonly IMediator _mediator;
     private IDbContextTransaction? _currentTransaction;
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IMediator mediator) : base(options)
-    {
-        _mediator = mediator;
-    }
 
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Store> Stores { get; set; }
@@ -24,12 +20,35 @@ public class ApplicationDbContext : DbContext, IUnitOfWork
     public DbSet<FinancialTransaction> FinancialTransactions { get; set; }
     public DbSet<Installment> Installments { get; set; }
     public DbSet<InventoryTransactionType> InventoryTransactionTypes { get; set; }
+    public DbSet<ProductCategory> ProductCategories { get; set; }
+    public DbSet<SmsLog> SmsLogs { get; set; }
+    public DbSet<SmsMessage> SmsMessages { get; set; }
+    public DbSet<SmsTemplate> SmsTemplates { get; set; }
+    public DbSet<SmsProvider> SmsProviders { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfiguration(new CustomerEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new StoreEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new ProductEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new ProductVariantEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new PurchaseInvoiceEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new PurchaseInvoiceItemEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new SalesInvoiceEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new SalesInvoiceItemEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new InventoryTransactionEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new InventoryTransactionTypeEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new BankAccountEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new FinancialTransactionEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new InstallmentEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new ProductCategoryEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new SmsLogEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new SmsMessageEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new SmsTemplateEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new SmsProviderEntityTypeConfiguration());
+
     }
 
     public IDbContextTransaction? GetCurrentTransaction() => _currentTransaction;
@@ -92,7 +111,7 @@ public class ApplicationDbContext : DbContext, IUnitOfWork
     {
         try
         {
-            await _mediator.DispatchDomainEventsAsync(this);
+            await mediator.DispatchDomainEventsAsync(this);
             var result = await base.SaveChangesAsync(cancellationToken) > 0;
             return result;
         }
