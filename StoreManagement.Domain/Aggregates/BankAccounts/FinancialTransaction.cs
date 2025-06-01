@@ -3,11 +3,14 @@
 public class FinancialTransaction : BaseEntity
 {
     public long BankAccountId { get; private set; }
-    private BankAccount BankAccount { get; set; }
+    public BankAccount BankAccount { get; private set; }
     public decimal Amount { get; private set; }
     public DateTime TransactionDate { get; private set; }
     public TransactionType TransactionType { get; private set; }
-    public string Description { get; private set; }
+    public string? Description { get; private set; }
+    public long? InvoiceId { get; set; }
+    public InvoiceType? InvoiceType { get; set; }
+
 
     private FinancialTransaction()
     {
@@ -15,7 +18,9 @@ public class FinancialTransaction : BaseEntity
     }
 
     // Constructor
-    public FinancialTransaction(BankAccount bankAccount, decimal amount, TransactionType transactionType, string description)
+    public FinancialTransaction(BankAccount bankAccount, 
+        decimal amount, TransactionType transactionType, 
+        string? description, long? invoiceId, InvoiceType? invoiceType)
     {
         if (bankAccount == null || bankAccount.Id <= 0)
             throw new InvalidOperationException("Bank account must be persisted and have a valid ID before creating a transaction.");
@@ -32,6 +37,8 @@ public class FinancialTransaction : BaseEntity
         TransactionType = transactionType;
         Description = description;
         TransactionDate = DateTime.UtcNow;
+        InvoiceId = invoiceId;
+        InvoiceType = invoiceType;
 
         AddDomainEvent(new FinancialTransactionCreatedEvent(bankAccount, TransactionType, Amount));
     }

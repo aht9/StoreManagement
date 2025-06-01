@@ -24,7 +24,7 @@ public class BankAccount : BaseEntity, IAggregateRoot
 
         if (initialBalance > 0)
         {
-            var transaction = new FinancialTransaction(this,initialBalance,TransactionType.Credit, "Initial Balance");
+            var transaction = new FinancialTransaction(this,initialBalance,TransactionType.Credit, "Initial Balance",null, null);
             _transactions.Add(transaction);
             
             // Initial balance transaction is added Before the BankAccount is persisted
