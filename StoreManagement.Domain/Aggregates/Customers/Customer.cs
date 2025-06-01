@@ -7,11 +7,11 @@ namespace StoreManagement.Domain.Aggregates.Customers
         // Private fields for encapsulation
         private string _firstName;
         private string _lastName;
-        private string _email;
+        private string? _email;
         private PhoneNumber _phoneNumber;
         private Address _address;
-        private DateTime _dateOfBirth;
-        private long _nationalCode;
+        private DateTime? _dateOfBirth;
+        private long? _nationalCode;
 
         // Public properties with validation logic
         public string FirstName
@@ -36,7 +36,7 @@ namespace StoreManagement.Domain.Aggregates.Customers
             }
         }
 
-        public string Email
+        public string? Email
         {
             get => _email;
             private set
@@ -69,7 +69,7 @@ namespace StoreManagement.Domain.Aggregates.Customers
             }
         }
 
-        public DateTime DateOfBirth
+        public DateTime? DateOfBirth
         {
             get => _dateOfBirth;
             private set
@@ -80,7 +80,7 @@ namespace StoreManagement.Domain.Aggregates.Customers
             }
         }
 
-        public long NationalCode
+        public long? NationalCode
         {
             get => _nationalCode;
             private set
@@ -114,7 +114,7 @@ namespace StoreManagement.Domain.Aggregates.Customers
         private Customer() { }
 
         // Constructor for creating a customer
-        public Customer(string firstName, string lastName, string email, PhoneNumber phoneNumber, Address address, DateTime dateOfBirth, long nationalCode)
+        public Customer(string firstName, string lastName, string? email, PhoneNumber phoneNumber, Address address, DateTime? dateOfBirth, long? nationalCode)
         {
             FirstName = firstName;
             LastName = lastName;

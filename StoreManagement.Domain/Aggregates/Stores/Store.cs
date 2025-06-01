@@ -5,10 +5,10 @@ namespace StoreManagement.Domain.Aggregates.Stores
     public class Store : BaseEntity, IAggregateRoot
     {
         private string _name;
-        private string _location;
-        private string _managerName;
-        private string _contactNumber;
-        private string _email;
+        private string? _location;
+        private string? _managerName;
+        private string? _contactNumber;
+        private string? _email;
         private PhoneNumber _phoneNumber;
         private Address _address;
 
@@ -23,7 +23,7 @@ namespace StoreManagement.Domain.Aggregates.Stores
             }
         }
 
-        public string Location
+        public string? Location
         {
             get => _location;
             private set
@@ -34,7 +34,7 @@ namespace StoreManagement.Domain.Aggregates.Stores
             }
         }
 
-        public string ManagerName
+        public string? ManagerName
         {
             get => _managerName;
             private set
@@ -45,7 +45,7 @@ namespace StoreManagement.Domain.Aggregates.Stores
             }
         }
 
-        public string ContactNumber
+        public string? ContactNumber
         {
             get => _contactNumber;
             private set
@@ -56,7 +56,7 @@ namespace StoreManagement.Domain.Aggregates.Stores
             }
         }
 
-        public string Email
+        public string? Email
         {
             get => _email;
             private set
@@ -117,7 +117,7 @@ namespace StoreManagement.Domain.Aggregates.Stores
         {
         }
 
-        public Store(string name, string location, string managerName, string contactNumber, string email,
+        public Store(string name, string? location, string? managerName, string? contactNumber, string? email,
             PhoneNumber phoneNumber, Address address)
         {
             Name = name;
@@ -129,8 +129,8 @@ namespace StoreManagement.Domain.Aggregates.Stores
             Address = address;
         }
 
-        public void UpdateStoreDetails(string name, string location, string managerName, string contactNumber,
-            string email, PhoneNumber phoneNumber, Address address)
+        public void UpdateStoreDetails(string name, string? location, string? managerName, string? contactNumber,
+            string? email, PhoneNumber phoneNumber, Address address)
         {
             Name = name;
             Location = location;

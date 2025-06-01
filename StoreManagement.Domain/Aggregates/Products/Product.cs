@@ -3,17 +3,21 @@
 public class Product : BaseEntity, IAggregateRoot
 {
     public string Name { get; private set; }
-    public string Description { get; private set; }
+    public string? Description { get; private set; }
+
+    public long? CategoryId { get; private set; }
+    public ProductCategory? Category { get; private set; }
 
     private readonly List<ProductVariant> _variants = new List<ProductVariant>();
     public IReadOnlyCollection<ProductVariant> Variants => _variants.AsReadOnly();
 
     private Product() { }
 
-    public Product(string name, string description)
+    public Product(string name, string? description,long? categoryId)
     {
         Name = name ?? throw new ArgumentNullException(nameof(name));
         Description = description ?? throw new ArgumentNullException(nameof(description));
+        CategoryId = categoryId;
     }
 
     public void UpdateName(string newName)
@@ -59,12 +63,19 @@ public class Product : BaseEntity, IAggregateRoot
         _variants.Remove(variant);
     }
 
-    public void Validate()
-    {
-        if (string.IsNullOrWhiteSpace(Name))
-            throw new InvalidOperationException("Product must have a valid name.");
 
-        if (string.IsNullOrWhiteSpace(Description))
-            throw new InvalidOperationException("Product must have a valid description.");
+    public void SetCategory(ProductCategory category)
+    {
+        Category = category ?? throw new ArgumentNullException(nameof(category));
+        CategoryId = category.Id;
+        UpdateTimestamp();
     }
+
+    public void ClearCategory()
+    {
+        Category = null;
+        CategoryId = null;
+        UpdateTimestamp();
+    }
+
 }

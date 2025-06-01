@@ -1,6 +1,4 @@
-﻿using StoreManagement.Domain.ValueObjects;
-
-namespace StoreManagement.Infrastructure.Data.Configurations;
+﻿namespace StoreManagement.Infrastructure.Data.Configurations;
 
 public class StoreEntityTypeConfiguration : IEntityTypeConfiguration<Store>
 {
@@ -29,7 +27,8 @@ public class StoreEntityTypeConfiguration : IEntityTypeConfiguration<Store>
             addressBuilder.WithOwner();
         });
 
-        builder.HasIndex(c => c.PhoneNumber).IsUnique().HasDatabaseName("IX_Customers_PhoneNumber");
+        builder.HasIndex(c=>c.Name).IsUnique().HasDatabaseName("IX_Stores_Name");
+        builder.HasIndex(c => c.PhoneNumber).IsUnique().HasDatabaseName("IX_Stores_PhoneNumber");
 
         builder.HasMany(s => s.PurchaseInvoices)
             .WithOne(pi => pi.Store)
