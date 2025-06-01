@@ -5,6 +5,8 @@ public class SalesInvoiceEntityTypeConfiguration : IEntityTypeConfiguration<Sale
     public void Configure(EntityTypeBuilder<SalesInvoice> builder)
     {
         builder.ToTable("SaleInvoices");
+        builder.Ignore(c => c.DomainEvents);
+
 
         builder.HasKey(pi => pi.Id);
         builder.Property(pi => pi.Id)

@@ -5,6 +5,9 @@ public class FinancialTransactionEntityTypeConfiguration : IEntityTypeConfigurat
     public void Configure(EntityTypeBuilder<FinancialTransaction> builder)
     {
         builder.ToTable("FinancialTransactions");
+        builder.Ignore(c => c.DomainEvents);
+
+
         builder.HasKey(ft => ft.Id);
         builder.Property(ft => ft.Id)
             .ValueGeneratedOnAdd()

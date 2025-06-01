@@ -5,6 +5,8 @@ public class InstallmentEntityTypeConfiguration : IEntityTypeConfiguration<Insta
     public void Configure(EntityTypeBuilder<Installment> builder)
     {
         builder.ToTable("Installments");
+        builder.Ignore(c => c.DomainEvents);
+
         builder.HasKey(i => i.Id);
         builder.Property(i => i.Id)
             .ValueGeneratedOnAdd()

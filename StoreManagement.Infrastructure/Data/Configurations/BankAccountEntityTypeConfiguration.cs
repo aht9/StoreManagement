@@ -9,6 +9,8 @@ public class BankAccountEntityTypeConfiguration : IEntityTypeConfiguration<BankA
         builder.Property(b => b.Id)
             .ValueGeneratedOnAdd()
             .IsRequired();
+        builder.Ignore(c => c.DomainEvents);
+
         builder.Property(b => b.AccountName).IsRequired().HasMaxLength(100);
         builder.Property(b => b.BankName).IsRequired().HasMaxLength(100);
         builder.Property(b => b.AccountNumber).IsRequired().HasMaxLength(50);

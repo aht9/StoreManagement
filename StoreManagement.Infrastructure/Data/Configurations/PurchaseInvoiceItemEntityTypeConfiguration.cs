@@ -5,6 +5,9 @@ public class PurchaseInvoiceItemEntityTypeConfiguration : IEntityTypeConfigurati
     public void Configure(EntityTypeBuilder<PurchaseInvoiceItem> builder)
     {
         builder.ToTable("PurchaseInvoiceItems");
+        builder.Ignore(c => c.DomainEvents);
+
+
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id)
             .ValueGeneratedOnAdd()

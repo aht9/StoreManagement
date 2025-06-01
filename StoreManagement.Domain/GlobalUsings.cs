@@ -1,7 +1,9 @@
 ﻿// Global using directives
 
+global using System.ComponentModel.DataAnnotations.Schema;
 global using System.Linq.Expressions;
 global using System.Reflection;
+global using System.Text.Json;
 global using MediatR;
 global using StoreManagement.Domain.Aggregates.BankAccounts;
 global using StoreManagement.Domain.Aggregates.Customers;

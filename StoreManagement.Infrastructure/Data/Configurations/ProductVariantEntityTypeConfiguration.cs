@@ -5,6 +5,9 @@ public class ProductVariantEntityTypeConfiguration : IEntityTypeConfiguration<Pr
     public void Configure(EntityTypeBuilder<ProductVariant> builder)
     {
         builder.ToTable("ProductVariants");
+        builder.Ignore(c => c.DomainEvents);
+
+
         builder.HasKey(pv => pv.Id);
         builder.Property(pv => pv.Id).ValueGeneratedOnAdd();
         builder.Property(pv => pv.SKU).IsRequired().HasMaxLength(50);

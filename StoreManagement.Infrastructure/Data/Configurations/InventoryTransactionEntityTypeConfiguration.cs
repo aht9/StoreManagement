@@ -5,6 +5,9 @@ public class InventoryTransactionEntityTypeConfiguration : IEntityTypeConfigurat
     public void Configure(EntityTypeBuilder<InventoryTransaction> builder)
     {
         builder.ToTable("InventoryTransactions");
+        builder.Ignore(c => c.DomainEvents);
+
+
         builder.HasKey(it => it.Id);
         builder.Property(it => it.Id)
             .ValueGeneratedOnAdd()
