@@ -38,12 +38,11 @@ public class SmsMessage : BaseEntity, IAggregateRoot
     }
 
     public SmsMessage(
-        string phoneNumber,
+        PhoneNumber phoneNumber,
         string content,
         string providerName)
     {
-     
-        PhoneNumber = phoneNumber;
+        PhoneNumber = phoneNumber ?? throw new ArgumentNullException(nameof(phoneNumber));
         Content = content;
         ProviderName = providerName;
         Status = SmsStatus.Pending;
@@ -52,13 +51,29 @@ public class SmsMessage : BaseEntity, IAggregateRoot
         Parameters = new Dictionary<string, string>();
     }
 
+
+    public SmsMessage(
+        string phoneNumber,
+        string content,
+        string providerName)
+    {
+        Content = content;
+        ProviderName = providerName;
+        Status = SmsStatus.Pending;
+        RetryCount = 0;
+        ParametersJson = string.Empty;
+        Parameters = new Dictionary<string, string>();
+        var phone = PhoneNumber.Create(phoneNumber);
+        PhoneNumber = phone.IsSuccess ? phone.Value : throw new ArgumentException(phone.Error);
+    }
+
     public SmsMessage(
         string phoneNumber,
         long templateId,
         Dictionary<string, string> parameters,
         string providerName)
     {
-        PhoneNumber = phoneNumber;
+        
         TemplateId = templateId;
         Parameters = parameters ?? new Dictionary<string, string>();
         ProviderName = providerName;
@@ -66,6 +81,9 @@ public class SmsMessage : BaseEntity, IAggregateRoot
         RetryCount = 0;
         Content = string.Empty; // Will be populated from template
         ParametersJson = string.Empty;
+
+        var phone = PhoneNumber.Create(phoneNumber);
+        PhoneNumber = phone.IsSuccess ? phone.Value : throw new ArgumentException(phone.Error);
     }
 
     public void SetTrackingCode(string trackingCode)

@@ -1,7 +1,7 @@
 ﻿namespace StoreManagement.Infrastructure.Repositories;
 
 public class GenericRepository<T>(ApplicationDbContext _dbContext) : IGenericRepository<T>
-    where T : BaseEntity, new()
+    where T : BaseEntity
 {
     private readonly IFilterStrategy<T?> _filterStrategy = new SoftDeleteFilterStrategy<T?>();
     public IUnitOfWork UnitOfWork => _dbContext;
@@ -68,6 +68,13 @@ public class GenericRepository<T>(ApplicationDbContext _dbContext) : IGenericRep
         var baseSpecification = new DefaultExpressionSpecification<T?>();
         var filteredSpecification = _filterStrategy.ApplyFilter(baseSpecification);
         return await _dbContext.Set<T>().Where(filteredSpecification.ToExpression()).ToListAsync();
+    }
+
+    public virtual async Task<T?> GetByIdAsync(long id, CancellationToken cancellationToken = default)
+    {
+        IQueryable<T?> query = _dbContext.Set<T>().AsQueryable();
+
+        return await query.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
     }
 
     public virtual async Task<T?> GetByIdAsync(long id, IncludeSpecification<T> includes, CancellationToken cancellationToken = default)

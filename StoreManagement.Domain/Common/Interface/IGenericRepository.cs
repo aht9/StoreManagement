@@ -1,6 +1,4 @@
-﻿using StoreManagement.Domain.Specifications;
-
-namespace StoreManagement.Domain.Common.Interface;
+﻿namespace StoreManagement.Domain.Common.Interface;
 
 public interface IGenericRepository<T> where T : BaseEntity
 {
@@ -23,6 +21,8 @@ public interface IGenericRepository<T> where T : BaseEntity
     Task<T?> GetByIdForUpdateAsync(long id, CancellationToken cancellationToken = default);
 
     Task<List<T?>> GetAllAsync();
+
+    Task<T?> GetByIdAsync(long id, CancellationToken cancellationToken = default);
 
     Task<T?> GetByIdAsync(long id, IncludeSpecification<T> includes, CancellationToken cancellationToken = default);
 

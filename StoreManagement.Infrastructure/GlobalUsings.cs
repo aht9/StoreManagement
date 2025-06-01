@@ -24,6 +24,7 @@ global using StoreManagement.Domain.Enums;
 global using StoreManagement.Domain.Notifications;
 global using StoreManagement.Domain.Specifications;
 global using StoreManagement.Domain.Specifications.CommonSpec;
+global using StoreManagement.Domain.Specifications.SMSSpec;
 global using StoreManagement.Infrastructure.Data.Dapper;
 global using StoreManagement.Infrastructure.Data.DbContexts;
 global using StoreManagement.Infrastructure.Extensions;

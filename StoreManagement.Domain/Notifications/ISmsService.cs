@@ -10,17 +10,17 @@ public interface ISmsService
 
     Task<SmsMessage> SendWithTemplateAsync(
         string phoneNumber,
-        Guid templateId,
+        long templateId,
         Dictionary<string, string> parameters,
         string? providerName = null,
         CancellationToken cancellationToken = default);
 
     Task<SmsDeliveryStatus> CheckDeliveryStatusAsync(
-        Guid messageId,
+        long messageId,
         CancellationToken cancellationToken = default);
 
     Task<bool> RetryFailedMessageAsync(
-        Guid messageId,
+        long messageId,
         string? providerName = null,
         CancellationToken cancellationToken = default);
 }

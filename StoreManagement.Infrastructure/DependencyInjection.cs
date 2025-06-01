@@ -1,4 +1,6 @@
-﻿namespace StoreManagement.Infrastructure;
+﻿using StoreManagement.Infrastructure.Notifications;
+
+namespace StoreManagement.Infrastructure;
 
 public static class DependencyInjection
 {
@@ -23,6 +25,17 @@ public static class DependencyInjection
 
         /// 5) MediatR برای Publish رویدادهای دامنه
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ApplicationDbContext).Assembly));
+
+
+        // 6) ServiceCollection Extensions
+        services.AddScoped<ISmsProviderFactory, SmsProviderFactory>();
+        services.AddScoped<ISmsService, SmsService>();
+
+        // 7) Repositories
+        services.AddScoped<IGenericRepository<SmsProvider>, GenericRepository<SmsProvider>>(); 
+        services.AddScoped<IGenericRepository<SmsMessage>, GenericRepository<SmsMessage>>();
+        services.AddScoped<IGenericRepository<SmsTemplate>, GenericRepository<SmsTemplate>>();
+        services.AddScoped<IGenericRepository<SmsLog>, GenericRepository<SmsLog>>();
 
         return services;
     }
