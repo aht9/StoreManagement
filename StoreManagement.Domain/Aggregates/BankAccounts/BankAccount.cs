@@ -24,7 +24,10 @@ public class BankAccount : BaseEntity, IAggregateRoot
 
         if (initialBalance > 0)
         {
-            // Initial balance transaction is added after the BankAccount is persisted
+            var transaction = new FinancialTransaction(this,initialBalance,TransactionType.Credit, "Initial Balance");
+            _transactions.Add(transaction);
+            
+            // Initial balance transaction is added Before the BankAccount is persisted
             AddDomainEvent(new BankAccountCreatedEvent(this, initialBalance));
         }
     }
@@ -45,7 +48,6 @@ public class BankAccount : BaseEntity, IAggregateRoot
         if (Id <= 0) throw new InvalidOperationException("BankAccount must be persisted before adding transactions.");
 
         _transactions.Add(transaction);
-        transaction.ApplyToBankAccount();
         UpdateBalance(transaction);
     }
 

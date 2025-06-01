@@ -36,12 +36,4 @@ public class FinancialTransaction : BaseEntity
         AddDomainEvent(new FinancialTransactionCreatedEvent(bankAccount, TransactionType, Amount));
     }
 
-    // Apply transaction to the bank account
-    public void ApplyToBankAccount()
-    {
-        if (BankAccount == null)
-            throw new InvalidOperationException("Bank account must be associated with the transaction.");
-
-        AddDomainEvent(new FinancialTransactionAppliedEvent(BankAccount, TransactionType, Amount));
-    }
 }
