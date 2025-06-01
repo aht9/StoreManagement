@@ -1,10 +1,14 @@
 // Global using directives
 
 global using System.ComponentModel.DataAnnotations;
+global using System.Data;
+global using Dapper;
 global using MediatR;
+global using Microsoft.Data.SqlClient;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore.Metadata.Builders;
 global using Microsoft.EntityFrameworkCore.Storage;
+global using Microsoft.Extensions.Configuration;
 global using StoreManagement.Domain.Aggregates.BankAccounts;
 global using StoreManagement.Domain.Aggregates.Customers;
 global using StoreManagement.Domain.Aggregates.Installments;
