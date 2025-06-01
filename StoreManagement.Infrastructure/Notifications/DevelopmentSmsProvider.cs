@@ -1,6 +1,4 @@
-﻿using StoreManagement.Domain.Notifications;
-
-namespace StoreManagement.Infrastructure.Notifications;
+﻿namespace StoreManagement.Infrastructure.Notifications;
 
 public class DevelopmentSmsProvider : ISmsProvider
 {
