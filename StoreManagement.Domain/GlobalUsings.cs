@@ -8,6 +8,7 @@ global using MediatR;
 global using StoreManagement.Domain.Aggregates.BankAccounts;
 global using StoreManagement.Domain.Aggregates.Customers;
 global using StoreManagement.Domain.Aggregates.Products;
+global using StoreManagement.Domain.Aggregates.SmsModels;
 global using StoreManagement.Domain.Aggregates.Stores;
 global using StoreManagement.Domain.Common;
 global using StoreManagement.Domain.Common.Interface;
