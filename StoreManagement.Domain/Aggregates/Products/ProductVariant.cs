@@ -11,7 +11,7 @@ public class ProductVariant : BaseEntity
     public int ProductId { get; private set; }
     public Product Product { get; private set; }
 
-    private ProductVariant(){}
+    private ProductVariant() { }
 
     // Constructor for creating a new ProductVariant
     public ProductVariant(string sku, string color, string size, int productId, Product product)
@@ -30,7 +30,7 @@ public class ProductVariant : BaseEntity
             throw new ArgumentException("SKU cannot be null or empty.", nameof(newSKU));
 
         SKU = newSKU;
-        UpdateEntity();
+        UpdateTimestamp();
     }
 
     // Method to update the color
@@ -40,7 +40,7 @@ public class ProductVariant : BaseEntity
             throw new ArgumentException("Color cannot be null or empty.", nameof(newColor));
 
         Color = newColor;
-        UpdateEntity();
+        UpdateTimestamp();
     }
 
     // Method to update the size
@@ -50,7 +50,7 @@ public class ProductVariant : BaseEntity
             throw new ArgumentException("Size cannot be null or empty.", nameof(newSize));
 
         Size = newSize;
-        UpdateEntity();
+        UpdateTimestamp();
     }
 
     // Method to validate the entity

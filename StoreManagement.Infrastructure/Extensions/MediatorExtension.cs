@@ -1,6 +1,4 @@
-﻿using StoreManagement.Domain.Common;
-
-namespace StoreManagement.Infrastructure.Extensions;
+﻿namespace StoreManagement.Infrastructure.Extensions;
 
 public static class MediatorExtension
 {
