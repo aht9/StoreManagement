@@ -1,13 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Serilog;
-using StoreManagement.Infrastructure;
-using System.IO;
-using System.Windows;
-
-namespace StoreManagement.UI
+﻿namespace StoreManagement.UI
 {
     /// <summary>
     /// Interaction logic for App.xaml
@@ -23,7 +14,8 @@ namespace StoreManagement.UI
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .WriteTo.Console()
-                .WriteTo.File(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Logs", "Bootstrap-.txt"), rollingInterval: RollingInterval.Day)
+                .WriteTo.File(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Logs", "Bootstrap-.txt"),
+                    rollingInterval: RollingInterval.Day)
                 .CreateBootstrapLogger();
 
             // Build configuration
@@ -85,14 +77,23 @@ namespace StoreManagement.UI
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
 
-                Shutdown();
+                if (Current != null) Current.Shutdown(-1);
             }
         }
 
         private void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             services.AddInfrastructure(configuration);
-
+            // Register Serilog's ILogger for injection
+            services.AddSingleton(Log.Logger);
+            // Navigation Service
+            services.AddSingleton<INavigationService, NavigationService>();
+            // ViewModels (transient or singleton based on need)
+            services.AddSingleton<ShellViewModel>();
+            services.AddTransient<CounterViewModel>();
+            services.AddTransient<DashboardViewModel>();
+            services.AddTransient<SettingsViewModel>(); 
+            // Main Window
             services.AddTransient<MainWindow>();
         }
 
@@ -117,7 +118,6 @@ namespace StoreManagement.UI
                 Log.Error(args.Exception, "TaskScheduler.UnobservedTaskException");
                 args.SetObserved();
             };
-
         }
 
         private void ShowErrorAndShutdown(Exception ex, string errorType)
@@ -128,7 +128,8 @@ namespace StoreManagement.UI
                 return;
             }
 
-            var errorMessage = $"An unexpected {errorType} occurred: {ex.Message}\n\nThe application will now close. Please check the logs for more details.";
+            var errorMessage =
+                $"An unexpected {errorType} occurred: {ex.Message}\n\nThe application will now close. Please check the logs for more details.";
             Log.Fatal(ex, $"Unhandled {errorType} leading to shutdown.");
 
             MessageBox.Show(errorMessage, "Unhandled Exception", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -144,9 +145,9 @@ namespace StoreManagement.UI
                 await AppHost.StopAsync();
                 AppHost.Dispose();
             }
+
             await Log.CloseAndFlushAsync();
             base.OnExit(e);
         }
     }
-
 }

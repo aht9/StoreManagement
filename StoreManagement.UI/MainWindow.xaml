@@ -3,10 +3,131 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:StoreManagement.UI"
+        xmlns:vm="clr-namespace:StoreManagement.UI.ViewModels"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="{Binding Title, FallbackValue='Store Management'}" Height="768" Width="1366"
+        WindowStartupLocation="CenterScreen"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="14"
+        FontFamily="{materialDesign:MaterialDesignFont}">
 
+    <!-- Removed Window.Resources for Storyboards as VSM handles them directly if defined in states -->
+
+    <Grid x:Name="LayoutRootGrid"> <!-- Added x:Name here -->
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="SidemenuStates">
+                <VisualState x:Name="SidemenuOpen">
+                    <Storyboard>
+                        <DoubleAnimation Storyboard.TargetName="SidemenuColumn" Storyboard.TargetProperty="Width" To="250" Duration="0:0:0.25">
+                            <DoubleAnimation.EasingFunction>
+                                <CubicEase EasingMode="EaseOut"/>
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="SidemenuClosed">
+                     <Storyboard>
+                        <DoubleAnimation Storyboard.TargetName="SidemenuColumn" Storyboard.TargetProperty="Width" To="60" Duration="0:0:0.25">
+                             <DoubleAnimation.EasingFunction>
+                                <CubicEase EasingMode="EaseOut"/>
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="SidemenuColumn" Width="250"/> 
+            <ColumnDefinition Width="*"/>    
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" Background="{DynamicResource PrimaryHueDarkBrush}" Effect="{StaticResource MaterialDesignShadowDepth3}">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Left" Margin="8 0 0 0" Height="60">
+                     <Image Source="/Assets/logo.png" Width="40" Height="40" Margin="8" VerticalAlignment="Center" RenderOptions.BitmapScalingMode="Fant" />
+                     <TextBlock Text="STORE MGMT" FontSize="18" FontWeight="Bold" Foreground="White"
+                               VerticalAlignment="Center" Margin="8,0,0,0"
+                               Visibility="{Binding ElementName=SidemenuColumn, Path=Width, Converter={StaticResource WidthToVisibilityConverter}, ConverterParameter=100}"/>
+                </StackPanel>
+                <Separator DockPanel.Dock="Top" Background="{DynamicResource PrimaryHueLightBrush}" Margin="0 0 0 10"/>
+
+                <ListBox ItemsSource="{Binding NavigationItems}"
+                         SelectedValue="{Binding SelectedNavigationItem}"
+                         Style="{StaticResource MaterialDesignNavigationListBox}"
+                         Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}"
+                         HorizontalContentAlignment="Stretch"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem" BasedOn="{StaticResource MaterialDesignNavigationListBoxItem}">
+                            <Setter Property="Padding" Value="0"/>
+                            <Setter Property="ToolTipService.Placement" Value="Right"/>
+                            <Setter Property="ToolTip" Value="{Binding DisplayName}"/>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type vm:NavigationItem}">
+                            <Grid Height="48" Margin="5 0 5 0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <materialDesign:PackIcon Kind="{Binding IconKind}" VerticalAlignment="Center" Margin="16,0" Width="24" Height="24"/>
+                                <TextBlock Grid.Column="1" Text="{Binding DisplayName}" VerticalAlignment="Center" Margin="16,0" FontSize="15"
+                                           Visibility="{Binding ElementName=SidemenuColumn, Path=Width, Converter={StaticResource WidthToVisibilityConverter}, ConverterParameter=100}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+        </Border>
+
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/> 
+                <RowDefinition Height="*"/>    
+            </Grid.RowDefinitions>
+
+            <materialDesign:ColorZone Mode="PrimaryMid" Grid.Row="0" Padding="0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Button Style="{StaticResource MaterialDesignIconButton}" Command="{Binding ToggleSidemenuCommand}"
+                            ToolTip="Toggle Sidemenu" Margin="8,0,0,0">
+                        <materialDesign:PackIcon Kind="Menu" Width="24" Height="24" Foreground="{DynamicResource PrimaryHueMidForegroundBrush}"/>
+                    </Button>
+
+                    <TextBlock Grid.Column="1" Text="{Binding CurrentViewModel.Title, FallbackValue='Page Title'}" 
+                               Style="{StaticResource MaterialDesignHeadline6TextBlock}" 
+                               VerticalAlignment="Center" Margin="16,0"
+                               Foreground="{DynamicResource PrimaryHueMidForegroundBrush}"/>
+                    
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Style="{StaticResource MaterialDesignFlatButton}" ToolTip="Notifications" Margin="0,0,8,0">
+                             <materialDesign:PackIcon Kind="BellOutline" Foreground="{DynamicResource PrimaryHueMidForegroundBrush}"/>
+                        </Button>
+                        <TextBlock Text="Admin User" VerticalAlignment="Center" Margin="0,0,8,0" Foreground="{DynamicResource PrimaryHueMidForegroundBrush}"/>
+                        <Button Command="{Binding LogoutCommand}" Style="{StaticResource MaterialDesignFlatButton}" Margin="0,0,16,0"
+                                ToolTip="Logout" Foreground="{DynamicResource PrimaryHueMidForegroundBrush}">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="LogoutVariant" Margin="0,0,8,0"/>
+                                <TextBlock Text="Logout"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </materialDesign:ColorZone>
+
+            <Border Grid.Row="1" Background="{DynamicResource MaterialDesignBackground}" Padding="16">
+                 <ContentControl Content="{Binding CurrentViewModel}"/>
+            </Border>
+        </Grid>
     </Grid>
 </Window>
