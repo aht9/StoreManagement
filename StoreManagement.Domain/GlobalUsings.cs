@@ -7,6 +7,7 @@ global using System.Text.Json;
 global using MediatR;
 global using StoreManagement.Domain.Aggregates.BankAccounts;
 global using StoreManagement.Domain.Aggregates.Customers;
+global using StoreManagement.Domain.Aggregates.Invoices;
 global using StoreManagement.Domain.Aggregates.Products;
 global using StoreManagement.Domain.Aggregates.SmsModels;
 global using StoreManagement.Domain.Aggregates.Stores;

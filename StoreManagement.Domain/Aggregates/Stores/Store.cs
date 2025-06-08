@@ -1,6 +1,4 @@
-﻿using StoreManagement.Domain.Aggregates.Invoices;
-
-namespace StoreManagement.Domain.Aggregates.Stores
+﻿namespace StoreManagement.Domain.Aggregates.Stores
 {
     public class Store : BaseEntity, IAggregateRoot
     {
@@ -9,7 +7,7 @@ namespace StoreManagement.Domain.Aggregates.Stores
         private string? _managerName;
         private string? _contactNumber;
         private string? _email;
-        private PhoneNumber _phoneNumber;
+        private PhoneNumber _phone;
         private Address _address;
 
         public string Name
@@ -67,14 +65,14 @@ namespace StoreManagement.Domain.Aggregates.Stores
             }
         }
 
-        public PhoneNumber PhoneNumber
+        public PhoneNumber Phone
         {
-            get => _phoneNumber;
+            get => _phone;
             private set
             {
                 if (value == null)
                     throw new ArgumentException("Phone number cannot be null.");
-                _phoneNumber = value;
+                _phone = value;
             }
         }
 
@@ -125,7 +123,7 @@ namespace StoreManagement.Domain.Aggregates.Stores
             ManagerName = managerName;
             ContactNumber = contactNumber;
             Email = email;
-            PhoneNumber = phoneNumber;
+            Phone = phoneNumber;
             Address = address;
         }
 
@@ -137,7 +135,7 @@ namespace StoreManagement.Domain.Aggregates.Stores
             ManagerName = managerName;
             ContactNumber = contactNumber;
             Email = email;
-            PhoneNumber = phoneNumber;
+            Phone = phoneNumber;
             Address = address;
             UpdateTimestamp();
         }

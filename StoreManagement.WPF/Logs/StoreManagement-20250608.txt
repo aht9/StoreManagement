@@ -1,0 +1,405 @@
+2025-06-08 12:40:41.435 +03:30 [INF] <4> [] Serilog Logger configured.
+2025-06-08 12:40:42.270 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (238ms) [Parameters=[], CommandType='"Text"', CommandTimeout='60']
+CREATE DATABASE [StoreManagement];
+2025-06-08 12:40:42.404 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (131ms) [Parameters=[], CommandType='"Text"', CommandTimeout='60']
+IF SERVERPROPERTY('EngineEdition') <> 5
+BEGIN
+    ALTER DATABASE [StoreManagement] SET READ_COMMITTED_SNAPSHOT ON;
+END;
+2025-06-08 12:40:42.411 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-06-08 12:40:42.422 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (9ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
+SELECT @result
+2025-06-08 12:40:42.449 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+2025-06-08 12:40:42.453 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-06-08 12:40:42.453 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2025-06-08 12:40:42.460 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2025-06-08 12:40:42.514 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [BankAccounts] (
+    [Id] bigint NOT NULL IDENTITY,
+    [AccountName] nvarchar(100) NOT NULL,
+    [BankName] nvarchar(100) NOT NULL,
+    [AccountNumber] nvarchar(50) NOT NULL,
+    [CardNumberLastFour] nvarchar(4) NOT NULL,
+    [Balance] decimal(18,2) NOT NULL DEFAULT 0.0,
+    [IsDeleted] bit NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    [UpdatedAt] datetime2 NOT NULL,
+    CONSTRAINT [PK_BankAccounts] PRIMARY KEY ([Id])
+);
+2025-06-08 12:40:42.516 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Customers] (
+    [Id] bigint NOT NULL IDENTITY,
+    [FirstName] nvarchar(250) NOT NULL,
+    [LastName] nvarchar(250) NOT NULL,
+    [Email] nvarchar(250) NULL,
+    [PhoneNumber] nvarchar(11) NOT NULL,
+    [Address_City] nvarchar(100) NOT NULL,
+    [Address_FullAddress] nvarchar(500) NOT NULL,
+    [DateOfBirth] datetime2 NOT NULL,
+    [NationalCode] bigint NULL,
+    [IsDeleted] bit NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    [UpdatedAt] datetime2 NOT NULL,
+    CONSTRAINT [PK_Customers] PRIMARY KEY ([Id])
+);
+2025-06-08 12:40:42.517 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Installments] (
+    [Id] bigint NOT NULL IDENTITY,
+    [InvoiceId] bigint NOT NULL,
+    [InvoiceType] int NOT NULL,
+    [InstallmentNumber] int NOT NULL,
+    [DueDate] datetime2 NOT NULL,
+    [AmountDue] decimal(18,2) NOT NULL,
+    [AmountPaid] decimal(18,2) NOT NULL,
+    [Status] int NOT NULL,
+    [IsDeleted] 2025-06-08 12:42:58.408 +03:30 [INF] <4> [] Serilog Logger configured.
+2025-06-08 12:42:59.183 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (193ms) [Parameters=[], CommandType='"Text"', CommandTimeout='60']
+CREATE DATABASE [StoreManagement];
+2025-06-08 12:42:59.278 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (92ms) [Parameters=[], CommandType='"Text"', CommandTimeout='60']
+IF SERVERPROPERTY('EngineEdition') <> 5
+BEGIN
+    ALTER DATABASE [StoreManagement] SET READ_COMMITTED_SNAPSHOT ON;
+END;
+2025-06-08 12:42:59.287 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-06-08 12:42:59.296 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
+SELECT @result
+2025-06-08 12:42:59.323 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (7ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+2025-06-08 12:42:59.327 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-06-08 12:42:59.328 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2025-06-08 12:42:59.335 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2025-06-08 12:42:59.383 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [BankAccounts] (
+    [Id] bigint NOT NULL IDENTITY,
+    [AccountName] nvarchar(100) NOT NULL,
+    [BankName] nvarchar(100) NOT NULL,
+    [AccountNumber] nvarchar(50) NOT NULL,
+    [CardNumberLastFour] nvarchar(4) NOT NULL,
+    [Balance] decimal(18,2) NOT NULL DEFAULT 0.0,
+    [IsDeleted] bit NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    [UpdatedAt] datetime2 NOT NULL,
+    CONSTRAINT [PK_BankAccounts] PRIMARY KEY ([Id])
+);
+2025-06-08 12:42:59.384 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Customers] (
+    [Id] bigint NOT NULL IDENTITY,
+    [FirstName] nvarchar(250) NOT NULL,
+    [LastName] nvarchar(250) NOT NULL,
+    [Email] nvarchar(250) NULL,
+    [PhoneNumber] nvarchar(11) NOT NULL,
+    [Address_City] nvarchar(100) NOT NULL,
+    [Address_FullAddress] nvarchar(500) NOT NULL,
+    [DateOfBirth] datetime2 NOT NULL,
+    [NationalCode] bigint NULL,
+    [IsDeleted] bit NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    [UpdatedAt] datetime2 NOT NULL,
+    CONSTRAINT [PK_Customers] PRIMARY KEY ([Id])
+);
+2025-06-08 12:42:59.386 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Installments] (
+    [Id] bigint NOT NULL IDENTITY,
+    [InvoiceId] bigint NOT NULL,
+    [InvoiceType] int NOT NULL,
+    [InstallmentNumber] int NOT NULL,
+    [DueDate] datetime2 NOT NULL,
+    [AmountDue] decimal(18,2) NOT NULL,
+    [AmountPaid] decimal(18,2) NOT NULL,
+    [Status] int NOT NULL,
+    [IsDeleted] bit NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    [UpdatedAt] datetime2 NOT NULL,
+    CONSTRAINT [PK_Installments] PRIMARY KEY ([Id])
+);
+2025-06-08 12:42:59.388 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [InventoryTransactionTypes] (
+    [Id] int NOT NULL DEFAULT (1),
+    [Name] nvarchar(200) NOT NULL,
+    CONSTRAINT [PK_InventoryTransactionTypes] PRIMARY KEY ([Id])
+);
+2025-06-08 12:42:59.391 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [ProductCategories] (
+    [Id] bigint NOT NULL IDENTITY,
+    [Name] nvarchar(300) NOT NULL,
+    [Description] nvarchar(1000) NULL,
+    [Order] int NOT NULL,
+    [ParentCategoryId] bigint NULL,
+    [IsDeleted] bit NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    [UpdatedAt] datetime2 NOT NULL,
+    CONSTRAINT [PK_ProductCategories] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_ProductCategories_ProductCategories_ParentCategoryId] FOREIGN KEY ([ParentCategoryId]) REFERENCES [ProductCategories] ([Id])
+);
+2025-06-08 12:42:59.394 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [SmsProviders] (
+    [Id] bigint NOT NULL IDENTITY,
+    [Name] nvarchar(100) NOT NULL,
+    [TypeName] nvarchar(100) NOT NULL,
+    [IsActive] bit NOT NULL DEFAULT CAST(1 AS bit),
+    [Priority] int NOT NULL DEFAULT 0,
+    [Settings] NVARCHAR(MAX) NULL,
+    [IsDeleted] bit NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    [UpdatedAt] datetime2 NOT NULL,
+    CONSTRAINT [PK_SmsProviders] PRIMARY KEY ([Id])
+);
+2025-06-08 12:42:59.399 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [SmsTemplates] (
+    [Id] bigint NOT NULL IDENTITY,
+    [Name] nvarchar(100) NOT NULL,
+    [Content] nvarchar(max) NOT NULL,
+    [IsActive] bit NOT NULL DEFAULT CAST(1 AS bit),
+    [DefaultParameters] NVARCHAR(MAX) NULL,
+    [IsDeleted] bit NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    [UpdatedAt] datetime2 NOT NULL,
+    CONSTRAINT [PK_SmsTemplates] PRIMARY KEY ([Id])
+);
+2025-06-08 12:42:59.400 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Stores] (
+    [Id] bigint NOT NULL IDENTITY,
+    [Name] nvarchar(300) NOT NULL,
+    [Location] nvarchar(500) NULL,
+    [ManagerName] nvarchar(200) NULL,
+    [ContactNumber] nvarchar(11) NULL,
+    [Email] nvarchar(200) NULL,
+    [PhoneNumber] nvarchar(11) NOT NULL,
+    [Address_City] nvarchar(100) NOT NULL,
+    [Address_FullAddress] nvarchar(500) NOT NULL,
+    [IsDeleted] bit NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    [UpdatedAt] datetime2 NOT NULL,
+    CONSTRAINT [PK_Stores] PRIMARY KEY ([Id])
+);
+2025-06-08 12:42:59.401 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [FinancialTransactions] (
+    [Id] bigint NOT NULL IDENTITY,
+    [BankAccountId] bigint NOT NULL,
+    [Amount] decimal(18,2) NOT NULL,
+    [TransactionDate] datetime2 NOT NULL,
+    [TransactionType] int NOT NULL,
+    [Description] nvarchar(500) NULL,
+    [InvoiceId] bigint NULL,
+    [InvoiceType] int NULL,
+    [IsDeleted] bit NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    [UpdatedAt] datetime2 NOT NULL,
+    CONSTRAINT [PK_FinancialTransactions] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_FinancialTransactions_BankAccounts_BankAccountId] FOREIGN KEY ([BankAccountId]) REFERENCES [BankAccounts] ([Id]) ON DELETE CASCADE
+);
+2025-06-08 12:42:59.406 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [SaleInvoices] (
+    [Id] bigint NOT NULL IDENTITY,
+    [CustomerId] bigint NOT NULL,
+    [IsDeleted] bit NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    [UpdatedAt] datetime2 NOT NULL,
+    [InvoiceNumber] nvarchar(50) NOT NULL,
+    [InvoiceDate] datetime2 NOT NULL,
+    [TotalAmount] decimal(18,2) NOT NULL,
+    [PaidAmount] decimal(18,2) NOT NULL,
+    [DueAmount] AS [TotalAmount] - [PaidAmount],
+    [PaymentType] int NOT NULL,
+    [InvoiceStatus] int NOT NULL,
+    CONSTRAINT [PK_SaleInvoices] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_SaleInvoices_Customers_CustomerId] FOREIGN KEY ([CustomerId]) REFERENCES [Customers] ([Id]) ON DELETE CASCADE
+);
+2025-06-08 12:42:59.408 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Products] (
+    [Id] bigint NOT NULL IDENTITY,
+    [Name] nvarchar(300) NOT NULL,
+    [Description] nvarchar(1000) NULL,
+    [CategoryId] bigint NULL,
+    [IsDeleted] bit NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    [UpdatedAt] datetime2 NOT NULL,
+    CONSTRAINT [PK_Products] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_Products_ProductCategories_CategoryId] FOREIGN KEY ([CategoryId]) REFERENCES [ProductCategories] ([Id]) ON DELETE NO ACTION
+);
+2025-06-08 12:42:59.412 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [SmsMessages] (
+    [Id] bigint NOT NULL IDENTITY,
+    [PhoneNumber] nvarchar(11) NOT NULL,
+    [Content] nvarchar(max) NOT NULL,
+    [Status] nvarchar(50) NOT NULL,
+    [ProviderName] nvarchar(100) NOT NULL,
+    [TrackingCode] nvarchar(max) NULL,
+    [SentAt] datetime2 NULL,
+    [DeliveredAt] datetime2 NULL,
+    [ErrorMessage] nvarchar(500) NULL,
+    [RetryCount] int NOT NULL DEFAULT 0,
+    [TemplateId] bigint NULL,
+    [Parameters] NVARCHAR(MAX) NULL,
+    [SmsTemplateId] bigint NULL,
+    [IsDeleted] bit NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    [UpdatedAt] datetime2 NOT NULL,
+    CONSTRAINT [PK_SmsMessages] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_SmsMessages_SmsTemplates_SmsTemplateId] FOREIGN KEY ([SmsTemplateId]) REFERENCES [SmsTemplates] ([Id]),
+    CONSTRAINT [FK_SmsMessages_SmsTemplates_TemplateId] FOREIGN KEY ([TemplateId]) REFERENCES [SmsTemplates] ([Id]) ON DELETE NO ACTION
+);
+2025-06-08 12:43:00.631 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [PurchaseInvoices] (
+    [Id] bigint NOT NULL IDENTITY,
+    [StoreId] bigint NOT NULL,
+    [IsDeleted] bit NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    [UpdatedAt] datetime2 NOT NULL,
+    [InvoiceNumber] nvarchar(50) NOT NULL,
+    [InvoiceDate] datetime2 NOT NULL,
+    [TotalAmount] decimal(18,2) NOT NULL,
+    [PaidAmount] decimal(18,2) NOT NULL,
+    [DueAmount] AS [TotalAmount] - [PaidAmount],
+    [PaymentType] int NOT NULL,
+    [InvoiceStatus] int NOT NULL,
+    CONSTRAINT [PK_PurchaseInvoices] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_PurchaseInvoices_Stores_StoreId] FOREIGN KEY ([StoreId]) REFERENCES [Stores] ([Id]) ON DELETE CASCADE
+);
+2025-06-08 12:43:00.633 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [ProductVariants] (
+    [Id] bigint NOT NULL IDENTITY,
+    [SKU] nvarchar(50) NOT NULL,
+    [Color] nvarchar(30) NOT NULL,
+    [Size] nvarchar(20) NOT NULL,
+    [ProductId] bigint NOT NULL,
+    [IsDeleted] bit NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    [UpdatedAt] datetime2 NOT NULL,
+    CONSTRAINT [PK_ProductVariants] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_ProductVariants_Products_ProductId] FOREIGN KEY ([ProductId]) REFERENCES [Products] ([Id]) ON DELETE CASCADE
+);
+2025-06-08 12:43:00.634 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [SmsLogs] (
+    [Id] bigint NOT NULL IDENTITY,
+    [SmsMessageId] bigint NOT NULL,
+    [ProviderName] nvarchar(100) NOT NULL,
+    [LogType] nvarchar(50) NOT NULL,
+    [Data] nvarchar(max) NULL,
+    [IsDeleted] bit NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    [UpdatedAt] datetime2 NOT NULL,
+    CONSTRAINT [PK_SmsLogs] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_SmsLogs_SmsMessages_SmsMessageId] FOREIGN KEY ([SmsMessageId]) REFERENCES [SmsMessages] ([Id]) ON DELETE CASCADE
+);
+2025-06-08 12:43:00.639 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [InventoryTransactions] (
+    [Id] bigint NOT NULL IDENTITY,
+    [ProductVariantId] bigint NOT NULL,
+    [TransactionDate] datetime2 NOT NULL,
+    [Quantity] int NOT NULL,
+    [TransactionTypeId] int NOT NULL,
+    [ReferenceInvoiceId] bigint NULL,
+    [ReferenceInvoiceType] int NULL,
+    [IsDeleted] bit NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    [UpdatedAt] datetime2 NOT NULL,
+    CONSTRAINT [PK_InventoryTransactions] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_InventoryTransactions_InventoryTransactionTypes_TransactionTypeId] FOREIGN KEY ([TransactionTypeId]) REFERENCES [InventoryTransactionTypes] ([Id]) ON DELETE NO ACTION,
+    CONSTRAINT [FK_InventoryTransactions_ProductVariants_ProductVariantId] FOREIGN KEY ([ProductVariantId]) REFERENCES [ProductVariants] ([Id]) ON DELETE CASCADE
+);
+2025-06-08 12:43:00.641 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [PurchaseInvoiceItems] (
+    [Id] bigint NOT NULL IDENTITY,
+    [PurchaseInvoiceId] bigint NOT NULL,
+    [IsDeleted] bit NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    [UpdatedAt] datetime2 NOT NULL,
+    [ProductVariantId] bigint NOT NULL,
+    [Quantity] int NOT NULL,
+    [UnitPrice] decimal(18,2) NOT NULL,
+    [Discount] int NOT NULL,
+    [Tax] int NOT NULL,
+    [TotalPrice] decimal(18,2) NOT NULL,
+    CONSTRAINT [PK_PurchaseInvoiceItems] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_PurchaseInvoiceItems_ProductVariants_ProductVariantId] FOREIGN KEY ([ProductVariantId]) REFERENCES [ProductVariants] ([Id]) ON DELETE CASCADE,
+    CONSTRAINT [FK_PurchaseInvoiceItems_PurchaseInvoices_PurchaseInvoiceId] FOREIGN KEY ([PurchaseInvoiceId]) REFERENCES [PurchaseInvoices] ([Id]) ON DELETE CASCADE
+);
+2025-06-08 12:43:01.528 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [SalesInvoiceItems] (
+    [Id] bigint NOT NULL IDENTITY,
+    [SalesInvoiceId] bigint NOT NULL,
+    [IsDeleted] bit NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    [UpdatedAt] datetime2 NOT NULL,
+    [ProductVariantId] bigint NOT NULL,
+    [Quantity] int NOT NULL,
+    [UnitPrice] decimal(18,2) NOT NULL,
+    [Discount] int NOT NULL,
+    [Tax] int NOT NULL,
+    [TotalPrice] decimal(18,2) NOT NULL,
+    CONSTRAINT [PK_SalesInvoiceItems] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_SalesInvoiceItems_ProductVariants_ProductVariantId] FOREIGN KEY ([ProductVariantId]) REFERENCES [ProductVariants] ([Id]) ON DELETE CASCADE,
+    CONSTRAINT [FK_SalesInvoiceItems_SaleInvoices_SalesInvoiceId] FOREIGN KEY ([SalesInvoiceId]) REFERENCES [SaleInvoices] ([Id]) ON DELETE CASCADE
+);
+2025-06-08 12:43:01.563 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (35ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[InventoryTransactionTypes]'))
+    SET IDENTITY_INSERT [InventoryTransactionTypes] ON;
+INSERT INTO [InventoryTransactionTypes] ([Id], [Name])
+VALUES (1, N'In'),
+(2, N'Out'),
+(3, N'Adjustment'),
+(4, N'Transfer');
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[InventoryTransactionTypes]'))
+    SET IDENTITY_INSERT [InventoryTransactionTypes] OFF;
+2025-06-08 12:43:01.565 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX [IX_BankAccounts_AccountNumber] ON [BankAccounts] ([AccountNumber]);
+2025-06-08 12:43:01.567 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_BankAccounts_CardNumberLastFour] ON [BankAccounts] ([CardNumberLastFour]);
+2025-06-08 12:43:01.569 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX [IX_Customers_PhoneNumber] ON [Customers] ([PhoneNumber]);
+2025-06-08 12:43:01.570 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_FinancialTransactions_BankAccountId] ON [FinancialTransactions] ([BankAccountId]);
+2025-06-08 12:43:01.571 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_InventoryTransactions_ProductVariantId] ON [InventoryTransactions] ([ProductVariantId]);
+2025-06-08 12:43:01.572 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_InventoryTransactions_TransactionTypeId] ON [InventoryTransactions] ([TransactionTypeId]);
+2025-06-08 12:43:01.574 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX [IX_ProductCategories_Name] ON [ProductCategories] ([Name]);
+2025-06-08 12:43:01.575 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_ProductCategories_ParentCategoryId] ON [ProductCategories] ([ParentCategoryId]);
+2025-06-08 12:43:01.576 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_Products_CategoryId] ON [Products] ([CategoryId]);
+2025-06-08 12:43:01.577 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX [IX_Products_Name] ON [Products] ([Name]);
+2025-06-08 12:43:01.578 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX [IX_ProductVariant_SKU] ON [ProductVariants] ([SKU]);
+2025-06-08 12:43:01.579 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_ProductVariants_ProductId] ON [ProductVariants] ([ProductId]);
+2025-06-08 12:43:01.581 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_PurchaseInvoiceItems_ProductVariantId] ON [PurchaseInvoiceItems] ([ProductVariantId]);
+2025-06-08 12:43:02.324 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_PurchaseInvoiceItems_PurchaseInvoiceId] ON [PurchaseInvoiceItems] ([PurchaseInvoiceId]);
+2025-06-08 12:43:02.325 +03:30 [INF] <1> [Microsoft.EntityFrameworkCore.Database.Command] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_PurchaseInvoices_StoreId] ON

@@ -1,6 +1,4 @@
-﻿using StoreManagement.Domain.ValueObjects;
-
-namespace StoreManagement.WPF.ViewModels;
+﻿namespace StoreManagement.WPF.ViewModels;
 
 
 public partial class EditCustomerViewModel : ViewModelBase

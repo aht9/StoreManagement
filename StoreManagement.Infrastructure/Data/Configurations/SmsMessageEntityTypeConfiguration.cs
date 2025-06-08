@@ -33,7 +33,7 @@ public class SmsMessageEntityTypeConfiguration : IEntityTypeConfiguration<SmsMes
         builder.Property(s => s.RetryCount).IsRequired().HasDefaultValue(0);
         builder.Property(s => s.ParametersJson)
             .HasColumnName("Parameters")
-            .HasColumnType("jsonb");
+            .HasColumnType("NVARCHAR(MAX)");
 
         builder.Property(e => e.TemplateId).IsRequired(false);
         builder.HasOne(e => e.Template)

@@ -19,12 +19,6 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<MainViewModel>();
         services.AddTransient<CustomerManagementViewModel>();
         services.AddTransient<DashboardViewModel>();
-        services.AddTransient<AddCustomerViewModel>(provider =>
-            new AddCustomerViewModel(
-                customer => { /* Default save action */ },
-                () => { /* Default cancel action */ }
-            ));
-
         return services;
     }
 }

@@ -26,7 +26,7 @@ public class SmsTemplateEntityTypeConfiguration : IEntityTypeConfiguration<SmsTe
 
         builder.Property(s => s.DefaultParametersJson)
             .HasColumnName("DefaultParameters")
-            .HasColumnType("jsonb");
+            .HasColumnType("NVARCHAR(MAX)");
 
         
     }

@@ -1,6 +1,4 @@
-﻿using StoreManagement.Domain.Aggregates.Invoices;
-
-namespace StoreManagement.Domain.Aggregates.Customers
+﻿namespace StoreManagement.Domain.Aggregates.Customers
 {
     public class Customer : BaseEntity, IAggregateRoot
     {

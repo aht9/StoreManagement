@@ -29,6 +29,6 @@ public class SmsProviderEntityTypeConfiguration : IEntityTypeConfiguration<SmsPr
 
         builder.Property(s => s.SettingsJson)
             .HasColumnName("Settings")
-            .HasColumnType("jsonb");
+            .HasColumnType("NVARCHAR(MAX)");
     }
 }

@@ -7,7 +7,7 @@ public abstract class Invoice<TItem> : BaseEntity, IAggregateRoot
     public DateTime InvoiceDate { get; private set; }
     public decimal TotalAmount { get; private set; }
     public decimal PaidAmount { get; private set; }
-    public decimal DueAmount => TotalAmount - PaidAmount;
+    public decimal DueAmount { get; private set; }
     public PaymentType PaymentType { get; private set; }
     public InvoiceStatus InvoiceStatus { get; private set; }
 

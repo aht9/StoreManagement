@@ -21,9 +21,18 @@
 
         builder.OwnsOne(e => e.Phone, phoneBuilder =>
         {
-            phoneBuilder.Property(p => p.Value).HasColumnName("PhoneNumber").HasMaxLength(11);
+            phoneBuilder.Property(p => p.Value)
+                .HasColumnName("PhoneNumber") 
+                .HasMaxLength(11);
+
+            phoneBuilder.HasIndex(p => p.Value)
+                .IsUnique()
+                .HasDatabaseName("IX_Customers_PhoneNumber");
+
             phoneBuilder.WithOwner();
         });
+
+
         builder.OwnsOne(c => c.Address, address =>
         {
             address.Property(a => a.City).HasMaxLength(100).IsRequired();
@@ -35,7 +44,6 @@
             .HasColumnType("datetime2")
             .IsRequired();
 
-        builder.HasIndex(c => c.Phone).IsUnique().HasDatabaseName("IX_Customers_PhoneNumber");
 
         builder.HasMany(c => c.SalesInvoices)
             .WithOne(pi => pi.Customer)

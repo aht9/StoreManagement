@@ -37,6 +37,8 @@ public class SmsMessage : BaseEntity, IAggregateRoot
         }
     }
 
+    private SmsMessage(){}
+
     public SmsMessage(
         PhoneNumber phoneNumber,
         string content,

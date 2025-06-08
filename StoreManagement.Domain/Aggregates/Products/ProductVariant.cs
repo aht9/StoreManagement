@@ -8,13 +8,13 @@ public class ProductVariant : BaseEntity
     public string SKU { get; private set; }
     public string? Color { get; private set; }
     public string? Size { get; private set; }
-    public int ProductId { get; private set; }
+    public long ProductId { get; private set; }
     public Product Product { get; private set; }
 
     private ProductVariant() { }
 
     // Constructor for creating a new ProductVariant
-    public ProductVariant(string sku, string? color, string? size, int productId)
+    public ProductVariant(string sku, string? color, string? size, long productId)
     {
         SKU = sku ?? throw new ArgumentNullException(nameof(sku));
         Color = color ?? throw new ArgumentNullException(nameof(color));
