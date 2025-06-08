@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using StoreManagement.Domain.Aggregates.Customers;
@@ -8,43 +9,80 @@ namespace StoreManagement.WPF.ViewModels;
 
 public partial class CustomerManagementViewModel : ViewModelBase
 {
+    private List<Customer> _allCustomers;
+
     [ObservableProperty]
-    private ObservableCollection<Customer> _customers;
+    private ObservableCollection<Customer> _pagedCustomers;
+
+    [ObservableProperty]
+    private AddCustomerViewModel _addCustomerViewModel;
 
     [ObservableProperty]
     private bool _isAddCustomerDialogOpen = false;
 
     [ObservableProperty]
-    private AddCustomerViewModel _addCustomerViewModel;
+    [NotifyPropertyChangedFor(nameof(TotalPages))]
+    private string _searchText = string.Empty;
+
+    [ObservableProperty]
+    private int _currentPage = 1;
+
+    [ObservableProperty]
+    private int _pageSize = 10;
+
+    public int TotalPages => (_allCustomers == null || _allCustomers.Count == 0) ? 1 : (int)Math.Ceiling((double)FilteredCustomers.Count() / PageSize);
+
+    private IEnumerable<Customer> FilteredCustomers =>
+        string.IsNullOrWhiteSpace(SearchText)
+            ? _allCustomers
+            : _allCustomers.Where(c =>
+                c.FirstName.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
+                c.LastName.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
+                (c.Email != null && c.Email.Contains(SearchText, StringComparison.OrdinalIgnoreCase)) ||
+                c.PhoneNumber.Value.Contains(SearchText));
 
     public CustomerManagementViewModel()
     {
         LoadCustomers();
+        UpdatePagedCustomers();
+    }
+
+    partial void OnSearchTextChanged(string value)
+    {
+        CurrentPage = 1; // Reset to first page on new search
+        UpdatePagedCustomers();
+    }
+
+    partial void OnCurrentPageChanged(int value)
+    {
+        UpdatePagedCustomers();
+    }
+
+    private void UpdatePagedCustomers()
+    {
+        var customers = FilteredCustomers
+            .Skip((CurrentPage - 1) * PageSize)
+            .Take(PageSize);
+        PagedCustomers = new ObservableCollection<Customer>(customers);
     }
 
     private void LoadCustomers()
     {
-        Customers = new ObservableCollection<Customer>
+        // In a real application, this data would come from a repository/service.
+        _allCustomers = new List<Customer>
         {
-            new Customer("علیرضا","محمدی","mAli@Gmail.com","09120004568","تهران", "خیابان ولیعصر,پلاک 18",null,null),
-            new Customer("Sara","Ahmadi","sara.ahmadi@example.com","09120004567","Shiraz", "Zand Street, No. 12",null,null),
-            new Customer("Reza","Karimi","reza.karimi@example.com","09130001234","Isfahan", "Chaharbagh Street, No. 45",null,null),
-            new Customer("Neda","Hosseini","neda.hosseini@example.com","09140005678","Mashhad", "Imam Reza Street, No. 78",null,null),
-            new Customer("Ali","Jafari","ali.jafari@example.com","09150009876","Tabriz", "Shahnaz Street, No. 23",null,null),
-            new Customer("Maryam","Rahimi","maryam.rahimi@example.com","09160003456","Qom", "Azar Street, No. 67",null,null),
-            new Customer("Hossein","Ebrahimi","hossein.ebrahimi@example.com","09170007890","Kerman", "Shohada Street, No. 89",null,null),
-            new Customer("Fatemeh","Shirazi","fatemeh.shirazi@example.com","09180001234","Ahvaz", "Kianpars Street, No. 12",null,null),
-            new Customer("Mehdi","Ghasemi","mehdi.ghasemi@example.com","09190005678","Rasht", "Golsar Street, No. 34",null,null),
-            new Customer("Zahra","Moradi","zahra.moradi@example.com","09200007890","Hamedan", "Baba Taher Street, No. 56",null,null),
-            new Customer("Parsa","Nikzad","parsa.nikzad@example.com","09210001234","Yazd", "Amir Chakhmaq Street, No. 78",null,null),
-            new Customer("Elham","Khalili","elham.khalili@example.com","09220005678","Kermanshah", "Azadi Street, No. 90",null,null),
-            new Customer("Sina","Rostami","sina.rostami@example.com","09230007890","Ardabil", "Shariati Street, No. 11",null,null),
-            new Customer("Leila","Farhadi","leila.farhadi@example.com","09240001234","Bandar Abbas", "Imam Khomeini Street, No. 22",null,null),
-            new Customer("Pouya","Shahidi","pouya.shahidi@example.com","09250005678","Zahedan", "Beheshti Street, No. 33",null,null),
-            new Customer("Amin","Taheri","amin.taheri@example.com","09260007890","Sanandaj", "Enghelab Street, No. 44",null,null),
-            new Customer("Shirin","Kazemi","shirin.kazemi@example.com","09270001234","Urmia", "Valiasr Street, No. 55",null,null),
-            new Customer("Kian","Ramezani","kian.ramezani@example.com","09280005678","Qazvin", "Navvab Street, No. 66",null,null),
-            new Customer("Hoda","Eskandari","hoda.eskandari@example.com","09290007890","Karaj", "Mehrshahr Street, No. 77",null,null)
+            new Customer("علیرضا","محمدی","mAli@Gmail.com","9120004568","تهران", "خیابان ولیعصر,پلاک 18",null,null),
+            new Customer("Sara","Ahmadi","sara.ahmadi@example.com","9120004567","Shiraz", "Zand Street, No. 12",null,null),
+            new Customer("Reza","Karimi","reza.karimi@example.com","9130001234","Isfahan", "Chaharbagh Street, No. 45",null,null),
+            new Customer("Neda","Hosseini","neda.hosseini@example.com","9140005678","Mashhad", "Imam Reza Street, No. 78",null,null),
+            new Customer("Ali","Jafari","ali.jafari@example.com","9150009876","Tabriz", "Shahnaz Street, No. 23",null,null),
+            new Customer("Maryam","Rahimi","maryam.rahimi@example.com","9160003456","Qom", "Azar Street, No. 67",null,null),
+            new Customer("Hossein","Ebrahimi","hossein.ebrahimi@example.com","9170007890","Kerman", "Shohada Street, No. 89",null,null),
+            new Customer("Fatemeh","Shirazi","fatemeh.shirazi@example.com","9180001234","Ahvaz", "Kianpars Street, No. 12",null,null),
+            new Customer("Mehdi","Ghasemi","mehdi.ghasemi@example.com","9190005678","Rasht", "Golsar Street, No. 34",null,null),
+            new Customer("Zahra","Moradi","zahra.moradi@example.com","9200007890","Hamedan", "Baba Taher Street, No. 56",null,null),
+            new Customer("Parsa","Nikzad","parsa.nikzad@example.com","9210001234","Yazd", "Amir Chakhmaq Street, No. 78",null,null),
+            new Customer("Elham","Khalili","elham.khalili@example.com","9220005678","Kermanshah", "Azadi Street, No. 90",null,null),
         };
     }
 
@@ -52,16 +90,49 @@ public partial class CustomerManagementViewModel : ViewModelBase
     private void OpenAddCustomerDialog()
     {
         AddCustomerViewModel = new AddCustomerViewModel(
-            // Success Action
+            // OnSave Action
             (newCustomer) => {
-                Customers.Add(newCustomer);
+                _allCustomers.Add(newCustomer);
+                UpdatePagedCustomers(); // Refresh the list
                 IsAddCustomerDialogOpen = false;
             },
-            // Cancel Action
+            // OnCancel Action
             () => {
                 IsAddCustomerDialogOpen = false;
             }
         );
         IsAddCustomerDialogOpen = true;
+    }
+
+    [RelayCommand(CanExecute = nameof(CanGoToNextPage))]
+    private void GoToNextPage()
+    {
+        CurrentPage++;
+    }
+
+    private bool CanGoToNextPage() => CurrentPage < TotalPages;
+
+    [RelayCommand(CanExecute = nameof(CanGoToPreviousPage))]
+    private void GoToPreviousPage()
+    {
+        CurrentPage--;
+    }
+
+    private bool CanGoToPreviousPage() => CurrentPage > 1;
+
+    [RelayCommand]
+    private void EditCustomer(Customer customer)
+    {
+        // Logic to open an edit dialog would go here
+        // For now, we can just show a message.
+        System.Windows.MessageBox.Show($"Editing {customer.FirstName} {customer.LastName}");
+    }
+
+    [RelayCommand]
+    private void DeleteCustomer(Customer customer)
+    {
+        // Add confirmation logic here
+        _allCustomers.Remove(customer);
+        UpdatePagedCustomers();
     }
 }
