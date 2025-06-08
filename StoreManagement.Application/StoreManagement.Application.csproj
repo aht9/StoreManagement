@@ -10,4 +10,10 @@
       <ProjectReference Include="..\StoreManagement.Infrastructure\StoreManagement.Infrastructure.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Features\Customer\Command\" />
+      <Folder Include="Features\Customer\handler\" />
+      <Folder Include="Features\Customer\Query\" />
+    </ItemGroup>
+
 </Project>

@@ -47,7 +47,7 @@ namespace StoreManagement.Domain.Aggregates.Customers
             }
         }
 
-        public PhoneNumber PhoneNumber
+        public PhoneNumber Phone
         {
             get => _phoneNumber;
             private set
@@ -125,7 +125,7 @@ namespace StoreManagement.Domain.Aggregates.Customers
                 throw new ArgumentException(phoneNumberResult.Error);
             }
 
-            PhoneNumber = phoneNumberResult.Value;
+            Phone = phoneNumberResult.Value;
             Address = new Address(city, fullAddress);
             DateOfBirth = dateOfBirth;
             NationalCode = nationalCode;
@@ -135,7 +135,7 @@ namespace StoreManagement.Domain.Aggregates.Customers
         public void UpdateContactInfo(string email, string phoneNumber)
         {
             Email = email;
-            PhoneNumber = PhoneNumber.Create(phoneNumber).Value; 
+            Phone = PhoneNumber.Create(phoneNumber).Value; 
         }
 
         public void UpdateAddress(Address address)
@@ -153,7 +153,7 @@ namespace StoreManagement.Domain.Aggregates.Customers
 
         public override string ToString()
         {
-            return $"{FirstName} {LastName}, Email: {Email}, Phone: {PhoneNumber.GetFormattedNumber()}, Address: {Address}";
+            return $"{FirstName} {LastName}, Email: {Email}, Phone: {Phone.GetFormattedNumber()}, Address: {Address}";
         }
     }
 }

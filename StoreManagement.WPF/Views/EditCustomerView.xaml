@@ -38,7 +38,7 @@
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,15,0,0">
                         <TextBlock Text="شماره تماس" Style="{StaticResource PersianLabelStyle}" Margin="5,0,0,5"/>
-                        <TextBox Text="{Binding PhoneNumber, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SearchBoxStyle}"/>
+                        <TextBox Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SearchBoxStyle}"/>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="2" Margin="0,15,0,0">
                         <TextBlock Text="ایمیل (اختیاری)" Style="{StaticResource PersianLabelStyle}" Margin="5,0,0,5"/>

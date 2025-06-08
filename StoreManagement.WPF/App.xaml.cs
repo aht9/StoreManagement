@@ -1,15 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using StoreManagement.WPF.ViewModels;
-using System.IO;
-using System.Windows;
-using System.Windows.Navigation;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Serilog;
-using StoreManagement.Infrastructure;
-
-namespace StoreManagement.WPF
+﻿namespace StoreManagement.WPF
 {
     /// <summary>
     /// Interaction logic for App.xaml
@@ -75,7 +64,9 @@ namespace StoreManagement.WPF
 
             try
             {
-                var mainWindow = AppHost.Services.GetRequiredService<MainWindow>();
+                var serviceProvider = AppHost.Services;
+                serviceProvider.ApplyPendingMigrations();
+                var mainWindow = serviceProvider.GetRequiredService<MainWindow>();
                 mainWindow.Show();
             }
             catch (Exception ex)
@@ -95,14 +86,11 @@ namespace StoreManagement.WPF
         private void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             services.AddInfrastructure(configuration);
-            // Register Serilog's ILogger for injection
-            services.AddSingleton(Log.Logger);
-           
-            // ViewModels (transient or singleton based on need)
-            services.AddSingleton<MainViewModel>();
-            services.AddTransient<CustomerManagementViewModel>();
-            services.AddTransient<DashboardViewModel>();
-            services.AddTransient<AddCustomerViewModel>();
+
+            services.AddPublicServiceCollection();
+            
+            services.AddViewModelServiceCollection();
+
             // Main Window
             services.AddTransient<MainWindow>();
         }

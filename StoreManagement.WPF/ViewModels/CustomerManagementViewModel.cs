@@ -1,11 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Linq;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using StoreManagement.Domain.Aggregates.Customers;
-using StoreManagement.Domain.ValueObjects;
-
-namespace StoreManagement.WPF.ViewModels;
+﻿namespace StoreManagement.WPF.ViewModels;
 
 public partial class CustomerManagementViewModel : ViewModelBase
 {
@@ -51,7 +44,7 @@ public partial class CustomerManagementViewModel : ViewModelBase
                 c.FirstName.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
                 c.LastName.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
                 (c.Email != null && c.Email.Contains(SearchText, StringComparison.OrdinalIgnoreCase)) ||
-                c.PhoneNumber.Value.Contains(SearchText));
+                c.Phone.Value.Contains(SearchText));
 
     public CustomerManagementViewModel()
     {
@@ -124,7 +117,7 @@ public partial class CustomerManagementViewModel : ViewModelBase
         EditCustomerViewModel = new EditCustomerViewModel(customerToEdit,
             (updatedCustomer) =>
             {
-                var index = _allCustomers.FindIndex(c => c.Email == customerToEdit.Email && c.PhoneNumber.Value == customerToEdit.PhoneNumber.Value); 
+                var index = _allCustomers.FindIndex(c => c.Email == customerToEdit.Email && c.Phone.Value == customerToEdit.Phone.Value); 
                 if (index != -1)
                 {
                     _allCustomers[index] = updatedCustomer;

@@ -1,6 +1,6 @@
 ﻿namespace StoreManagement.Infrastructure.Data.Configurations;
 
-public class CustomerEntityTypeConfiguration : IEntityTypeConfiguration<Customer>
+    public class CustomerEntityTypeConfiguration : IEntityTypeConfiguration<Customer>
 {
     public void Configure(EntityTypeBuilder<Customer> builder)
     {
@@ -17,7 +17,9 @@ public class CustomerEntityTypeConfiguration : IEntityTypeConfiguration<Customer
             .HasMaxLength(250)
             .IsRequired(false)
             .HasAnnotation("DataType", DataType.EmailAddress);
-        builder.OwnsOne(e => e.PhoneNumber, phoneBuilder =>
+
+
+        builder.OwnsOne(e => e.Phone, phoneBuilder =>
         {
             phoneBuilder.Property(p => p.Value).HasColumnName("PhoneNumber").HasMaxLength(11);
             phoneBuilder.WithOwner();
@@ -33,7 +35,7 @@ public class CustomerEntityTypeConfiguration : IEntityTypeConfiguration<Customer
             .HasColumnType("datetime2")
             .IsRequired();
 
-        builder.HasIndex(c => c.PhoneNumber).IsUnique().HasDatabaseName("IX_Customers_PhoneNumber");
+        builder.HasIndex(c => c.Phone).IsUnique().HasDatabaseName("IX_Customers_PhoneNumber");
 
         builder.HasMany(c => c.SalesInvoices)
             .WithOne(pi => pi.Customer)

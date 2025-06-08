@@ -1,15 +1,11 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using StoreManagement.Domain.Aggregates.Customers;
-
-namespace StoreManagement.WPF.ViewModels;
+﻿namespace StoreManagement.WPF.ViewModels;
 
 public partial class AddCustomerViewModel : ViewModelBase
 {
     [ObservableProperty] private string _firstName;
     [ObservableProperty] private string _lastName;
     [ObservableProperty] private string _email;
-    [ObservableProperty] private string _phoneNumber;
+    [ObservableProperty] private string _phone;
     [ObservableProperty] private string _city;
     [ObservableProperty] private string _fullAddress;
     [ObservableProperty] private string _dateOfBirth;
@@ -31,7 +27,7 @@ public partial class AddCustomerViewModel : ViewModelBase
             FirstName,
             LastName,
             Email,
-            PhoneNumber,
+            Phone,
             City,
             FullAddress,
             DateTime.TryParse(DateOfBirth, out var dob) ? dob : (DateTime?)null,

@@ -1,7 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using StoreManagement.Domain.Aggregates.Customers;
-using StoreManagement.Domain.ValueObjects;
+﻿using StoreManagement.Domain.ValueObjects;
 
 namespace StoreManagement.WPF.ViewModels;
 
@@ -15,7 +12,7 @@ public partial class EditCustomerViewModel : ViewModelBase
     [ObservableProperty] private string _firstName;
     [ObservableProperty] private string _lastName;
     [ObservableProperty] private string _email;
-    [ObservableProperty] private string _phoneNumber;
+    [ObservableProperty] private string _phone;
     [ObservableProperty] private string _city;
     [ObservableProperty] private string _fullAddress;
     [ObservableProperty] private string _dateOfBirth;
@@ -31,7 +28,7 @@ public partial class EditCustomerViewModel : ViewModelBase
         FirstName = customer.FirstName;
         LastName = customer.LastName;
         Email = customer.Email;
-        PhoneNumber = customer.PhoneNumber.Value;
+        Phone = customer.Phone.Value;
         City = customer.Address.City;
         FullAddress = customer.Address.FullAddress;
         DateOfBirth = customer.DateOfBirth?.ToString("yyyy/MM/dd");
@@ -48,7 +45,7 @@ public partial class EditCustomerViewModel : ViewModelBase
             FirstName,
             LastName,
             Email,
-            PhoneNumber,
+            Phone,
             City,
             FullAddress,
             DateTime.TryParse(DateOfBirth, out var dob) ? dob : (DateTime?)null,

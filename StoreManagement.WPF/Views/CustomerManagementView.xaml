@@ -50,7 +50,7 @@
                             <DataGridTextColumn Header="نام" Binding="{Binding FirstName}" Width="*"/>
                             <DataGridTextColumn Header="نام خانوادگی" Binding="{Binding LastName}" Width="*"/>
                             <DataGridTextColumn Header="ایمیل" Binding="{Binding Email}" Width="2*"/>
-                            <DataGridTextColumn Header="شماره تماس" Binding="{Binding PhoneNumber.Value}" Width="*"/>
+                            <DataGridTextColumn Header="شماره تماس" Binding="{Binding Phone.Value}" Width="*"/>
                             <DataGridTextColumn Header="شهر" Binding="{Binding Address.City}" Width="*"/>
 
                             <DataGridTemplateColumn Header="عملیات" Width="Auto">
