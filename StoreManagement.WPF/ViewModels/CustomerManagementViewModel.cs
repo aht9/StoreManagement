@@ -21,16 +21,28 @@ public partial class CustomerManagementViewModel : ViewModelBase
     private bool _isAddCustomerDialogOpen = false;
 
     [ObservableProperty]
+    private int _pageSize = 10;
+
+    [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(TotalPages))]
+    [NotifyCanExecuteChangedFor(nameof(GoToNextPageCommand))]
+    [NotifyCanExecuteChangedFor(nameof(GoToPreviousPageCommand))]
     private string _searchText = string.Empty;
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(GoToNextPageCommand))]
+    [NotifyCanExecuteChangedFor(nameof(GoToPreviousPageCommand))]
     private int _currentPage = 1;
 
-    [ObservableProperty]
-    private int _pageSize = 10;
-
     public int TotalPages => (_allCustomers == null || _allCustomers.Count == 0) ? 1 : (int)Math.Ceiling((double)FilteredCustomers.Count() / PageSize);
+
+
+    [ObservableProperty]
+    private EditCustomerViewModel _editCustomerViewModel;
+
+    [ObservableProperty]
+    private bool _isEditCustomerDialogOpen = false;
+
 
     private IEnumerable<Customer> FilteredCustomers =>
         string.IsNullOrWhiteSpace(SearchText)
@@ -104,6 +116,32 @@ public partial class CustomerManagementViewModel : ViewModelBase
         IsAddCustomerDialogOpen = true;
     }
 
+    [RelayCommand]
+    private void EditCustomer(Customer customerToEdit)
+    {
+        if (customerToEdit == null) return;
+
+        EditCustomerViewModel = new EditCustomerViewModel(customerToEdit,
+            (updatedCustomer) =>
+            {
+                var index = _allCustomers.FindIndex(c => c.Email == customerToEdit.Email && c.PhoneNumber.Value == customerToEdit.PhoneNumber.Value); 
+                if (index != -1)
+                {
+                    _allCustomers[index] = updatedCustomer;
+                }
+                UpdatePagedCustomers();
+                IsEditCustomerDialogOpen = false;
+            },
+
+            () =>
+            {
+                IsEditCustomerDialogOpen = false;
+            }
+        );
+        IsEditCustomerDialogOpen = true;
+    }
+
+
     [RelayCommand(CanExecute = nameof(CanGoToNextPage))]
     private void GoToNextPage()
     {
@@ -119,14 +157,6 @@ public partial class CustomerManagementViewModel : ViewModelBase
     }
 
     private bool CanGoToPreviousPage() => CurrentPage > 1;
-
-    [RelayCommand]
-    private void EditCustomer(Customer customer)
-    {
-        // Logic to open an edit dialog would go here
-        // For now, we can just show a message.
-        System.Windows.MessageBox.Show($"Editing {customer.FirstName} {customer.LastName}");
-    }
 
     [RelayCommand]
     private void DeleteCustomer(Customer customer)

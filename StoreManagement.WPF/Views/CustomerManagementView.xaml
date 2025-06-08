@@ -1,25 +1,27 @@
 ﻿<UserControl x:Class="StoreManagement.WPF.Views.CustomerManagementView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:StoreManagement.WPF.Views"
              xmlns:viewModels="clr-namespace:StoreManagement.WPF.ViewModels"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:converters="clr-namespace:StoreManagement.WPF.Converters"
-             mc:Ignorable="d" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=viewModels:CustomerManagementViewModel}"
-             d:DesignHeight="600" d:DesignWidth="800">
-
-    <UserControl.Resources>
-        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-    </UserControl.Resources>
+             d:DesignHeight="600" d:DesignWidth="800"
+             FlowDirection="RightToLeft"
+             FontFamily="{StaticResource PersianFont}">
 
     <Grid>
         <materialDesign:DialogHost IsOpen="{Binding IsAddCustomerDialogOpen}">
             <materialDesign:DialogHost.DialogContent>
                 <local:AddCustomerView DataContext="{Binding AddCustomerViewModel}"/>
             </materialDesign:DialogHost.DialogContent>
+
+            <materialDesign:DialogHost IsOpen="{Binding IsEditCustomerDialogOpen}">
+                <materialDesign:DialogHost.DialogContent>
+                    <local:EditCustomerView DataContext="{Binding EditCustomerViewModel}"/>
+                </materialDesign:DialogHost.DialogContent>
 
             <Grid>
                 <Grid.RowDefinitions>
@@ -29,36 +31,21 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Text="مدیریت مشتریان" FontSize="24" FontWeight="Bold" Margin="20"/>
+                <TextBlock Grid.Row="0" Text="مدیریت مشتریان" Style="{StaticResource DisplayTitleStyle}" Margin="20"/>
 
                 <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="20,0">
-                    <Button Command="{Binding OpenAddCustomerDialogCommand}"
-                            Style="{StaticResource MaterialDesignRaisedButton}"
-                            ToolTip="افزودن مشتری جدید">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="Add" Margin="0,0,8,0"/>
-                            <TextBlock Text="افزودن مشتری"/>
-                        </StackPanel>
-                    </Button>
+                    <Button Command="{Binding OpenAddCustomerDialogCommand}" 
+                            Style="{StaticResource PrimaryActionButtonStyle}"
+                            Content="افزودن مشتری جدید"/>
+
                     <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
-                             materialDesign:HintAssist.Hint="جستجو..."
-                             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                             Style="{StaticResource SearchBoxStyle}"
                              Width="300"
-                             Margin="20,0,0,0"
-                             VerticalAlignment="Center">
-                        <materialDesign:HintAssist.FloatingOffset>
-                            <Point Y="-18" X="0"/>
-                        </materialDesign:HintAssist.FloatingOffset>
-                    </TextBox>
+                             Margin="20,0,0,0"/>
                 </StackPanel>
 
-                <materialDesign:Card Grid.Row="2" Margin="20" VerticalAlignment="Stretch">
-                    <DataGrid ItemsSource="{Binding PagedCustomers}"
-                              AutoGenerateColumns="False"
-                              CanUserAddRows="False"
-                              IsReadOnly="True"
-                              materialDesign:DataGridAssist.CellPadding="13 8 8 8"
-                              materialDesign:DataGridAssist.ColumnHeaderPadding="8">
+                <Border Grid.Row="2" Style="{StaticResource CardBorderStyle}" Margin="20">
+                    <DataGrid Style="{StaticResource ModernDataGridStyle}" ItemsSource="{Binding PagedCustomers}">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="نام" Binding="{Binding FirstName}" Width="*"/>
                             <DataGridTextColumn Header="نام خانوادگی" Binding="{Binding LastName}" Width="*"/>
@@ -70,36 +57,40 @@
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
-                                            <Button Style="{StaticResource MaterialDesignIconButton}" 
-                                                    ToolTip="ویرایش مشتری"
+                                            <Button Style="{StaticResource BaseButtonStyle}"
+                                                    ToolTip="ویرایش"
+                                                    Padding="8"
                                                     Command="{Binding DataContext.EditCustomerCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                                     CommandParameter="{Binding}">
-                                                <materialDesign:PackIcon Kind="Pencil" />
+                                                <materialDesign:PackIcon Kind="PencilOutline" Width="16" Height="16" />
                                             </Button>
-                                            <Button Margin="8,0,0,0"
-                                                    Style="{StaticResource MaterialDesignIconButton}"
-                                                    ToolTip="حذف مشتری"
+                                            <Button Style="{StaticResource BaseButtonStyle}"
+                                                    ToolTip="حذف"
+                                                    Padding="8" Margin="8,0,0,0"
                                                     Command="{Binding DataContext.DeleteCustomerCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                                     CommandParameter="{Binding}">
-                                                <materialDesign:PackIcon Kind="Delete" Foreground="Red"/>
+                                                <materialDesign:PackIcon Kind="DeleteOutline" Width="16" Height="16" Foreground="{StaticResource DangerBrush}"/>
                                             </Button>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-
                         </DataGrid.Columns>
                     </DataGrid>
-                </materialDesign:Card>
+                </Border>
 
-                <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="20">
-                    <Button Command="{Binding GoToPreviousPageCommand}" Content="قبلی" Style="{StaticResource MaterialDesignFlatButton}"/>
-                    <TextBlock Text="{Binding CurrentPage}" VerticalAlignment="Center" Margin="10,0"/>
-                    <TextBlock Text="از" VerticalAlignment="Center" Margin="10,0"/>
-                    <TextBlock Text="{Binding TotalPages}" VerticalAlignment="Center" Margin="10,0"/>
-                    <Button Command="{Binding GoToNextPageCommand}" Content="بعدی" Style="{StaticResource MaterialDesignFlatButton}"/>
+                <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,10">
+                    <Button Command="{Binding GoToPreviousPageCommand}" Content="قبلی" Style="{StaticResource BaseButtonStyle}"/>
+                    <TextBlock VerticalAlignment="Center" Margin="15,0">
+                        <Run Text="صفحه"/>
+                        <Run Text="{Binding CurrentPage, Mode=OneWay}"/>
+                        <Run Text="از"/>
+                        <Run Text="{Binding TotalPages, Mode=OneWay}"/>
+                    </TextBlock>
+                    <Button Command="{Binding GoToNextPageCommand}" Content="بعدی" Style="{StaticResource BaseButtonStyle}"/>
                 </StackPanel>
             </Grid>
+            </materialDesign:DialogHost>
         </materialDesign:DialogHost>
     </Grid>
 </UserControl>
