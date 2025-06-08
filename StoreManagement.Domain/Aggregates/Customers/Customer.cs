@@ -114,22 +114,28 @@ namespace StoreManagement.Domain.Aggregates.Customers
         private Customer() { }
 
         // Constructor for creating a customer
-        public Customer(string firstName, string lastName, string? email, PhoneNumber phoneNumber, Address address, DateTime? dateOfBirth, long? nationalCode)
+        public Customer(string firstName, string lastName, string? email, string phoneNumber, string city, string fullAddress, DateTime? dateOfBirth, long? nationalCode)
         {
             FirstName = firstName;
             LastName = lastName;
             Email = email;
-            PhoneNumber = phoneNumber;
-            Address = address;
+            var phoneNumberResult = PhoneNumber.Create(phoneNumber);
+            if (phoneNumberResult.IsFailure)
+            {
+                throw new ArgumentException(phoneNumberResult.Error);
+            }
+
+            PhoneNumber = phoneNumberResult.Value;
+            Address = new Address(city, fullAddress);
             DateOfBirth = dateOfBirth;
             NationalCode = nationalCode;
         }
 
         // Behavior methods
-        public void UpdateContactInfo(string email, PhoneNumber phoneNumber)
+        public void UpdateContactInfo(string email, string phoneNumber)
         {
             Email = email;
-            PhoneNumber = phoneNumber;
+            PhoneNumber = PhoneNumber.Create(phoneNumber).Value; 
         }
 
         public void UpdateAddress(Address address)

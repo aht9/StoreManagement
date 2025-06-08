@@ -1,0 +1,43 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Font Family -->
+    <FontFamily x:Key="EnglishFont">Segoe UI</FontFamily>
+    <FontFamily x:Key="PersianFont">pack://application:,,,/Assets/Fonts/#Vazirmatn</FontFamily>
+
+    <!-- Color Palette from the Style Guide -->
+    <SolidColorBrush x:Key="PrimaryBackgroundBrush" Color="#0D1117"/>
+    <SolidColorBrush x:Key="SecondaryBackgroundBrush" Color="#161B22"/>
+    <SolidColorBrush x:Key="BorderBrush" Color="#30363D"/>
+    <SolidColorBrush x:Key="PrimaryTextBrush" Color="#C9D1D9"/>
+    <SolidColorBrush x:Key="SecondaryTextBrush" Color="#8B949E"/>
+    <SolidColorBrush x:Key="AccentBrush" Color="#58A6FF"/>
+    <SolidColorBrush x:Key="SuccessBrush" Color="#3FB950"/>
+    <SolidColorBrush x:Key="DangerBrush" Color="#F85149"/>
+
+    <!-- Base Text Styles -->
+    <Style TargetType="TextBlock" x:Key="BaseTextBlockStyle">
+        <Setter Property="FontFamily" Value="{StaticResource EnglishFont}"/>
+        <Setter Property="Foreground" Value="{StaticResource PrimaryTextBrush}"/>
+    </Style>
+    <Style TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}"/>
+
+    <Style TargetType="TextBlock" x:Key="DisplayTitleStyle" BasedOn="{StaticResource BaseTextBlockStyle}">
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="FontWeight" Value="Light"/>
+    </Style>
+
+    <Style TargetType="TextBlock" x:Key="CardTitleStyle" BasedOn="{StaticResource BaseTextBlockStyle}">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+
+    <Style TargetType="TextBlock" x:Key="LabelTextStyle" BasedOn="{StaticResource BaseTextBlockStyle}">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Foreground" Value="{StaticResource SecondaryTextBrush}"/>
+    </Style>
+
+    <Style TargetType="TextBlock" x:Key="PersianLabelStyle" BasedOn="{StaticResource LabelTextStyle}">
+        <Setter Property="FontFamily" Value="{StaticResource PersianFont}"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+</ResourceDictionary>

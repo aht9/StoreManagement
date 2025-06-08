@@ -1,0 +1,65 @@
+﻿<UserControl x:Class="StoreManagement.WPF.Views.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             mc:Ignorable="d" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:viewmodels="clr-namespace:StoreManagement.WPF.ViewModels"
+             d:DesignHeight="600" d:DesignWidth="1000">
+    <UserControl.DataContext>
+        <viewmodels:DashboardViewModel/>
+    </UserControl.DataContext>
+    <StackPanel>
+        <!-- Page Title -->
+        <TextBlock Text="صفحه پیشخوان" Style="{StaticResource DisplayTitleStyle}" Margin="0,0,0,20" FlowDirection="RightToLeft"/>
+
+        <Grid FlowDirection="RightToLeft">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Main Chart Card -->
+            <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource CardBorderStyle}" MinHeight="250" Margin="0,0,15,0">
+                <StackPanel>
+                    <TextBlock Text="بررسی اجمالی" Style="{StaticResource CardTitleStyle}"/>
+                    <TextBlock Text="قرارگیری نمودار ها" HorizontalAlignment="Center" 
+                               VerticalAlignment="Center" Margin="0,50,0,0" Style="{StaticResource LabelTextStyle}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- KPI Cards -->
+            <StackPanel Grid.Row="0" Grid.Column="1" Margin="15,0,0,0">
+                <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,0,15">
+                    <StackPanel>
+                        <TextBlock Text="میزان درآمد" Style="{StaticResource LabelTextStyle}" Margin="0,0,0,5"/>
+                        <TextBlock Text="2,480" FontSize="28" FontWeight="SemiBold"/>
+                        <TextBlock Text="+15% vs last month" Foreground="{StaticResource SuccessBrush}" FontSize="12"/>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource CardBorderStyle}">
+                    <StackPanel>
+                        <TextBlock Text="میزان خرید" Style="{StaticResource LabelTextStyle}" Margin="0,0,0,5"/>
+                        <TextBlock Text="122" FontSize="28" FontWeight="SemiBold"/>
+                        <TextBlock Text="+5% vs last month" Foreground="{StaticResource DangerBrush}" FontSize="12"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- Recent Activity Card -->
+            <Border Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource CardBorderStyle}" Margin="0,30,0,0">
+                <StackPanel>
+                    <TextBlock Text="آخرین فعالیت ها" Style="{StaticResource CardTitleStyle}" 
+                               Margin="0,0,0,15"/>
+                    <TextBlock Text="فعالیت های کاربر به این صورت نمایش داده میشوند" Margin="0,5"/>
+                    <TextBlock Text="فعالیت های کاربر به این صورت نمایش داده میشوند" Margin="0,5"/>
+                    <TextBlock Text="فعالیت های کاربر به این صورت نمایش داده میشوند" Margin="0,5"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </StackPanel>
+</UserControl>

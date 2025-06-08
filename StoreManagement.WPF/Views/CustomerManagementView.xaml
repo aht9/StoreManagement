@@ -1,0 +1,101 @@
+﻿<UserControl x:Class="StoreManagement.WPF.Views.CustomerManagementView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             mc:Ignorable="d" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:views="clr-namespace:StoreManagement.WPF.Views"
+             xmlns:viewmodels="clr-namespace:StoreManagement.WPF.ViewModels"
+             d:DataContext="{d:DesignInstance Type=viewmodels:CustomerManagementViewModel}"
+             d:DesignHeight="600" d:DesignWidth="1000">
+    <Grid>
+        <!-- Main Content -->
+        <StackPanel>
+            <!-- Page Title -->
+            <TextBlock Text="مدیریت مشتریان" Style="{StaticResource DisplayTitleStyle}" Margin="0,0,0,20"/>
+
+            <!-- Actions: Search and Add -->
+            <Grid Margin="0,0,0,20" FlowDirection="RightToLeft">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" Style="{StaticResource SearchBoxStyle}" Width="300" HorizontalAlignment="Left" Text="جست و جو ..."/>
+                <Button Grid.Column="1" Style="{StaticResource PrimaryActionButtonStyle}" Content="اضافه کردن مشتری جدید"
+                        Command="{Binding OpenAddCustomerDialogCommand}"/>
+            </Grid>
+
+            <!-- Customer Data Grid -->
+            <Border Style="{StaticResource CardBorderStyle}" Padding="0">
+                <DataGrid ItemsSource="{Binding Customers}" Style="{StaticResource ModernDataGridStyle}" FlowDirection="RightToLeft">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding FirstName}" Width="*">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="نام" Style="{StaticResource PersianLabelStyle}"/>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                        </DataGridTextColumn>
+
+                        <DataGridTextColumn Binding="{Binding LastName}" Width="*">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="نشان" Style="{StaticResource PersianLabelStyle}"/>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                        </DataGridTextColumn>
+
+                        <DataGridTextColumn Binding="{Binding Email}" Width="2*">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="ایمیل (Email)" Style="{StaticResource PersianLabelStyle}"/>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                        </DataGridTextColumn>
+
+                        <DataGridTextColumn Header="شماره تماس" Binding="{Binding PhoneNumber.Value}" Width="*"/>
+
+                        <DataGridTextColumn Binding="{Binding Address.City}" Width="2*">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="شهر" Style="{StaticResource PersianLabelStyle}"/>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                        </DataGridTextColumn>
+
+                        <DataGridTextColumn Binding="{Binding Address.FullAddress}" Width="2*">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="آدرس" Style="{StaticResource PersianLabelStyle}"/>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                        </DataGridTextColumn>
+
+                        <DataGridTextColumn Binding="{Binding DateOfBirth}" Width="2*">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="تاریخ تولد" Style="{StaticResource PersianLabelStyle}"/>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                        </DataGridTextColumn>
+
+                        <DataGridTextColumn Binding="{Binding NationalCode}" Width="2*">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="کدملی" Style="{StaticResource PersianLabelStyle}"/>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+        </StackPanel>
+
+        <!-- Add Customer Dialog Overlay -->
+        <Border Background="#80000000"
+                Visibility="{Binding IsAddCustomerDialogOpen, Converter={StaticResource BoolToVisibilityConverter}}">
+            <views:AddCustomerView DataContext="{Binding AddCustomerViewModel}"
+                                   VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        </Border>
+    </Grid>
+</UserControl>

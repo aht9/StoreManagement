@@ -1,0 +1,30 @@
+﻿<Application x:Class="StoreManagement.WPF.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:StoreManagement.WPF"
+             xmlns:converters="clr-namespace:StoreManagement.WPF.Converters"
+             xmlns:views="clr-namespace:StoreManagement.WPF.Views"
+             xmlns:viewmodels="clr-namespace:StoreManagement.WPF.ViewModels"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles/ColorsAndFonts.xaml"/>
+                <ResourceDictionary Source="Styles/ButtonStyles.xaml"/>
+                <ResourceDictionary Source="Styles/DataGridStyles.xaml"/>
+                <ResourceDictionary Source="Styles/ControlStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Converters -->
+            <converters:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+
+            <!-- DataTemplate for ViewModels -->
+            <DataTemplate DataType="{x:Type viewmodels:DashboardViewModel}">
+                <views:DashboardView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:CustomerManagementViewModel}">
+                <views:CustomerManagementView/>
+            </DataTemplate>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
