@@ -1,44 +1,47 @@
 ﻿namespace StoreManagement.Domain.Specifications.CommonSpec;
 
-public class IncludeSpecification<T> where T : BaseEntity
+public class IncludeSpecification<T> : ExpressionSpecification<T> where T : BaseEntity
 {
-    private readonly List<Expression<Func<T, object>>> _includes = new();
-    public IReadOnlyList<Expression<Func<T, object>>> Includes => _includes.AsReadOnly();
-
-    private readonly List<string> _includeStrings = new();
-    public IReadOnlyList<string> IncludeStrings => _includeStrings.AsReadOnly();
-
-    public IncludeSpecification<T> Include(Expression<Func<T, object>> includeExpression)
+    /// <summary>
+    /// This specification does not filter, so its expression is always true.
+    /// </summary>
+    public override Expression<Func<T, bool>> ToExpression()
     {
-        _includes.Add(includeExpression);
+        return entity => true;
+    }
+
+    /// <summary>
+    /// Adds an include expression. The 'new' keyword is used to hide the base method
+    /// and return the more specific IncludeSpecification type for a fluent API.
+    /// </summary>
+    public new IncludeSpecification<T> Include(Expression<Func<T, object>> includeExpression)
+    {
+        base.Includes.Add(includeExpression);
         return this;
     }
 
-    public IncludeSpecification<T> Include(string includeString)
+    /// <summary>
+    /// Adds an include expression by string.
+    /// </summary>
+    public new IncludeSpecification<T> Include(string includeString)
     {
-        _includeStrings.Add(includeString);
+        base.IncludeStrings.Add(includeString);
         return this;
     }
 
+    /// <summary>
+    /// Adds a ThenInclude expression using strings.
+    /// </summary>
     public IncludeSpecification<T> Include<TProperty>(Expression<Func<T, IEnumerable<TProperty>>> navigationExpression, Expression<Func<TProperty, object>> thenIncludeExpression)
         where TProperty : class
     {
         var propertyName = GetNavigationPropertyName(navigationExpression);
         var thenPropertyName = GetThenIncludePropertyName(thenIncludeExpression);
-        _includeStrings.Add($"{propertyName}.{thenPropertyName}");
+        base.IncludeStrings.Add($"{propertyName}.{thenPropertyName}");
         return this;
     }
 
-
-    /// <summary>
-    /// Extracts the name of the navigation property from the provided expression.
-    /// </summary>
-    /// <typeparam name="TProperty">The type of the property being navigated to.</typeparam>
-    /// <param name="expression">An expression representing the navigation property.</param>
-    /// <returns>The name of the navigation property.</returns>
-    /// <exception cref="ArgumentException">
-    /// Thrown when the provided expression is not a member access expression.
-    /// </exception>
+    // Private helpers from your original code
     private string GetNavigationPropertyName<TProperty>(Expression<Func<T, IEnumerable<TProperty>>> expression)
     {
         if (expression.Body is MemberExpression memberExpression)
@@ -48,22 +51,12 @@ public class IncludeSpecification<T> where T : BaseEntity
         throw new ArgumentException("Expression is not a member access expression.", nameof(expression));
     }
 
-    /// <summary>
-    /// Extracts the name of the property to be included in a "ThenInclude" operation from the provided expression.
-    /// </summary>
-    /// <typeparam name="TProperty">The type of the property being navigated to.</typeparam>
-    /// <param name="expression">An expression representing the property to be included.</param>
-    /// <returns>The name of the property to be included.</returns>
-    /// <exception cref="ArgumentException">
-    /// Thrown when the provided expression is not a member access expression or a valid unary conversion.
-    /// </exception>
     private string GetThenIncludePropertyName<TProperty>(Expression<Func<TProperty, object>> expression)
     {
         if (expression.Body is MemberExpression memberExpression)
         {
             return memberExpression.Member.Name;
         }
-        // Handle case when the expression is a conversion (e.g., x => (object)x.Property)
         else if (expression.Body is UnaryExpression unaryExpression &&
                  unaryExpression.Operand is MemberExpression operandMemberExpression)
         {
@@ -71,5 +64,4 @@ public class IncludeSpecification<T> where T : BaseEntity
         }
         throw new ArgumentException("Expression is not a member access expression.", nameof(expression));
     }
-
 }

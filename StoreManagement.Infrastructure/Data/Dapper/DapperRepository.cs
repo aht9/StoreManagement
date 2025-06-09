@@ -1,12 +1,8 @@
 ﻿namespace StoreManagement.Infrastructure.Data.Dapper;
 
-public class DapperRepository : IDapperRepository
+public class DapperRepository(DapperContext context) : IDapperRepository
 {
-    private readonly DapperContext _context;
-    public DapperRepository(DapperContext context)
-    {
-        _context = context ?? throw new ArgumentNullException(nameof(context));
-    }
+    private readonly DapperContext _context = context ?? throw new ArgumentNullException(nameof(context));
 
     public async Task<IEnumerable<T>> QueryAsync<T>(string sql, object param = null)
     {

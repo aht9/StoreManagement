@@ -153,5 +153,13 @@
         {
             return $"{FirstName} {LastName}, Email: {Email}, Phone: {Phone.GetFormattedNumber()}, Address: {Address}";
         }
+
+        public void UpdatePersonalInfo(string firstName, string lastName, long? nationalCode, DateTime? dateOfBirth)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            NationalCode = nationalCode;
+            DateOfBirth = dateOfBirth;
+        }
     }
 }
