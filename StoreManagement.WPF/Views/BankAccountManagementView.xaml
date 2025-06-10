@@ -130,6 +130,19 @@
                         <DataGridTextColumn Header="شرح" Binding="{Binding Description}" Width="2*"/>
                         <DataGridTextColumn Header="نوع" Binding="{Binding TransactionType}" Width="Auto"/>
                         <DataGridTextColumn Header="مبلغ" Binding="{Binding Amount, StringFormat={}{0:N0}}" Width="*"/>
+                        <DataGridTemplateColumn Header="عملیات">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="حذف"
+                                            Command="{Binding DataContext.DeleteTransactionCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}"
+                                            Style="{StaticResource MaterialDesignOutlinedButton}"
+                                            Foreground="Red"
+                                            BorderBrush="Red"
+                                            Padding="8,2"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
             </Border>

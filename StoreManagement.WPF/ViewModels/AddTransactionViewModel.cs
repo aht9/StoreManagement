@@ -12,7 +12,7 @@ public partial class AddTransactionViewModel : ViewModelBase
     [ObservableProperty][NotifyCanExecuteChangedFor(nameof(SaveCommand))] private string _description = "";
     [ObservableProperty] private bool _isBusy;
 
-    public Array TransactionTypes => Enum.GetValues(typeof(TransactionType));
+    public IEnumerable<KeyValuePair<TransactionType, string>> TransactionTypeOptions { get; }
 
     public AddTransactionViewModel(IMediator mediator, long bankAccountId, Func<Task> onSave, Action onCancel)
     {
@@ -20,6 +20,12 @@ public partial class AddTransactionViewModel : ViewModelBase
         _bankAccountId = bankAccountId;
         _onSave = onSave;
         _onCancel = onCancel;
+
+        TransactionTypeOptions = new List<KeyValuePair<TransactionType, string>>
+        {
+            new(TransactionType.Credit, "واریز"),
+            new(TransactionType.Debit, "برداشت")
+        };
     }
 
     [RelayCommand(CanExecute = nameof(CanSave))]

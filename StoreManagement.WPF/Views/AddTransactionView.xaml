@@ -18,7 +18,13 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <TextBox Grid.Row="0" Text="{Binding Amount, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:N0}}" materialDesign:HintAssist.Hint="مبلغ (ریال)"/>
-                <ComboBox Grid.Row="1" Margin="0,15,0,0" ItemsSource="{Binding TransactionTypes}" SelectedItem="{Binding TransactionType}" materialDesign:HintAssist.Hint="نوع تراکنش"/>
+                <ComboBox Grid.Row="1" ItemsSource="{Binding TransactionTypeOptions}"
+                          SelectedValue="{Binding TransactionType}"
+                          DisplayMemberPath="Value"
+                          SelectedValuePath="Key"
+                          materialDesign:HintAssist.Hint="نوع تراکنش"
+                          Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                          Margin="0,10,0,0"/>
                 <TextBox Grid.Row="2" Margin="0,15,0,0" Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" materialDesign:HintAssist.Hint="شرح تراکنش"/>
             </Grid>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,25,0,0">

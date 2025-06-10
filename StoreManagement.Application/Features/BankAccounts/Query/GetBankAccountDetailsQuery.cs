@@ -19,7 +19,7 @@ public class GetBankAccountDetailsQueryHandler(
 
                 SELECT Id, Amount, TransactionDate, TransactionType, Description, InvoiceId, InvoiceType
                 FROM FinancialTransactions
-                WHERE BankAccountId = @BankAccountId
+                WHERE BankAccountId = @BankAccountId AND IsDeleted = 0
                 ORDER BY TransactionDate DESC;
             ";
 

@@ -37,6 +37,7 @@ public partial class BankAccountManagementViewModel : ViewModelBase
         AddTransactionCommand.NotifyCanExecuteChanged();
         DeleteAccountCommand.NotifyCanExecuteChanged();
         EditAccountCommand.NotifyCanExecuteChanged();
+        DeleteTransactionCommand.NotifyCanExecuteChanged();
     }
 
     [RelayCommand]
@@ -133,4 +134,37 @@ public partial class BankAccountManagementViewModel : ViewModelBase
     }
 
     private bool CanManipulateAccount() => SelectedAccountDetails != null;
+
+
+    [RelayCommand(CanExecute = nameof(CanManipulateTransaction))]
+    private async Task DeleteTransaction(FinancialTransactionDto? transaction)
+    {
+        if (SelectedAccountDetails == null || transaction == null) return;
+
+        var result = MessageBox.Show($"آیا از حذف تراکنش '{transaction.Description}' به مبلغ {transaction.Amount} اطمینان دارید؟", "تایید حذف تراکنش", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+        if (result == MessageBoxResult.No) return;
+
+        IsBusy = true;
+        var command = new DeleteFinancialTransactionCommand
+        {
+            BankAccountId = SelectedAccountDetails.Id,
+            TransactionId = transaction.Id
+        };
+
+        var commandResult = await _mediator.Send(command);
+        if (commandResult.IsSuccess)
+        {
+            MessageBox.Show("تراکنش با موفقیت حذف شد.", "موفقیت", MessageBoxButton.OK, MessageBoxImage.Information);
+            // Refresh data
+            await SelectBankAccount(SelectedAccountDetails);
+            await LoadBankAccountsAsync();
+        }
+        else
+        {
+            MessageBox.Show(commandResult.Error, "خطا در حذف", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        IsBusy = false;
+    }
+
+    private bool CanManipulateTransaction(FinancialTransactionDto? transaction) => transaction != null && SelectedAccountDetails != null;
 }
