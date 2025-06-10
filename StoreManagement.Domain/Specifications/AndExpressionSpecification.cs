@@ -1,6 +1,6 @@
 ﻿namespace StoreManagement.Domain.Specifications;
 
-public class AndExpressionSpecification<T> : ExpressionSpecification<T>
+public class AndExpressionSpecification<T> : ExpressionSpecification<T> where T : BaseEntity
 {
     private readonly ExpressionSpecification<T> _left;
     private readonly ExpressionSpecification<T> _right;

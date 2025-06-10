@@ -1,20 +1,13 @@
 ﻿namespace StoreManagement.Domain.Specifications;
 
-public class OrExpressionSpecification<T> : ExpressionSpecification<T>
+public class OrExpressionSpecification<T>(ExpressionSpecification<T> left, ExpressionSpecification<T> right)
+    : ExpressionSpecification<T>
+    where T : BaseEntity
 {
-    private readonly ExpressionSpecification<T> _left;
-    private readonly ExpressionSpecification<T> _right;
-
-    public OrExpressionSpecification(ExpressionSpecification<T> left, ExpressionSpecification<T> right)
-    {
-        _left = left;
-        _right = right;
-    }
-
     public override Expression<Func<T, bool>> ToExpression()
     {
-        var leftExpr = _left.ToExpression();
-        var rightExpr = _right.ToExpression();
+        var leftExpr = left.ToExpression();
+        var rightExpr = right.ToExpression();
 
         var param = Expression.Parameter(typeof(T));
         var combined = Expression.OrElse(

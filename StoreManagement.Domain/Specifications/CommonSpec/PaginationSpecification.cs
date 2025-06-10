@@ -1,7 +1,7 @@
 ﻿namespace StoreManagement.Domain.Specifications.CommonSpec;
 
 public sealed class PaginationSpecification<T>(int pageNumber, int pageSize) : ExpressionSpecification<T>
-    where T : class
+    where T : BaseEntity
 {
     private readonly int _skip = (pageNumber - 1) * pageSize;
 

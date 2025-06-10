@@ -4,7 +4,7 @@ public static class SpecificationExtensions
 {
     public static ExpressionSpecification<T> AndSpecification<T>(
         this IExpressionSpecification<T> spec,
-        ExpressionSpecification<T> other)
+        ExpressionSpecification<T> other) where T : BaseEntity
     {
         // اگر spec از نوع ExpressionSpecification<T> باشد، از متد And آن استفاده می‌کنیم
         if (spec is ExpressionSpecification<T> expressionSpec)
@@ -21,7 +21,7 @@ public static class SpecificationExtensions
 }
 
 // کلاس کمکی برای تبدیل IExpressionSpecification به ExpressionSpecification
-public class ExpressionSpecificationAdapter<T> : ExpressionSpecification<T>
+public class ExpressionSpecificationAdapter<T> : ExpressionSpecification<T> where T : BaseEntity
 {
     private readonly IExpressionSpecification<T> _specification;
 

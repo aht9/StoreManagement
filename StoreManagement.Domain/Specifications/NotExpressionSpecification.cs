@@ -1,6 +1,6 @@
 ﻿namespace StoreManagement.Domain.Specifications;
 
-public class NotExpressionSpecification<T> : ExpressionSpecification<T>
+public class NotExpressionSpecification<T> : ExpressionSpecification<T> where T : BaseEntity
 {
     private readonly ExpressionSpecification<T> _specification;
 
