@@ -2,11 +2,14 @@
 
 public partial class MainViewModel : ViewModelBase
 {
+    private readonly IMediator _mediator;
+
     [ObservableProperty]
     private ViewModelBase _currentViewModel;
 
-    public MainViewModel()
+    public MainViewModel(IMediator mediator)
     {
+        _mediator = mediator;
         // Set the initial view
         CurrentViewModel = new DashboardViewModel();
     }
@@ -20,6 +23,6 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     private void NavigateToCustomers()
     {
-        CurrentViewModel = new CustomerManagementViewModel();
+        CurrentViewModel = new CustomerManagementViewModel(_mediator);
     }
 }

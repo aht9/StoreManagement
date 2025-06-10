@@ -37,12 +37,7 @@
         public string? Email
         {
             get => _email;
-            private set
-            {
-                if (string.IsNullOrWhiteSpace(value) || !value.Contains("@"))
-                    throw new ArgumentException("Invalid email address.");
-                _email = value;
-            }
+            private set => _email = value;
         }
 
         public PhoneNumber Phone

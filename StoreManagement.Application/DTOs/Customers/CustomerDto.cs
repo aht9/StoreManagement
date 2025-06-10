@@ -8,8 +8,8 @@ public class CustomerDto
     public string FullName => $"{FirstName} {LastName}";
     public string PhoneNumber { get; set; }
     public string? Email { get; set; }
-    public string City { get; set; }
-    public string FullAddress { get; set; }
+    public string Address_City { get; set; }
+    public string Address_FullAddress { get; set; }
     public DateTime? DateOfBirth { get; set; }
     public long? NationalCode { get; set; }
     public DateTime CreationDate { get; set; }

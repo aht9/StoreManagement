@@ -2,10 +2,11 @@
 
 public partial class CustomerManagementViewModel : ViewModelBase
 {
-    private List<Customer> _allCustomers;
+    private readonly IMediator _mediator;
+    private List<CustomerDto> _allCustomers;
 
     [ObservableProperty]
-    private ObservableCollection<Customer> _pagedCustomers;
+    private ObservableCollection<CustomerDto> _pagedCustomers;
 
     [ObservableProperty]
     private AddCustomerViewModel _addCustomerViewModel;
@@ -14,6 +15,14 @@ public partial class CustomerManagementViewModel : ViewModelBase
     private bool _isAddCustomerDialogOpen = false;
 
     [ObservableProperty]
+    private EditCustomerViewModel _editCustomerViewModel;
+
+    [ObservableProperty]
+    private bool _isEditCustomerDialogOpen = false;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(GoToNextPageCommand))]
+    [NotifyCanExecuteChangedFor(nameof(GoToPreviousPageCommand))]
     private int _pageSize = 10;
 
     [ObservableProperty]
@@ -27,35 +36,31 @@ public partial class CustomerManagementViewModel : ViewModelBase
     [NotifyCanExecuteChangedFor(nameof(GoToPreviousPageCommand))]
     private int _currentPage = 1;
 
+    [ObservableProperty]
+    private bool _isBusy;
+
     public int TotalPages => (_allCustomers == null || _allCustomers.Count == 0) ? 1 : (int)Math.Ceiling((double)FilteredCustomers.Count() / PageSize);
 
 
-    [ObservableProperty]
-    private EditCustomerViewModel _editCustomerViewModel;
-
-    [ObservableProperty]
-    private bool _isEditCustomerDialogOpen = false;
-
-
-    private IEnumerable<Customer> FilteredCustomers =>
+    private IEnumerable<CustomerDto> FilteredCustomers =>
         string.IsNullOrWhiteSpace(SearchText)
             ? _allCustomers
             : _allCustomers.Where(c =>
                 c.FirstName.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
                 c.LastName.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
                 (c.Email != null && c.Email.Contains(SearchText, StringComparison.OrdinalIgnoreCase)) ||
-                c.Phone.Value.Contains(SearchText));
+                c.PhoneNumber.Contains(SearchText));
 
-    public CustomerManagementViewModel()
+    public CustomerManagementViewModel(IMediator mediator)
     {
-        LoadCustomers();
-        UpdatePagedCustomers();
+        _mediator = mediator;
+        LoadCustomersAsync();
     }
 
     partial void OnSearchTextChanged(string value)
     {
-        CurrentPage = 1; // Reset to first page on new search
-        UpdatePagedCustomers();
+        CurrentPage = 1; 
+        LoadCustomersAsync();
     }
 
     partial void OnCurrentPageChanged(int value)
@@ -63,43 +68,56 @@ public partial class CustomerManagementViewModel : ViewModelBase
         UpdatePagedCustomers();
     }
 
-    private void UpdatePagedCustomers()
+    partial void OnPageSizeChanged(int value)
     {
-        var customers = FilteredCustomers
-            .Skip((CurrentPage - 1) * PageSize)
-            .Take(PageSize);
-        PagedCustomers = new ObservableCollection<Customer>(customers);
+        CurrentPage = 1; 
+        UpdatePagedCustomers();
     }
 
-    private void LoadCustomers()
+    private void UpdatePagedCustomers()
     {
-        // In a real application, this data would come from a repository/service.
-        _allCustomers = new List<Customer>
+        var customers = _allCustomers
+            .Skip((CurrentPage - 1) * PageSize)
+            .Take(PageSize);
+        PagedCustomers = new ObservableCollection<CustomerDto>(customers);
+    }
+
+    private async Task LoadCustomersAsync()
+    {
+        IsBusy = true;
+        try
         {
-            new Customer("علیرضا","محمدی","mAli@Gmail.com","9120004568","تهران", "خیابان ولیعصر,پلاک 18",null,null),
-            new Customer("Sara","Ahmadi","sara.ahmadi@example.com","9120004567","Shiraz", "Zand Street, No. 12",null,null),
-            new Customer("Reza","Karimi","reza.karimi@example.com","9130001234","Isfahan", "Chaharbagh Street, No. 45",null,null),
-            new Customer("Neda","Hosseini","neda.hosseini@example.com","9140005678","Mashhad", "Imam Reza Street, No. 78",null,null),
-            new Customer("Ali","Jafari","ali.jafari@example.com","9150009876","Tabriz", "Shahnaz Street, No. 23",null,null),
-            new Customer("Maryam","Rahimi","maryam.rahimi@example.com","9160003456","Qom", "Azar Street, No. 67",null,null),
-            new Customer("Hossein","Ebrahimi","hossein.ebrahimi@example.com","9170007890","Kerman", "Shohada Street, No. 89",null,null),
-            new Customer("Fatemeh","Shirazi","fatemeh.shirazi@example.com","9180001234","Ahvaz", "Kianpars Street, No. 12",null,null),
-            new Customer("Mehdi","Ghasemi","mehdi.ghasemi@example.com","9190005678","Rasht", "Golsar Street, No. 34",null,null),
-            new Customer("Zahra","Moradi","zahra.moradi@example.com","9200007890","Hamedan", "Baba Taher Street, No. 56",null,null),
-            new Customer("Parsa","Nikzad","parsa.nikzad@example.com","9210001234","Yazd", "Amir Chakhmaq Street, No. 78",null,null),
-            new Customer("Elham","Khalili","elham.khalili@example.com","9220005678","Kermanshah", "Azadi Street, No. 90",null,null),
-        };
+            var query = new GetAllCustomersQuery { SearchText = this.SearchText };
+            var result = await _mediator.Send(query);
+            if (result.IsSuccess)
+            {
+                _allCustomers = result.Value;
+                CurrentPage = 1; 
+                UpdatePagedCustomers();
+            }
+            else
+            {
+                MessageBox.Show(result.Error, "Error Loading Customers", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"An unexpected error occurred: {ex.Message}", "System Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
     [RelayCommand]
     private void OpenAddCustomerDialog()
     {
-        AddCustomerViewModel = new AddCustomerViewModel(
+        AddCustomerViewModel = new AddCustomerViewModel(_mediator,
             // OnSave Action
-            (newCustomer) => {
-                _allCustomers.Add(newCustomer);
-                UpdatePagedCustomers(); // Refresh the list
+            async () => {
                 IsAddCustomerDialogOpen = false;
+                await LoadCustomersAsync(); // Refresh the list from the database
             },
             // OnCancel Action
             () => {
@@ -110,28 +128,52 @@ public partial class CustomerManagementViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void EditCustomer(Customer customerToEdit)
+    private void OpenEditCustomerDialog(CustomerDto customerToEdit)
     {
         if (customerToEdit == null) return;
 
-        EditCustomerViewModel = new EditCustomerViewModel(customerToEdit,
-            (updatedCustomer) =>
-            {
-                var index = _allCustomers.FindIndex(c => c.Email == customerToEdit.Email && c.Phone.Value == customerToEdit.Phone.Value); 
-                if (index != -1)
-                {
-                    _allCustomers[index] = updatedCustomer;
-                }
-                UpdatePagedCustomers();
+        EditCustomerViewModel = new EditCustomerViewModel(_mediator, customerToEdit,
+            // OnSave Action
+            async () => {
                 IsEditCustomerDialogOpen = false;
+                await LoadCustomersAsync(); // Refresh the list
             },
-
-            () =>
-            {
+            // OnCancel Action
+            () => {
                 IsEditCustomerDialogOpen = false;
             }
         );
         IsEditCustomerDialogOpen = true;
+    }
+
+    [RelayCommand]
+    private async Task DeleteCustomer(CustomerDto customerToDelete)
+    {
+        if (customerToDelete == null) return;
+
+        var confirmResult = MessageBox.Show($"Are you sure you want to delete {customerToDelete.FullName}?",
+            "Confirm Delete", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+        if (confirmResult == MessageBoxResult.No) return;
+
+        IsBusy = true;
+        try
+        {
+            var result = await _mediator.Send(new DeleteCustomerCommand { Id = customerToDelete.Id });
+            if (result.IsSuccess)
+            {
+                MessageBox.Show("Customer deleted successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                await LoadCustomersAsync();
+            }
+            else
+            {
+                MessageBox.Show(result.Error, "Deletion Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
 
@@ -152,10 +194,6 @@ public partial class CustomerManagementViewModel : ViewModelBase
     private bool CanGoToPreviousPage() => CurrentPage > 1;
 
     [RelayCommand]
-    private void DeleteCustomer(Customer customer)
-    {
-        // Add confirmation logic here
-        _allCustomers.Remove(customer);
-        UpdatePagedCustomers();
-    }
+    private async Task Refresh() => await LoadCustomersAsync();
+
 }

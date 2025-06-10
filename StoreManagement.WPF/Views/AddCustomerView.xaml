@@ -1,17 +1,28 @@
 ﻿<UserControl x:Class="StoreManagement.WPF.Views.AddCustomerView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:StoreManagement.WPF.Views"
              xmlns:viewModels="clr-namespace:StoreManagement.WPF.ViewModels"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=viewModels:AddCustomerViewModel}"
-             d:DesignHeight="500" d:DesignWidth="600"
+             d:DesignHeight="550" d:DesignWidth="600"
              FlowDirection="RightToLeft"
              FontFamily="{StaticResource PersianFont}">
 
-    <Border Style="{StaticResource CardBorderStyle}" MaxWidth="600">
+    <Border MaxWidth="600">
+        <Border.Style>
+            <Style TargetType="Border" BasedOn="{StaticResource CardBorderStyle}">
+                <Setter Property="IsEnabled" Value="True"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsBusy}" Value="True">
+                        <Setter Property="IsEnabled" Value="False"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Border.Style>
         <StackPanel>
             <TextBlock Text="افزودن مشتری جدید" Style="{StaticResource CardTitleStyle}" HorizontalAlignment="Center" Margin="0,0,0,20"/>
 
@@ -41,7 +52,7 @@
 
                     <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,15,0,0">
                         <TextBlock Text="شماره تماس" Style="{StaticResource PersianLabelStyle}" Margin="5,0,0,5"/>
-                        <TextBox Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SearchBoxStyle}"/>
+                        <TextBox Text="{Binding PhoneNumber, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SearchBoxStyle}"/>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="2" Margin="0,15,0,0">
                         <TextBlock Text="ایمیل (اختیاری)" Style="{StaticResource PersianLabelStyle}" Margin="5,0,0,5"/>
@@ -54,7 +65,7 @@
                     </StackPanel>
                     <StackPanel Grid.Row="2" Grid.Column="2" Margin="0,15,0,0">
                         <TextBlock Text="تاریخ تولد (اختیاری)" Style="{StaticResource PersianLabelStyle}" Margin="5,0,0,5"/>
-                        <DatePicker Text="{Binding DateOfBirth, UpdateSourceTrigger=PropertyChanged}"/>
+                        <DatePicker SelectedDate="{Binding DateOfBirth, UpdateSourceTrigger=PropertyChanged, TargetNullValue={x:Null}}"/>
                     </StackPanel>
 
                     <StackPanel Grid.Row="3" Grid.Column="0" Margin="0,15,0,0">
@@ -63,15 +74,20 @@
                     </StackPanel>
                     <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,15,0,0">
                         <TextBlock Text="آدرس کامل" Style="{StaticResource PersianLabelStyle}" Margin="5,0,0,5"/>
-                        <TextBox Text="{Binding FullAddress, UpdateSourceTrigger=PropertyChanged}" 
-                                 Style="{StaticResource SearchBoxStyle}" 
+                        <TextBox Text="{Binding FullAddress, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource SearchBoxStyle}"
                                  TextWrapping="Wrap" AcceptsReturn="True" Height="80"/>
                     </StackPanel>
                 </Grid>
             </ScrollViewer>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,20,0,0">
-                <Button Command="{Binding SaveCommand}" Content="ذخیره" Style="{StaticResource PrimaryActionButtonStyle}"/>
+                <Button Command="{Binding SaveCommand}" Style="{StaticResource PrimaryActionButtonStyle}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="ذخیره"/>
+                        <materialDesign:PackIcon Kind="ContentSave" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
                 <Button Command="{Binding CancelCommand}" Content="انصراف" Style="{StaticResource BaseButtonStyle}" Margin="8,0,0,0"/>
             </StackPanel>
         </StackPanel>

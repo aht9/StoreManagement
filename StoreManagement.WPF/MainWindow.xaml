@@ -11,9 +11,6 @@
         AllowsTransparency="False"
         Background="Transparent">
 
-    <Window.DataContext>
-        <viewModels:MainViewModel/>
-    </Window.DataContext>
 
     <Border Background="{StaticResource PrimaryBackgroundBrush}" CornerRadius="10" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
         <Grid>

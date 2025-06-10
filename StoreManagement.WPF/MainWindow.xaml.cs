@@ -15,9 +15,11 @@ namespace StoreManagement.WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public MainWindow(MainViewModel viewModel)
         {
             InitializeComponent();
+
+            DataContext = viewModel;
         }
 
         private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)

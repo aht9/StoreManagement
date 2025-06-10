@@ -1,62 +1,84 @@
-﻿namespace StoreManagement.WPF.ViewModels;
+﻿using MediatR;
+
+namespace StoreManagement.WPF.ViewModels;
 
 
 public partial class EditCustomerViewModel : ViewModelBase
 {
-    private readonly Customer _customerToEdit;
-    private readonly Action<Customer> _onSave;
+    private readonly IMediator _mediator;
+    private readonly Func<Task> _onSave;
     private readonly Action _onCancel;
 
-    [ObservableProperty] private string _firstName;
-    [ObservableProperty] private string _lastName;
-    [ObservableProperty] private string _email;
-    [ObservableProperty] private string _phone;
-    [ObservableProperty] private string _city;
-    [ObservableProperty] private string _fullAddress;
-    [ObservableProperty] private string _dateOfBirth;
-    [ObservableProperty] private string _nationalCode;
+    [ObservableProperty] private long _id;
+    [ObservableProperty] private string _firstName = "";
+    [ObservableProperty] private string _lastName = "";
+    [ObservableProperty] private string? _email;
 
-    public EditCustomerViewModel(Customer customer, Action<Customer> onSave, Action onCancel)
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
+    private string _phoneNumber = "";
+
+    [ObservableProperty] private string _city = "";
+    [ObservableProperty] private string _fullAddress = "";
+    [ObservableProperty] private DateTime? _dateOfBirth;
+    [ObservableProperty] private long? _nationalCode;
+    [ObservableProperty] private bool _isBusy;
+
+    public EditCustomerViewModel(IMediator mediator, CustomerDto customerToEdit, Func<Task> onSave, Action onCancel)
     {
-        _customerToEdit = customer;
+        _mediator = mediator;
         _onSave = onSave;
         _onCancel = onCancel;
 
         // Load existing data into the form
-        FirstName = customer.FirstName;
-        LastName = customer.LastName;
-        Email = customer.Email;
-        Phone = customer.Phone.Value;
-        City = customer.Address.City;
-        FullAddress = customer.Address.FullAddress;
-        DateOfBirth = customer.DateOfBirth?.ToString("yyyy/MM/dd");
-        NationalCode = customer.NationalCode?.ToString();
+        Id = customerToEdit.Id;
+        FirstName = customerToEdit.FirstName;
+        LastName = customerToEdit.LastName;
+        PhoneNumber = customerToEdit.PhoneNumber;
+        Email = customerToEdit.Email;
+        City = customerToEdit.Address_City;
+        FullAddress = customerToEdit.Address_FullAddress;
+        DateOfBirth = customerToEdit.DateOfBirth;
+        NationalCode = customerToEdit.NationalCode;
     }
 
-    [RelayCommand]
-    private void Save()
+    [RelayCommand(CanExecute = nameof(CanSave))]
+    private async Task Save()
     {
-        // Update the original customer object
-        // In a real-world scenario, you might use a method on the Customer entity
-        // For now, we create a new instance with updated values, reflecting an update pattern
-        var updatedCustomer = new Customer(
-            FirstName,
-            LastName,
-            Email,
-            Phone,
-            City,
-            FullAddress,
-            DateTime.TryParse(DateOfBirth, out var dob) ? dob : (DateTime?)null,
-            long.TryParse(NationalCode, out var nc) ? nc : (long?)null
-        );
-        // In a real app with Ids, you would assign the Id here: updatedCustomer.Id = _customerToEdit.Id;
+        IsBusy = true;
+        try
+        {
+            var command = new UpdateCustomerCommand
+            {
+                Id = this.Id,
+                PhoneNumber = this.PhoneNumber,
+                Email = this.Email,
+                City = this.City,
+                FullAddress = this.FullAddress
+            };
+            var result = await _mediator.Send(command);
 
-        _onSave?.Invoke(updatedCustomer);
+            if (result.IsSuccess)
+            {
+                MessageBox.Show("Customer updated successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                await _onSave.Invoke();
+            }
+            else
+            {
+                MessageBox.Show(result.Error, "Update Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
+
+    private bool CanSave() => !string.IsNullOrWhiteSpace(PhoneNumber) && !IsBusy;
 
     [RelayCommand]
     private void Cancel()
     {
-        _onCancel?.Invoke();
+        _onCancel.Invoke();
     }
 }

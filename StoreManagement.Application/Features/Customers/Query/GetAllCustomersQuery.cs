@@ -15,7 +15,7 @@ public class GetAllCustomersQueryHandler(
         try
         {
             var sqlBuilder = new System.Text.StringBuilder(
-                "SELECT Id, FirstName, LastName, PhoneNumber, Email, City, FullAddress, DateOfBirth, NationalCode, CreatedAt FROM Customers WHERE IsDeleted = 0");
+                "SELECT Id, FirstName, LastName, PhoneNumber, Email, Address_City, Address_FullAddress, DateOfBirth, NationalCode, CreatedAt FROM Customers WHERE IsDeleted = 0");
 
             var parameters = new DynamicParameters();
             if (!string.IsNullOrWhiteSpace(request.SearchText))
@@ -23,7 +23,7 @@ public class GetAllCustomersQueryHandler(
                 sqlBuilder.Append(" AND (FirstName LIKE @SearchText OR LastName LIKE @SearchText OR PhoneNumber LIKE @SearchText OR CAST(NationalCode AS NVARCHAR(20)) LIKE @SearchText)");
                 parameters.Add("SearchText", $"%{request.SearchText}%");
             }
-            sqlBuilder.Append(" ORDER BY CreationDate DESC");
+            sqlBuilder.Append(" ORDER BY CreatedAt DESC");
             var customers = await dapperRepository.QueryAsync<CustomerDto>(sqlBuilder.ToString(), parameters);
             return Result.Success(customers.ToList());
 

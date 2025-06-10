@@ -10,6 +10,9 @@ public static class ServiceCollectionExtensions
         // Register MediatR PipelineBehavior 
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>));
 
+        // Register MediatR for handling commands and queries
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateCustomerCommand).Assembly));
+
         return services;
     }
 
@@ -19,6 +22,10 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<MainViewModel>();
         services.AddTransient<CustomerManagementViewModel>();
         services.AddTransient<DashboardViewModel>();
+
+        services.AddTransient<AddCustomerViewModel>();
+        services.AddTransient<EditCustomerViewModel>();
+
         return services;
     }
 }

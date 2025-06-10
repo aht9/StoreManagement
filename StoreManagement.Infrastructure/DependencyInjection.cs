@@ -22,8 +22,8 @@ public static class DependencyInjection
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ApplicationDbContext>());
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
-        /// 5) MediatR برای Publish رویدادهای دامنه
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ApplicationDbContext).Assembly));
+        ///// 5) MediatR برای Publish رویدادهای دامنه
+        //services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ApplicationDbContext).Assembly));
 
         // 6) ServiceCollection Extensions
         services.AddScoped<ISmsProviderFactory, SmsProviderFactory>();

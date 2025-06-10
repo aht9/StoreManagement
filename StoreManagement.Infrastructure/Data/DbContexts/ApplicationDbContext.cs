@@ -2,10 +2,21 @@
 
 namespace StoreManagement.Infrastructure.Data.DbContexts;
 
-public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IMediator mediator)
-    : DbContext(options), IUnitOfWork
+public class ApplicationDbContext : DbContext, IUnitOfWork
 {
+    private readonly IMediator? _mediator;
     private IDbContextTransaction? _currentTransaction;
+
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IMediator mediator) : base(options)
+    {
+        _mediator = mediator;
+    }
+
+    // This constructor is used by the DesignTimeFactory and does not require IMediator.
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+    {
+        _mediator = null;
+    }
 
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Store> Stores { get; set; }
@@ -111,7 +122,10 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     {
         try
         {
-            await mediator.DispatchDomainEventsAsync(this);
+            if (_mediator != null)
+            {
+                await _mediator.DispatchDomainEventsAsync(this);
+            }
             var result = await base.SaveChangesAsync(cancellationToken) > 0;
             return result;
         }

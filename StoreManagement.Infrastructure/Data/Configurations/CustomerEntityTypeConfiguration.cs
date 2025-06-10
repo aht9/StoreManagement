@@ -15,8 +15,7 @@
         builder.Property(c => c.LastName).HasMaxLength(250).IsRequired();
         builder.Property(c => c.Email)
             .HasMaxLength(250)
-            .IsRequired(false)
-            .HasAnnotation("DataType", DataType.EmailAddress);
+            .IsRequired(false);
 
 
         builder.OwnsOne(e => e.Phone, phoneBuilder =>
@@ -36,13 +35,15 @@
         builder.OwnsOne(c => c.Address, address =>
         {
             address.Property(a => a.City).HasMaxLength(100).IsRequired();
-            address.Property(a => a.FullAddress).HasMaxLength(500).IsRequired();
+            address.Property(a => a.FullAddress).HasMaxLength(500).IsRequired(false);
             address.WithOwner();
         });
         builder.Property(c => c.NationalCode).HasMaxLength(11).IsRequired(false);
         builder.Property(c => c.DateOfBirth)
             .HasColumnType("datetime2")
-            .IsRequired();
+            .IsRequired(false);
+
+        builder.HasQueryFilter(e => !e.IsDeleted);
 
 
         builder.HasMany(c => c.SalesInvoices)
