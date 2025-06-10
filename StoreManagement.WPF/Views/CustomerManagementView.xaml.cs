@@ -11,5 +11,6 @@ namespace StoreManagement.WPF.Views
         {
             InitializeComponent();
         }
+
     }
 }

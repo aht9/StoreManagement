@@ -7,6 +7,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:converters="clr-namespace:StoreManagement.WPF.Converters"
+             xmlns:helpers="clr-namespace:StoreManagement.WPF.Helpers"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=viewModels:CustomerManagementViewModel}"
              d:DesignHeight="600" d:DesignWidth="800"
@@ -16,12 +17,11 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+            <helpers:BindingProxy x:Key="ViewModelProxy" Data="{Binding}" />
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <!-- The root grid now contains both the main content and the dialog hosts as siblings -->
     <Grid>
-        <!-- Main Content Grid -->
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -63,21 +63,19 @@
                         <DataGridTextColumn Header="شماره تماس" Binding="{Binding PhoneNumber}" Width="*"/>
                         <DataGridTextColumn Header="شهر" Binding="{Binding Address_City}" Width="*"/>
 
-                        <DataGridTemplateColumn Header="عملیات" Width="Auto">
+                        <DataGridTemplateColumn Header="عملیات" Width="120">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <Button Style="{StaticResource BaseButtonStyle}"
-                                                ToolTip="ویرایش"
-                                                Padding="8"
-                                                Command="{Binding DataContext.OpenEditCustomerDialogCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                        <Button Style="{StaticResource BaseButtonStyle}" 
+                                                ToolTip="ویرایش" Padding="8"
+                                                Command="{Binding Path=Data.OpenEditCustomerDialogCommand, Source={StaticResource ViewModelProxy}}"
                                                 CommandParameter="{Binding}">
                                             <materialDesign:PackIcon Kind="PencilOutline" Width="16" Height="16" />
                                         </Button>
-                                        <Button Style="{StaticResource BaseButtonStyle}"
-                                                ToolTip="حذف"
-                                                Padding="8" Margin="8,0,0,0"
-                                                Command="{Binding DataContext.DeleteCustomerCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                        <Button Style="{StaticResource BaseButtonStyle}" 
+                                                ToolTip="حذف" Padding="8" Margin="8,0,0,0"
+                                                Command="{Binding Path=Data.DeleteCustomerCommand, Source={StaticResource ViewModelProxy}}"
                                                 CommandParameter="{Binding}">
                                             <materialDesign:PackIcon Kind="DeleteOutline" Width="16" Height="16" Foreground="{StaticResource DangerBrush}"/>
                                         </Button>

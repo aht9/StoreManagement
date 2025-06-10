@@ -54,7 +54,7 @@ public partial class AddCustomerViewModel : ViewModelBase
             if (result.IsSuccess)
             {
                 MessageBox.Show("Customer created successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                _onSave.Invoke();
+                _onSave?.Invoke();
             }
             else
             {
