@@ -62,4 +62,14 @@ public class ProductVariant : BaseEntity
             Product != null
         );
     }
+
+    public void Update(string requestSku, string requestColor, string requestSize)
+    {
+        if (string.IsNullOrWhiteSpace(requestSku))
+            throw new ArgumentException("SKU cannot be null or empty.", nameof(requestSku));
+        SKU = requestSku;
+        Color = requestColor;
+        Size = requestSize;
+        UpdateTimestamp();
+    }
 }

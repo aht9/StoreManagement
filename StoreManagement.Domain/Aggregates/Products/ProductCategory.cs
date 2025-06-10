@@ -27,6 +27,16 @@ public class ProductCategory : BaseEntity, IAggregateRoot
         Validate();
     }
 
+    // Method to update the category details
+    public void Update(string name, string description, int order)
+    {
+        Name = name;
+        Description = description;
+        Order = order;
+        Validate();
+        UpdateTimestamp();
+    }
+
     // Method to update the name
     public void UpdateName(string newName)
     {

@@ -78,4 +78,13 @@ public class Product : BaseEntity, IAggregateRoot
         UpdateTimestamp();
     }
 
+    public void Update(string name, string description, long? categoryId)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentException("Name cannot be empty.", nameof(name));
+        Name = name;
+        Description = description;
+        CategoryId = categoryId;
+        UpdateTimestamp();
+    }
 }

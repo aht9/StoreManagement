@@ -10,4 +10,8 @@
       <ProjectReference Include="..\StoreManagement.Infrastructure\StoreManagement.Infrastructure.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Features\ProductVariants\Queries\" />
+    </ItemGroup>
+
 </Project>
