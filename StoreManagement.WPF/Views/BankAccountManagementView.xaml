@@ -1,0 +1,165 @@
+﻿<UserControl x:Class="StoreManagement.WPF.Views.BankAccountManagementView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StoreManagement.WPF.Views"
+             xmlns:viewModels="clr-namespace:StoreManagement.WPF.ViewModels"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:converters="clr-namespace:StoreManagement.WPF.Converters"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=viewModels:BankAccountManagementViewModel}"
+             FontFamily="{StaticResource PersianFont}"
+             FlowDirection="RightToLeft">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="320"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Accounts List Panel -->
+        <Border Grid.Column="0" Style="{StaticResource CardBorderStyle}" Margin="20">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="لیست حساب‌های بانکی" Style="{StaticResource CardTitleStyle}" Margin="10"/>
+
+                <ListBox Grid.Row="1" ItemsSource="{Binding BankAccounts}" 
+                         SelectedItem="{Binding SelectedAccountDetails, Mode=OneWay, BindsDirectlyToSource=True}"
+                         HorizontalContentAlignment="Stretch">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                            <Setter Property="materialDesign:ListBoxItemAssist.ShowSelection" Value="True"/>
+                            <EventSetter Event="Selected" Handler="ListBoxItem_Selected"/>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Border Padding="10" BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <materialDesign:PackIcon Kind="CreditCard" Grid.RowSpan="2" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="{DynamicResource PrimaryHueMidBrush}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding AccountName}" FontWeight="Bold"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding BankName}" Opacity="0.7"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Balance, StringFormat={}{0:N0} ریال}" HorizontalAlignment="Left"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <Button Grid.Row="2" Style="{StaticResource PrimaryActionButtonStyle}" Content="افزودن حساب جدید" Command="{Binding OpenAddAccountDialogCommand}" Margin="10"/>
+            </Grid>
+        </Border>
+
+        <!-- Details Panel -->
+        <Grid Grid.Column="1" Margin="0,20,20,20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Details Header -->
+            <Border Grid.Row="0" Style="{StaticResource CardBorderStyle}" Padding="15">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Orientation="Horizontal">
+                        <TextBlock Text="{Binding SelectedAccountDetails.AccountName, FallbackValue='حسابی انتخاب نشده'}" Style="{StaticResource DisplayTitleStyle}" VerticalAlignment="Center"/>
+                        <Button Style="{StaticResource BaseButtonStyle}" Margin="10,0,0,0" Padding="8" ToolTip="ویرایش حساب" Command="{Binding EditAccountCommand}">
+                            <materialDesign:PackIcon Kind="Pencil"/>
+                        </Button>
+                        <Button Style="{StaticResource BaseButtonStyle}" Margin="5,0,0,0" Padding="8" ToolTip="حذف حساب" Command="{Binding DeleteAccountCommand}">
+                            <materialDesign:PackIcon Kind="Delete" Foreground="{DynamicResource DangerBrush}"/>
+                        </Button>
+                    </StackPanel>
+
+                    <Grid Grid.Row="1" Margin="0,15,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <materialDesign:Card Grid.Column="0" Padding="10" Margin="0,0,5,0" Background="{DynamicResource SuccessBrush}">
+                            <StackPanel>
+                                <TextBlock Text="مجموع واریز" Opacity="0.8"/>
+                                <TextBlock Text="{Binding SelectedAccountDetails.TotalCredit, StringFormat={}{0:N0} ریال}" FontWeight="Bold" FontSize="18"/>
+                            </StackPanel>
+                        </materialDesign:Card>
+                        <materialDesign:Card Grid.Column="1" Padding="10" Margin="5,0,0,0" Background="{DynamicResource DangerBrush}">
+                            <StackPanel>
+                                <TextBlock Text="مجموع برداشت" Opacity="0.8"/>
+                                <TextBlock Text="{Binding SelectedAccountDetails.TotalDebit, StringFormat={}{0:N0} ریال}" FontWeight="Bold" FontSize="18"/>
+                            </StackPanel>
+                        </materialDesign:Card>
+                    </Grid>
+
+                    <Button Grid.Row="2" Style="{StaticResource PrimaryActionButtonStyle}" HorizontalAlignment="Left" Margin="0,15,0,0" Content="تراکنش جدید" Command="{Binding AddTransactionCommand}"/>
+
+                </Grid>
+            </Border>
+
+            <!-- Transactions Grid -->
+            <Border Grid.Row="1" Style="{StaticResource CardBorderStyle}" Margin="0,20,0,0">
+                <DataGrid ItemsSource="{Binding SelectedAccountDetails.Transactions}" Style="{StaticResource ModernDataGridStyle}" IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="تاریخ" Binding="{Binding TransactionDate, StringFormat='yyyy/MM/dd HH:mm'}" Width="*"/>
+                        <DataGridTextColumn Header="شرح" Binding="{Binding Description}" Width="2*"/>
+                        <DataGridTextColumn Header="نوع" Binding="{Binding TransactionType}" Width="Auto"/>
+                        <DataGridTextColumn Header="مبلغ" Binding="{Binding Amount, StringFormat={}{0:N0}}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+        </Grid>
+
+        <!-- Dialog Hosts -->
+        <materialDesign:DialogHost Grid.Column="0" IsOpen="{Binding IsAddBankAccountDialogOpen}">
+            <materialDesign:DialogHost.DialogContent>
+                <local:AddBankAccountView DataContext="{Binding AddBankAccountViewModel}"/>
+            </materialDesign:DialogHost.DialogContent>
+        </materialDesign:DialogHost>
+        <materialDesign:DialogHost Grid.Column="0" IsOpen="{Binding IsEditBankAccountDialogOpen}">
+            <materialDesign:DialogHost.DialogContent>
+                <local:EditBankAccountView DataContext="{Binding EditBankAccountViewModel}"/>
+            </materialDesign:DialogHost.DialogContent>
+        </materialDesign:DialogHost>
+        <materialDesign:DialogHost Grid.Column="0" IsOpen="{Binding IsAddTransactionDialogOpen}">
+            <materialDesign:DialogHost.DialogContent>
+                <local:AddTransactionView DataContext="{Binding AddTransactionViewModel}"/>
+            </materialDesign:DialogHost.DialogContent>
+        </materialDesign:DialogHost>
+
+        <!-- Busy Indicator -->
+        <materialDesign:Card Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}"
+                             VerticalAlignment="Center" HorizontalAlignment="Center"
+                             Padding="20" Grid.ColumnSpan="2" Grid.Column="0">
+            <StackPanel Orientation="Horizontal">
+                <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}" IsIndeterminate="True" />
+                <TextBlock Text="در حال پردازش..." Margin="15,0,0,0" VerticalAlignment="Center"/>
+            </StackPanel>
+        </materialDesign:Card>
+    </Grid>
+</UserControl>

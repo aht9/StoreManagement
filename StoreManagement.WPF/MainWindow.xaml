@@ -107,6 +107,10 @@ c253 -80 426 -265 496 -526 30 -111 37 -337 15 -454 -49 -258 -181 -442 -395
                                  Style="{StaticResource NavRadioButtonStyle}" 
                                  Command="{Binding NavigateToCustomersCommand}"
                                  Tag="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    <RadioButton Content="حساب بانکی" 
+                                 Style="{StaticResource NavRadioButtonStyle}" 
+                                 Command="{Binding NavigateToBankAccountsCommand}"
+                                 Tag="M16 3H8v4H2v14h20V7h-6V3zm-2 4h-4V5h4v2zM4 19V9h16v10H4zm6-8h4v3h-4v-3zm-2 4h8v2H8v-2z"/>
                     <RadioButton Content="گزارشات" 
                                  IsEnabled="False" 
                                  Style="{StaticResource NavRadioButtonStyle}"

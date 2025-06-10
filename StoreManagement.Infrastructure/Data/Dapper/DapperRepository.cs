@@ -4,21 +4,36 @@ public class DapperRepository(DapperContext context) : IDapperRepository
 {
     private readonly DapperContext _context = context ?? throw new ArgumentNullException(nameof(context));
 
-    public async Task<IEnumerable<T>> QueryAsync<T>(string sql, object param = null)
+    public async Task<IEnumerable<T>> QueryAsync<T>(string sql, object? param = null, IDbTransaction? transaction = null, CancellationToken cancellationToken = default)
     {
-        using var conn = _context.CreateConnection();
-        return await conn.QueryAsync<T>(sql, param);
+        var command = new CommandDefinition(sql, param, transaction, cancellationToken: cancellationToken);
+        using var connection = _context.CreateConnection();
+        return await connection.QueryAsync<T>(command);
     }
 
-    public async Task<T> QuerySingleAsync<T>(string sql, object param = null)
+    public async Task<T> QuerySingleOrDefaultAsync<T>(string sql, object? param = null, IDbTransaction? transaction = null, CancellationToken cancellationToken = default)
     {
-        using var conn = _context.CreateConnection();
-        return await conn.QuerySingleOrDefaultAsync<T>(sql, param);
+        var command = new CommandDefinition(sql, param, transaction, cancellationToken: cancellationToken);
+        using var connection = _context.CreateConnection();
+        return await connection.QuerySingleOrDefaultAsync<T>(command);
     }
 
-    public async Task<int> ExecuteAsync(string sql, object param = null)
+    public async Task<int> ExecuteAsync(string sql, object? param = null, IDbTransaction? transaction = null, CancellationToken cancellationToken = default)
     {
-        using var conn = _context.CreateConnection();
-        return await conn.ExecuteAsync(sql, param);
+        var command = new CommandDefinition(sql, param, transaction, cancellationToken: cancellationToken);
+        using var connection = _context.CreateConnection();
+        return await connection.ExecuteAsync(command);
+    }
+
+    public async Task<SqlMapper.GridReader> QueryMultipleAsync(string sql, object? param = null, IDbTransaction? transaction = null, CancellationToken cancellationToken = default)
+    {
+        var command = new CommandDefinition(sql, param, transaction, cancellationToken: cancellationToken);
+        var connection = _context.CreateConnection();
+        return await connection.QueryMultipleAsync(command);
+    }
+
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
     }
 }

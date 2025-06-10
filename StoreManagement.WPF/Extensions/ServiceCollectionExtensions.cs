@@ -22,9 +22,14 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<MainViewModel>();
         services.AddTransient<CustomerManagementViewModel>();
         services.AddTransient<DashboardViewModel>();
+        services.AddTransient<BankAccountManagementViewModel>();
+
 
         services.AddTransient<AddCustomerViewModel>();
         services.AddTransient<EditCustomerViewModel>();
+        services.AddTransient<AddBankAccountViewModel>();
+        services.AddTransient<EditBankAccountViewModel>();
+        services.AddTransient<AddTransactionViewModel>();
 
         return services;
     }

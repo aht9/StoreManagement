@@ -15,7 +15,7 @@ public class GetCustomerByIdQueryHandler(IDapperRepository dapperRepository, ILo
         {
             const string sql = "SELECT Id, FirstName, LastName, PhoneNumber, Email, City, FullAddress, DateOfBirth, NationalCode, CreatedAt FROM Customers WHERE Id = @Id AND IsDeleted = 0";
 
-            var customer = await dapperRepository.QuerySingleAsync<CustomerDto>(sql, new { request.Id });
+            var customer = await dapperRepository.QuerySingleOrDefaultAsync<CustomerDto>(sql, new { request.Id }, cancellationToken: cancellationToken);
 
             if (customer == null)
             {

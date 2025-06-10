@@ -2,27 +2,33 @@
 
 public partial class MainViewModel : ViewModelBase
 {
-    private readonly IMediator _mediator;
+    private readonly IServiceProvider _serviceProvider;
 
     [ObservableProperty]
     private ViewModelBase _currentViewModel;
 
-    public MainViewModel(IMediator mediator)
+    public MainViewModel(IServiceProvider serviceProvider)
     {
-        _mediator = mediator;
-        // Set the initial view
-        CurrentViewModel = new DashboardViewModel();
+        _serviceProvider = serviceProvider;        
+        CurrentViewModel = _serviceProvider.GetRequiredService<DashboardViewModel>();
     }
 
     [RelayCommand]
     private void NavigateToDashboard()
     {
-        CurrentViewModel = new DashboardViewModel();
+        CurrentViewModel = _serviceProvider.GetRequiredService<DashboardViewModel>();
     }
 
     [RelayCommand]
     private void NavigateToCustomers()
     {
-        CurrentViewModel = new CustomerManagementViewModel(_mediator);
+        CurrentViewModel = _serviceProvider.GetRequiredService<CustomerManagementViewModel>();
+    }
+
+
+    [RelayCommand]
+    private void NavigateToBankAccounts()
+    {
+        CurrentViewModel = _serviceProvider.GetRequiredService<BankAccountManagementViewModel>();
     }
 }
