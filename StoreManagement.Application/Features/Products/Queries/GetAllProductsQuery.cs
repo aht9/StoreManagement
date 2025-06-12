@@ -2,6 +2,7 @@
 
 public class GetAllProductsQuery : IRequest<Result<List<ProductDto>>>
 {
+    public string? SearchText { get; set; }
 }
 
 public class GetAllProductsQueryHandler : IRequestHandler<GetAllProductsQuery, Result<List<ProductDto>>>
@@ -19,13 +20,21 @@ public class GetAllProductsQueryHandler : IRequestHandler<GetAllProductsQuery, R
     {
         try
         {
-            const string sql = @"
+            var sqlBuilder = new System.Text.StringBuilder(@"
                 SELECT p.Id, p.Name, p.Description, p.CategoryId, c.Name as CategoryName
                 FROM Products p
                 LEFT JOIN ProductCategories c ON p.CategoryId = c.Id
-                WHERE p.IsDeleted = 0
-                ORDER BY p.Name";
-            var result = await _dapper.QueryAsync<ProductDto>(sql, cancellationToken: cancellationToken);
+                WHERE p.IsDeleted = 0");
+
+            var parameters = new DynamicParameters();
+            if (!string.IsNullOrWhiteSpace(request.SearchText))
+            {
+                sqlBuilder.Append(" AND (p.Name LIKE @SearchText OR c.Name LIKE @SearchText OR p.Description LIKE @SearchText)");
+                parameters.Add("SearchText", $"%{request.SearchText}%");
+            }
+            sqlBuilder.Append(" ORDER BY p.Name");
+
+            var result = await _dapper.QueryAsync<ProductDto>(sqlBuilder.ToString(), parameters);
             return Result.Success(result.ToList());
         }
         catch (Exception ex)
