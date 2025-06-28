@@ -20,6 +20,15 @@ public class InventoryTransactionEntityTypeConfiguration : IEntityTypeConfigurat
         builder.Property(it => it.Quantity)
             .IsRequired();
 
+        builder.Property(it => it.PurchasePrice)
+            .IsRequired(false)
+            .HasColumnType("decimal(18,2)");
+
+        builder.Property(it => it.SalePrice)
+            .IsRequired(false)
+            .HasColumnType("decimal(18,2)");
+
+
         builder
             .Property<int>("_transactionTypeId")
             .UsePropertyAccessMode(PropertyAccessMode.Field)

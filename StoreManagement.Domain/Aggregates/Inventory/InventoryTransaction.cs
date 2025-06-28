@@ -8,6 +8,10 @@ public class InventoryTransaction : BaseEntity, IAggregateRoot
     public DateTime TransactionDate { get; private set; }
 
     public int Quantity { get; private set; }
+    
+    public decimal? PurchasePrice { get; private set; }
+
+    public decimal? SalePrice { get; private set; }
 
     public InventoryTransactionType TransactionType { get; private set; }
     private int _transactionTypeId;
