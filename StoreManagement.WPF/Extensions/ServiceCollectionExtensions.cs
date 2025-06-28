@@ -1,6 +1,4 @@
-﻿using StoreManagement.WPF.Views;
-
-namespace StoreManagement.WPF.Extensions;
+﻿namespace StoreManagement.WPF.Extensions;
 
 public static class ServiceCollectionExtensions
 {
@@ -15,6 +13,14 @@ public static class ServiceCollectionExtensions
         // Register MediatR for handling commands and queries
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateCustomerCommand).Assembly));
 
+
+        // Register AutoMapper
+
+        services.AddAutoMapper(cfg =>
+        {
+            cfg.AddProfile<StoreMappingProfile>();
+        }, typeof(CreateCustomerCommand).Assembly);
+
         return services;
     }
 
@@ -26,6 +32,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<DashboardViewModel>();
         services.AddTransient<BankAccountManagementViewModel>();
         services.AddTransient<ProductManagementViewModel>();
+        services.AddTransient<StoreManagementViewModel>();
 
         services.AddTransient<AddCustomerViewModel>();
         services.AddTransient<EditCustomerViewModel>();
@@ -33,10 +40,13 @@ public static class ServiceCollectionExtensions
         services.AddTransient<EditBankAccountViewModel>();
         services.AddTransient<AddTransactionViewModel>();
 
-        services.AddTransient<AddProductView>();
-        services.AddTransient<EditProductView>();
-        services.AddTransient<AddProductVariantView>();
-        services.AddTransient<EditProductVariantView>();
+        services.AddTransient<AddProductViewModel>();
+        services.AddTransient<EditProductViewModel>();
+        services.AddTransient<AddProductVariantViewModel>();
+        services.AddTransient<EditProductVariantViewModel>();
+
+        services.AddTransient<AddStoreViewModel>();
+        services.AddTransient<EditStoreViewModel>();
 
         return services;
     }

@@ -37,4 +37,10 @@ public partial class MainViewModel : ViewModelBase
     {
         CurrentViewModel = _serviceProvider.GetRequiredService<ProductManagementViewModel>();
     }
+
+    [RelayCommand]
+    private void NavigateToStores()
+    {
+        CurrentViewModel = _serviceProvider.GetRequiredService<StoreManagementViewModel>();
+    }
 }

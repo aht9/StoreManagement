@@ -11,11 +11,18 @@ public class DapperRepository(DapperContext context) : IDapperRepository
         return await connection.QueryAsync<T>(command);
     }
 
-    public async Task<T> QuerySingleOrDefaultAsync<T>(string sql, object? param = null, IDbTransaction? transaction = null, CancellationToken cancellationToken = default)
+    public async Task<T?> QuerySingleOrDefaultAsync<T>(string sql, object? param = null, IDbTransaction? transaction = null, CancellationToken cancellationToken = default)
     {
         var command = new CommandDefinition(sql, param, transaction, cancellationToken: cancellationToken);
         using var connection = _context.CreateConnection();
         return await connection.QuerySingleOrDefaultAsync<T>(command);
+    }
+
+    public async Task<T?> QueryFirstOrDefaultAsync<T>(string sql, object? param = null, IDbTransaction? transaction = null, CancellationToken cancellationToken = default)
+    {
+        var command = new CommandDefinition(sql, param, transaction, cancellationToken: cancellationToken);
+        using var connection = _context.CreateConnection();
+        return await connection.QueryFirstOrDefaultAsync<T>(command);
     }
 
     public async Task<int> ExecuteAsync(string sql, object? param = null, IDbTransaction? transaction = null, CancellationToken cancellationToken = default)

@@ -12,6 +12,11 @@
 
     <ItemGroup>
       <Folder Include="Features\ProductVariants\Queries\" />
+      <Folder Include="Features\Stores\Commands\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="14.0.0" />
     </ItemGroup>
 
 </Project>

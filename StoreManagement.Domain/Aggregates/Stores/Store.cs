@@ -26,8 +26,6 @@
             get => _location;
             private set
             {
-                if (string.IsNullOrWhiteSpace(value))
-                    throw new ArgumentException("Location cannot be empty.");
                 _location = value;
             }
         }
@@ -37,8 +35,6 @@
             get => _managerName;
             private set
             {
-                if (string.IsNullOrWhiteSpace(value))
-                    throw new ArgumentException("Manager name cannot be empty.");
                 _managerName = value;
             }
         }
@@ -48,8 +44,6 @@
             get => _contactNumber;
             private set
             {
-                if (string.IsNullOrWhiteSpace(value))
-                    throw new ArgumentException("Contact number cannot be empty.");
                 _contactNumber = value;
             }
         }
@@ -59,8 +53,6 @@
             get => _email;
             private set
             {
-                if (string.IsNullOrWhiteSpace(value) || !value.Contains("@"))
-                    throw new ArgumentException("Invalid email address.");
                 _email = value;
             }
         }

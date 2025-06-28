@@ -34,7 +34,7 @@ public class GetAllProductsQueryHandler : IRequestHandler<GetAllProductsQuery, R
             }
             sqlBuilder.Append(" ORDER BY p.Name");
 
-            var result = await _dapper.QueryAsync<ProductDto>(sqlBuilder.ToString(), parameters);
+            var result = await _dapper.QueryAsync<ProductDto>(sqlBuilder.ToString(), parameters, cancellationToken: cancellationToken);
             return Result.Success(result.ToList());
         }
         catch (Exception ex)
