@@ -1,0 +1,60 @@
+﻿<UserControl x:Class="StoreManagement.WPF.Views.AddProductVariantView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:viewModels="clr-namespace:StoreManagement.WPF.ViewModels"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=viewModels:AddProductVariantViewModel}"
+             FontFamily="{StaticResource PersianFont}"
+             FlowDirection="RightToLeft">
+    <Grid>
+        <materialDesign:Card Width="Auto" MaxWidth="400" Margin="16" Padding="16" UniformCornerRadius="4"
+                             VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="افزودن واریانت جدید" Style="{StaticResource DisplayTitleStyle}" HorizontalAlignment="Center" Margin="0 0 0 16"/>
+
+                <TextBox Grid.Row="1"
+                         materialDesign:HintAssist.Hint="SKU"
+                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                         Text="{Binding Sku, UpdateSourceTrigger=PropertyChanged}"
+                         Margin="0 8 0 0"/>
+
+                <TextBox Grid.Row="2"
+                         materialDesign:HintAssist.Hint="رنگ"
+                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                         Text="{Binding Color, UpdateSourceTrigger=PropertyChanged}"
+                         Margin="0 8 0 0"/>
+
+                <TextBox Grid.Row="3"
+                         materialDesign:HintAssist.Hint="سایز"
+                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                         Text="{Binding Size, UpdateSourceTrigger=PropertyChanged}"
+                         Margin="0 8 0 0"/>
+
+                <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 24 0 0">
+                    <Button Style="{StaticResource PrimaryActionButtonStyle}" Content="ذخیره" Command="{Binding SaveCommand}" Margin="0 0 8 0"/>
+                    <Button Style="{StaticResource BaseButtonStyle}" Content="لغو" Command="{Binding CancelCommand}"/>
+                </StackPanel>
+            </Grid>
+        </materialDesign:Card>
+
+        <materialDesign:Card Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}"
+                             VerticalAlignment="Center" HorizontalAlignment="Center"
+                             Padding="20">
+            <StackPanel Orientation="Horizontal">
+                <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}" IsIndeterminate="True" />
+                <TextBlock Text="در حال بارگذاری..." Margin="15,0,0,0" VerticalAlignment="Center"/>
+            </StackPanel>
+        </materialDesign:Card>
+    </Grid>
+</UserControl>

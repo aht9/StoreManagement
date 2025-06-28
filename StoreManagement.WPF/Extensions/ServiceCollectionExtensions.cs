@@ -1,4 +1,6 @@
-﻿namespace StoreManagement.WPF.Extensions;
+﻿using StoreManagement.WPF.Views;
+
+namespace StoreManagement.WPF.Extensions;
 
 public static class ServiceCollectionExtensions
 {
@@ -23,13 +25,18 @@ public static class ServiceCollectionExtensions
         services.AddTransient<CustomerManagementViewModel>();
         services.AddTransient<DashboardViewModel>();
         services.AddTransient<BankAccountManagementViewModel>();
-
+        services.AddTransient<ProductManagementViewModel>();
 
         services.AddTransient<AddCustomerViewModel>();
         services.AddTransient<EditCustomerViewModel>();
         services.AddTransient<AddBankAccountViewModel>();
         services.AddTransient<EditBankAccountViewModel>();
         services.AddTransient<AddTransactionViewModel>();
+
+        services.AddTransient<AddProductView>();
+        services.AddTransient<EditProductView>();
+        services.AddTransient<AddProductVariantView>();
+        services.AddTransient<EditProductVariantView>();
 
         return services;
     }

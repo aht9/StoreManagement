@@ -166,7 +166,7 @@
         </materialDesign:DialogHost>
 
         <!-- Busy Indicator -->
-        <materialDesign:Card Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}"
+        <materialDesign:Card Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}"
                              VerticalAlignment="Center" HorizontalAlignment="Center"
                              Padding="20" Grid.ColumnSpan="2" Grid.Column="0">
             <StackPanel Orientation="Horizontal">

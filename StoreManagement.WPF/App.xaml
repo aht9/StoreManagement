@@ -30,6 +30,9 @@
             <DataTemplate DataType="{x:Type viewmodels:BankAccountManagementViewModel}">
                 <views:BankAccountManagementView/>
             </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:ProductManagementViewModel}">
+                <views:ProductManagementView/>
+            </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

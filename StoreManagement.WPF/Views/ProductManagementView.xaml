@@ -7,7 +7,7 @@
              xmlns:viewModels="clr-namespace:StoreManagement.WPF.ViewModels"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:helpers="clr-namespace:StoreManagement.WPF.Helpers"
-             mc:Ignorable="d" 
+             xmlns:converters="clr-namespace:StoreManagement.WPF.Converters" mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=viewModels:ProductManagementViewModel}"
              FontFamily="{StaticResource PersianFont}"
              d:DesignHeight="600" d:DesignWidth="800"
@@ -30,51 +30,64 @@
 
             <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="20,0">
                 <Button Command="{Binding OpenAddProductDialogCommand}"
-                            Style="{StaticResource PrimaryActionButtonStyle}"
-                            Content="افزودن محصول جدید"/>
+                        Style="{StaticResource PrimaryActionButtonStyle}"
+                        Content="افزودن محصول جدید"/>
+
+                <Button Command="{Binding OpenAddProductVariantDialogCommand}"
+                        Style="{StaticResource PrimaryActionButtonStyle}"
+                        Content="افزودن واریانت محصول انتخابی"
+                        Margin="10,0,0,0"/>
+
+                <Button Command="{Binding OpenEditProductVariantDialogCommand}"
+                        Style="{StaticResource PrimaryActionButtonStyle}"
+                        Content="مدیریت واریانت‌های محصول انتخابی"
+                        Margin="10,0,0,0"/>
 
                 <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
-                             Style="{StaticResource SearchBoxStyle}"
-                             Width="300"
-                             Margin="20,0,0,0"/>
+                         Style="{StaticResource SearchBoxStyle}"
+                         Width="300"
+                         Margin="20,0,0,0"/>
 
                 <Button Command="{Binding RefreshCommand}" 
-                            Style="{StaticResource BaseButtonStyle}" 
-                            ToolTip="بارگذاری مجدد"
-                            Padding="8"
-                            Margin="10,0,0,0">
+                        Style="{StaticResource BaseButtonStyle}" 
+                        ToolTip="بارگذاری مجدد"
+                        Padding="8"
+                        Margin="10,0,0,0">
                     <materialDesign:PackIcon Kind="Refresh" Width="16" Height="16" />
                 </Button>
             </StackPanel>
 
             <Border Grid.Row="2" Style="{StaticResource CardBorderStyle}" Margin="20">
                 <DataGrid Style="{StaticResource ModernDataGridStyle}" 
-                              ItemsSource="{Binding PagedProducts}"
-                              SelectedItem="{Binding SelectedProductVariant}"
-                              IsReadOnly="True">
-                    <DataGridTextColumn Header="نام محصول" Binding="{Binding Name}" Width="*"/>
-                    <DataGridTextColumn Header="نام دسته بندی" Binding="{Binding CategoryName}" Width="*"/>
-                    <DataGridTextColumn Header="توضیحات" Binding="{Binding Description}" Width="2*"/>
-                    <DataGridTemplateColumn Header="عملیات" Width="120">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <Button Style="{StaticResource BaseButtonStyle}" 
+                          ItemsSource="{Binding PagedProducts}"
+                          SelectedItem="{Binding SelectedProduct}"
+                          IsReadOnly="True"
+                          AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="نام محصول" Binding="{Binding Name}" Width="*"/>
+                        <DataGridTextColumn Header="نام دسته بندی" Binding="{Binding CategoryName}" Width="*"/>
+                        <DataGridTextColumn Header="توضیحات" Binding="{Binding Description}" Width="2*"/>
+                        <DataGridTemplateColumn Header="عملیات" Width="120">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button Style="{StaticResource BaseButtonStyle}" 
                                                 ToolTip="ویرایش" Padding="8"
-                                                Command="{Binding Path=Data.OpenEditCustomerDialogCommand, Source={StaticResource ViewModelProxy}}"
+                                                Command="{Binding Path=Data.OpenEditProductDialogCommand, Source={StaticResource ViewModelProxy}}" 
                                                 CommandParameter="{Binding}">
-                                        <materialDesign:PackIcon Kind="PencilOutline" Width="16" Height="16" />
-                                    </Button>
-                                    <Button Style="{StaticResource BaseButtonStyle}" 
+                                            <materialDesign:PackIcon Kind="PencilOutline" Width="16" Height="16" />
+                                        </Button>
+                                        <Button Style="{StaticResource BaseButtonStyle}" 
                                                 ToolTip="حذف" Padding="8" Margin="8,0,0,0"
-                                                Command="{Binding Path=Data.DeleteCustomerCommand, Source={StaticResource ViewModelProxy}}"
+                                                Command="{Binding Path=Data.DeleteProductCommand, Source={StaticResource ViewModelProxy}}" 
                                                 CommandParameter="{Binding}">
-                                        <materialDesign:PackIcon Kind="DeleteOutline" Width="16" Height="16" Foreground="{StaticResource DangerBrush}"/>
-                                    </Button>
-                                </StackPanel>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
+                                            <materialDesign:PackIcon Kind="DeleteOutline" Width="16" Height="16" Foreground="{StaticResource DangerBrush}"/>
+                                        </Button>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
                 </DataGrid>
             </Border>
             <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,10">
@@ -89,8 +102,7 @@
             </StackPanel>
         </Grid>
 
-        <!-- Loading Indicator -->
-        <materialDesign:Card Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}"
+        <materialDesign:Card Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}"
                              VerticalAlignment="Center" HorizontalAlignment="Center"
                              Padding="20">
             <StackPanel Orientation="Horizontal">
@@ -99,16 +111,27 @@
             </StackPanel>
         </materialDesign:Card>
 
-        <!-- Dialog Hosts for Add and Edit -->
         <materialDesign:DialogHost IsOpen="{Binding IsAddProductDialogOpen}">
             <materialDesign:DialogHost.DialogContent>
-                <local:AddCustomerView DataContext="{Binding AddProductViewModel}"/>
+                <local:AddProductView DataContext="{Binding AddProductViewModel}"/>
             </materialDesign:DialogHost.DialogContent>
         </materialDesign:DialogHost>
 
         <materialDesign:DialogHost IsOpen="{Binding IsEditProductDialogOpen}">
             <materialDesign:DialogHost.DialogContent>
-                <local:EditCustomerView DataContext="{Binding EditProductViewModel}"/>
+                <local:EditProductView DataContext="{Binding EditProductViewModel}"/>
+            </materialDesign:DialogHost.DialogContent>
+        </materialDesign:DialogHost>
+
+        <materialDesign:DialogHost IsOpen="{Binding IsAddProductVariantDialogOpen}">
+            <materialDesign:DialogHost.DialogContent>
+                <local:AddProductVariantView DataContext="{Binding AddProductVariantViewModel}"/>
+            </materialDesign:DialogHost.DialogContent>
+        </materialDesign:DialogHost>
+
+        <materialDesign:DialogHost IsOpen="{Binding IsEditProductVariantDialogOpen}">
+            <materialDesign:DialogHost.DialogContent>
+                <local:EditProductVariantView DataContext="{Binding EditProductVariantViewModel}"/>
             </materialDesign:DialogHost.DialogContent>
         </materialDesign:DialogHost>
     </Grid>

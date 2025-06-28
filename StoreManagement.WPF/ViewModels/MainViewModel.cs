@@ -31,4 +31,10 @@ public partial class MainViewModel : ViewModelBase
     {
         CurrentViewModel = _serviceProvider.GetRequiredService<BankAccountManagementViewModel>();
     }
+
+    [RelayCommand]
+    private void NavigateToProducts()
+    {
+        CurrentViewModel = _serviceProvider.GetRequiredService<ProductManagementViewModel>();
+    }
 }

@@ -100,7 +100,7 @@
         </Grid>
 
         <!-- Loading Indicator -->
-        <materialDesign:Card Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}"
+        <materialDesign:Card Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}"
                              VerticalAlignment="Center" HorizontalAlignment="Center"
                              Padding="20">
             <StackPanel Orientation="Horizontal">

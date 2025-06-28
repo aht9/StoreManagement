@@ -5,6 +5,12 @@
     <Compile Update="Views\AddBankAccountView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\AddProductVariantView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\AddProductView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\AddTransactionView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -15,6 +21,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\EditCustomerView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\EditProductVariantView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\EditProductView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\ProductManagementView.xaml.cs">

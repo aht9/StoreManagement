@@ -111,6 +111,10 @@ c253 -80 426 -265 496 -526 30 -111 37 -337 15 -454 -49 -258 -181 -442 -395
                                  Style="{StaticResource NavRadioButtonStyle}" 
                                  Command="{Binding NavigateToBankAccountsCommand}"
                                  Tag="M16 3H8v4H2v14h20V7h-6V3zm-2 4h-4V5h4v2zM4 19V9h16v10H4zm6-8h4v3h-4v-3zm-2 4h8v2H8v-2z"/>
+                    <RadioButton Content="مدیریت محصولات" 
+                                 Style="{StaticResource NavRadioButtonStyle}" 
+                                 Command="{Binding NavigateToProductsCommand}"
+                                 Tag="M22 3H2v6h1v11c0 1.105.895 2 2 2h14c1.105 0 2-.895 2-2V9h1V3zM4 5h16v2H4V5zm15 15H5V9h14v11zM9 11h6c0 1.105-.895 2-2 2h-2c-1.105 0-2-.895-2-2z"/>
                     <RadioButton Content="گزارشات" 
                                  IsEnabled="False" 
                                  Style="{StaticResource NavRadioButtonStyle}"

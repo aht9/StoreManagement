@@ -1,7 +1,4 @@
-﻿using StoreManagement.Application.DTOs.Products;
-using StoreManagement.Application.Features.Products.Queries;
-
-namespace StoreManagement.WPF.ViewModels;
+﻿namespace StoreManagement.WPF.ViewModels;
 
 public partial class ProductManagementViewModel : ViewModelBase
 {
@@ -13,6 +10,10 @@ public partial class ProductManagementViewModel : ViewModelBase
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasSelectedProduct))]
+    [NotifyCanExecuteChangedFor(nameof(OpenEditProductDialogCommand))] // Added for general edit button
+    [NotifyCanExecuteChangedFor(nameof(DeleteProductCommand))] // For general delete button
+    [NotifyCanExecuteChangedFor(nameof(OpenAddProductVariantDialogCommand))] // To enable/disable variant buttons
+    [NotifyCanExecuteChangedFor(nameof(OpenEditProductVariantDialogCommand))] // To enable/disable variant buttons
     private ProductDto? _selectedProduct;
 
     [ObservableProperty] private bool _isBusy;
@@ -37,11 +38,11 @@ public partial class ProductManagementViewModel : ViewModelBase
             ? _allProducts
             : _allProducts.Where(c =>
                 c.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
-                c.CategoryName.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
+                (c.CategoryName != null && c.CategoryName.Contains(SearchText, StringComparison.OrdinalIgnoreCase)) || // Added null check for CategoryName
                 (c.Description != null && c.Description.Contains(SearchText, StringComparison.OrdinalIgnoreCase)));
 
-    public int TotalPages => (_allProducts == null || _allProducts.Count == 0) ? 1 : (int)Math.Ceiling((double)FilteredProducts.Count() / PageSize);
 
+    public int TotalPages => (_allProducts == null || _allProducts.Count == 0) ? 1 : (int)Math.Ceiling((double)FilteredProducts.Count() / PageSize);
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(GoToNextPageCommand))]
@@ -62,6 +63,7 @@ public partial class ProductManagementViewModel : ViewModelBase
     public ProductManagementViewModel(IMediator mediator)
     {
         _mediator = mediator;
+        _allProducts = new List<ProductDto>();
         LoadProductsAsync();
     }
 
@@ -125,24 +127,45 @@ public partial class ProductManagementViewModel : ViewModelBase
     [RelayCommand]
     private void OpenAddProductDialog()
     {
-        AddProductViewModel = new AddProductViewModel(_mediator);
+        Action onSaveAction = async () =>
+        {
+            IsAddProductDialogOpen = false;
+            await LoadProductsAsync(); // Refresh the list after adding
+        };
+
+        Action onCancelAction = () =>
+        {
+            IsAddProductDialogOpen = false;
+        };
+
+        AddProductViewModel = new AddProductViewModel(_mediator, onSaveAction, onCancelAction);
         IsAddProductDialogOpen = true;
     }
 
     [RelayCommand]
-    private void OpenEditProductDialog()
+    private void OpenEditProductDialog(ProductDto productToEdit)
     {
-        if (SelectedProduct == null)
+        if (productToEdit == null) return;
+
+        // OnSave Action for EditProductViewModel
+        Action onSaveAction = async () =>
         {
-            MessageBox.Show("Please select a product to edit.", "No Product Selected", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
-        EditProductViewModel = new EditProductViewModel(_mediator, SelectedProduct.Id);
+            IsEditProductDialogOpen = false;
+            await LoadProductsAsync(); // Refresh the list
+        };
+
+        // OnCancel Action for EditProductViewModel
+        Action onCancelAction = () =>
+        {
+            IsEditProductDialogOpen = false;
+        };
+
+        EditProductViewModel = new EditProductViewModel(_mediator, productToEdit.Id, onSaveAction, onCancelAction);
         IsEditProductDialogOpen = true;
     }
 
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(HasSelectedProduct))]
     private void OpenAddProductVariantDialog()
     {
         if (SelectedProduct == null)
@@ -150,11 +173,24 @@ public partial class ProductManagementViewModel : ViewModelBase
             MessageBox.Show("Please select a product to add a variant.", "No Product Selected", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
-        AddProductVariantViewModel = new AddProductVariantViewModel(_mediator, SelectedProduct.Id);
+
+
+        Action onSaveAction = async () =>
+        {
+            IsAddProductVariantDialogOpen = false;
+            await LoadProductsAsync();
+        };
+
+        Action onCancelAction = () =>
+        {
+            IsAddProductVariantDialogOpen = false;
+        };
+
+        AddProductVariantViewModel = new AddProductVariantViewModel(_mediator, SelectedProduct.Id, onSaveAction, onCancelAction);
         IsAddProductVariantDialogOpen = true;
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(HasSelectedProduct))]
     private void OpenEditProductVariantDialog()
     {
         if (SelectedProduct == null)
@@ -162,52 +198,43 @@ public partial class ProductManagementViewModel : ViewModelBase
             MessageBox.Show("Please select a product variant to edit.", "No Variant Selected", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
-        EditProductVariantViewModel = new EditProductVariantViewModel(_mediator, SelectedProduct.Id);
+        Action onSaveAction = async () =>
+        {
+            IsEditProductVariantDialogOpen = false;
+            await LoadProductsAsync(); 
+        };
+
+        Action onCancelAction = () =>
+        {
+            IsEditProductVariantDialogOpen = false;
+        };
+
+        EditProductVariantViewModel = new EditProductVariantViewModel(_mediator, SelectedProduct.Id, onSaveAction, onCancelAction);
         IsEditProductVariantDialogOpen = true;
     }
 
-
     [RelayCommand]
-    private void OpenEditCustomerDialog(ProductDto productToEdit)
-    {
-        if (productToEdit == null) return;
-
-        EditProductViewModel = new EditProductViewModel(_mediator, productToEdit,
-            // OnSave Action
-            async () => {
-                IsEditProductDialogOpen = false;
-                await LoadProductsAsync(); // Refresh the list
-            },
-            // OnCancel Action
-            () => {
-                IsEditProductDialogOpen = false;
-            }
-        );
-        IsEditProductDialogOpen = true;
-    }
-
-    [RelayCommand]
-    private async Task DeleteCustomer(ProductDto productToDelete)
+    private async Task DeleteProduct(ProductDto productToDelete) // Renamed from DeleteCustomer
     {
         if (productToDelete == null) return;
 
-        var confirmResult = MessageBox.Show($"Are you sure you want to delete {productToDelete.Name}?",
-            "Confirm Delete", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+        var confirmResult = MessageBox.Show($"آیا مطمئن هستید که می‌خواهید محصول {productToDelete.Name} را حذف کنید؟",
+            "تایید حذف", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
         if (confirmResult == MessageBoxResult.No) return;
 
         IsBusy = true;
         try
         {
-            var result = await _mediator.Send(new DeleteCustomerCommand { Id = productToDelete.Id });
+            var result = await _mediator.Send(new DeleteProductCommand { Id = productToDelete.Id }); // Changed to DeleteProductCommand
             if (result.IsSuccess)
             {
-                MessageBox.Show("Customer deleted successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("محصول با موفقیت حذف شد.", "موفقیت", MessageBoxButton.OK, MessageBoxImage.Information);
                 await LoadProductsAsync();
             }
             else
             {
-                MessageBox.Show(result.Error, "Deletion Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(result.Error, "حذف ناموفق", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         finally
@@ -215,8 +242,6 @@ public partial class ProductManagementViewModel : ViewModelBase
             IsBusy = false;
         }
     }
-
-
 
 
     [RelayCommand(CanExecute = nameof(CanGoToNextPage))]
