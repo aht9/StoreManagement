@@ -1,0 +1,54 @@
+﻿<UserControl x:Class="StoreManagement.WPF.Views.Invoicing.PaymentDialogView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StoreManagement.WPF.Views.Invoicing"
+             xmlns:enums="clr-namespace:StoreManagement.Domain.Enums;assembly=StoreManagement.Domain"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:helpers="clr-namespace:StoreManagement.WPF.Helpers"
+             mc:Ignorable="d" 
+             d:DesignHeight="550" d:DesignWidth="500" Width="500"
+             FlowDirection="RightToLeft"
+             Background="{StaticResource SecondaryBackgroundBrush}">
+    <Border Style="{StaticResource CardBorderStyle}" Padding="15">
+        <StackPanel>
+            <TextBlock Text="نهایی سازی و پرداخت" Style="{StaticResource CardTitleStyle}"/>
+            <TextBlock Text="{Binding GrandTotal, StringFormat='مبلغ قابل پرداخت: {0:N0} ریال'}" 
+                       Foreground="{StaticResource SecondaryTextBrush}" Margin="0,4,0,20"/>
+
+            <TextBlock Text="روش پرداخت" Style="{StaticResource LabelTextStyle}" />
+            <StackPanel Margin="0,5,0,15">
+                <ComboBox ItemsSource="{Binding Source={helpers:EnumBindingSource {x:Type enums:PaymentType}}}"
+                          SelectedValue="{Binding SelectedPaymentType}"
+                          SelectedValuePath="Value"
+                          DisplayMemberPath="Description"/>
+            </StackPanel>
+
+            <StackPanel Margin="0,8">
+                <TextBlock Text="پرداخت از/به حساب" Style="{StaticResource LabelTextStyle}" />
+                <ComboBox ItemsSource="{Binding BankAccounts}" SelectedItem="{Binding SelectedBankAccount}" DisplayMemberPath="AccountName" Margin="0,5,0,0"/>
+            </StackPanel>
+
+            <StackPanel Margin="0,8" Visibility="{Binding IsInstallmentPayment, Converter={StaticResource BoolToVisibilityConverter}}">
+                <TextBlock Text="پیش پرداخت" Style="{StaticResource LabelTextStyle}" Margin="0,10,0,0"/>
+                <TextBox Style="{StaticResource SearchBoxStyle}" Text="{Binding DownPayment}" Margin="0,5,0,10"/>
+
+                <TextBlock Text="تعداد اقساط (ماه)" Style="{StaticResource LabelTextStyle}" />
+                <TextBox Style="{StaticResource SearchBoxStyle}" Text="{Binding InstallmentMonths}" Margin="0,5,0,10"/>
+
+                <TextBlock Text="درصد سود ماهانه" Style="{StaticResource LabelTextStyle}" />
+                <TextBox Style="{StaticResource SearchBoxStyle}" Text="{Binding InterestRate}" Margin="0,5,0,0"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+                <Button Content="لغو" Style="{StaticResource BaseButtonStyle}" Margin="0,0,8,0"
+                        Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                        CommandParameter="{x:Null}"/>
+                <Button Content="تایید و ثبت نهایی" Style="{StaticResource PrimaryActionButtonStyle}"
+                        Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                        CommandParameter="{Binding}"/>
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</UserControl>

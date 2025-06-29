@@ -208,6 +208,39 @@ namespace StoreManagement.Infrastructure.Migrations
                     b.ToTable("Installments", (string)null);
                 });
 
+            modelBuilder.Entity("StoreManagement.Domain.Aggregates.Inventory.Inventory", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<long>("ProductVariantId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Quantity")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductVariantId")
+                        .IsUnique();
+
+                    b.ToTable("Inventories", (string)null);
+                });
+
             modelBuilder.Entity("StoreManagement.Domain.Aggregates.Inventory.InventoryTransaction", b =>
                 {
                     b.Property<long>("Id")
@@ -943,6 +976,15 @@ namespace StoreManagement.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Phone")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("StoreManagement.Domain.Aggregates.Inventory.Inventory", b =>
+                {
+                    b.HasOne("StoreManagement.Domain.Aggregates.Products.ProductVariant", null)
+                        .WithOne()
+                        .HasForeignKey("StoreManagement.Domain.Aggregates.Inventory.Inventory", "ProductVariantId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

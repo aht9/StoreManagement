@@ -1,4 +1,6 @@
-﻿namespace StoreManagement.WPF.Extensions;
+﻿using StoreManagement.WPF.ViewModels.Invoicing;
+
+namespace StoreManagement.WPF.Extensions;
 
 public static class ServiceCollectionExtensions
 {
@@ -33,6 +35,9 @@ public static class ServiceCollectionExtensions
         services.AddTransient<BankAccountManagementViewModel>();
         services.AddTransient<ProductManagementViewModel>();
         services.AddTransient<StoreManagementViewModel>();
+        //services.AddTransient<InvoicingViewModel>();
+        services.AddSingleton<IInvoicingViewModelFactory, InvoicingViewModelFactory>();
+
 
         services.AddTransient<AddCustomerViewModel>();
         services.AddTransient<EditCustomerViewModel>();
@@ -47,6 +52,10 @@ public static class ServiceCollectionExtensions
 
         services.AddTransient<AddStoreViewModel>();
         services.AddTransient<EditStoreViewModel>();
+
+        services.AddTransient<InvoiceItemViewModel>();
+        services.AddTransient<PaymentDialogViewModel>();
+        services.AddTransient<SelectPartyDialogViewModel>();
 
         return services;
     }

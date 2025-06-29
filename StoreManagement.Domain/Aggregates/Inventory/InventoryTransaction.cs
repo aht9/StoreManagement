@@ -1,4 +1,6 @@
-﻿namespace StoreManagement.Domain.Aggregates.Inventory;
+﻿using StoreManagement.Domain.Events.Inventories;
+
+namespace StoreManagement.Domain.Aggregates.Inventory;
 
 public class InventoryTransaction : BaseEntity, IAggregateRoot
 {
@@ -39,6 +41,9 @@ public class InventoryTransaction : BaseEntity, IAggregateRoot
         ReferenceInvoiceType = referenceInvoiceType;
 
         Validate();
+
+        // پس از ساخت موفقیت‌آمیز، رویداد مربوطه را به لیست رویدادها اضافه کن
+        this.AddDomainEvent(new InventoryTransactionCreatedEvent(this));
     }
 
     public void UpdateTransactionDate(DateTime newDate)
@@ -79,5 +84,16 @@ public class InventoryTransaction : BaseEntity, IAggregateRoot
 
         if (Quantity <= 0)
             throw new InvalidOperationException("Quantity must be greater than zero.");
+    }
+
+    public void SetPrices(decimal? itemDtoUnitPrice, decimal salePrice)
+    {
+        if (itemDtoUnitPrice <= 0)
+            throw new ArgumentException("Unit price must be greater than zero.", nameof(itemDtoUnitPrice));
+        if (salePrice < 0)
+            throw new ArgumentException("Sale price cannot be negative.", nameof(salePrice));
+        PurchasePrice = itemDtoUnitPrice;
+        SalePrice = salePrice;
+        UpdateTimestamp();
     }
 }

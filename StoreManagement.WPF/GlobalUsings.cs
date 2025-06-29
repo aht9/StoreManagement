@@ -1,10 +1,16 @@
 // Global using directives
 
 global using System.Collections.ObjectModel;
+global using System.Collections.Specialized;
+global using System.ComponentModel;
+global using System.Globalization;
 global using System.IO;
 global using System.Windows;
+global using System.Windows.Data;
+global using System.Windows.Markup;
 global using CommunityToolkit.Mvvm.ComponentModel;
 global using CommunityToolkit.Mvvm.Input;
+global using MaterialDesignThemes.Wpf;
 global using MediatR;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.Extensions.Configuration;
@@ -15,12 +21,16 @@ global using Serilog;
 global using StoreManagement.Application.Behaviors;
 global using StoreManagement.Application.DTOs.BankAccounts;
 global using StoreManagement.Application.DTOs.Customers;
+global using StoreManagement.Application.DTOs.Invoices;
+global using StoreManagement.Application.DTOs.Parties;
 global using StoreManagement.Application.DTOs.Products;
 global using StoreManagement.Application.DTOs.Stores;
 global using StoreManagement.Application.Features.BankAccounts.Commands;
 global using StoreManagement.Application.Features.BankAccounts.Query;
 global using StoreManagement.Application.Features.Customers.Command;
 global using StoreManagement.Application.Features.Customers.Query;
+global using StoreManagement.Application.Features.Invoices.Commands;
+global using StoreManagement.Application.Features.Parties.Queries;
 global using StoreManagement.Application.Features.ProductCategories.Queries;
 global using StoreManagement.Application.Features.Products.Commands;
 global using StoreManagement.Application.Features.Products.Queries;
@@ -36,3 +46,4 @@ global using StoreManagement.Infrastructure;
 global using StoreManagement.Infrastructure.Data.DbContexts;
 global using StoreManagement.WPF.Extensions;
 global using StoreManagement.WPF.ViewModels;
+global using StoreManagement.WPF.Views.Invoicing;

@@ -26,6 +26,7 @@ public class ApplicationDbContext : DbContext, IUnitOfWork
     public DbSet<PurchaseInvoiceItem> PurchaseInvoiceItems { get; set; }
     public DbSet<SalesInvoice> SalesInvoices { get; set; }
     public DbSet<SalesInvoiceItem> SalesInvoiceItems { get; set; }
+    public DbSet<Inventory> Inventories { get; set; }
     public DbSet<InventoryTransaction> InventoryTransactions { get; set; }
     public DbSet<BankAccount> BankAccounts { get; set; }
     public DbSet<FinancialTransaction> FinancialTransactions { get; set; }
@@ -49,6 +50,7 @@ public class ApplicationDbContext : DbContext, IUnitOfWork
         modelBuilder.ApplyConfiguration(new PurchaseInvoiceItemEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new SalesInvoiceEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new SalesInvoiceItemEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new InventoryEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new InventoryTransactionEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new InventoryTransactionTypeEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new BankAccountEntityTypeConfiguration());

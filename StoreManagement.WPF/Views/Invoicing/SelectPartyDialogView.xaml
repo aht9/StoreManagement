@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="StoreManagement.WPF.Views.Invoicing.SelectPartyDialogView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StoreManagement.WPF.Views.Invoicing"
+             xmlns:viewModels="clr-namespace:StoreManagement.WPF.ViewModels.Invoicing"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             d:DataContext="{d:DesignInstance Type=viewModels:SelectPartyDialogViewModel}"
+             mc:Ignorable="d"
+             FlowDirection="RightToLeft"
+             d:DesignHeight="450" d:DesignWidth="600" Width="600"
+             Background="{StaticResource SecondaryBackgroundBrush}">
+    <Border Style="{StaticResource CardBorderStyle}" Padding="15">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="{Binding Title}" Style="{StaticResource CardTitleStyle}" Margin="0,0,0,16"/>
+
+            <TextBox Grid.Row="1" Style="{StaticResource SearchBoxStyle}"
+                     Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
+
+            <DataGrid Grid.Row="2" ItemsSource="{Binding Parties}" SelectedItem="{Binding SelectedParty}"
+                      Style="{StaticResource ModernDataGridStyle}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="نام" Binding="{Binding Name}" Width="*"/>
+                    <DataGridTextColumn Header="کد" Binding="{Binding DisplayCode}" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+                <Button Content="لغو" Style="{StaticResource BaseButtonStyle}" Margin="0,0,8,0"
+                        Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                        CommandParameter="{x:Null}"/>
+                <Button Content="انتخاب" Style="{StaticResource PrimaryActionButtonStyle}"
+                        Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                        CommandParameter="{Binding SelectedParty}"
+                        IsEnabled="{Binding CanSelectParty}"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

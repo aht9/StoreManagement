@@ -1,15 +1,22 @@
-﻿namespace StoreManagement.WPF.ViewModels;
+﻿using StoreManagement.WPF.ViewModels.Invoicing;
+
+namespace StoreManagement.WPF.ViewModels;
 
 public partial class MainViewModel : ViewModelBase
 {
     private readonly IServiceProvider _serviceProvider;
+    private readonly IInvoicingViewModelFactory _invoicingViewModelFactory;
+    public ISnackbarMessageQueue SnackbarMessageQueue { get; }
+
 
     [ObservableProperty]
     private ViewModelBase _currentViewModel;
 
-    public MainViewModel(IServiceProvider serviceProvider)
+    public MainViewModel(IServiceProvider serviceProvider, IInvoicingViewModelFactory invoicingViewModelFactory)
     {
-        _serviceProvider = serviceProvider;        
+        SnackbarMessageQueue = new SnackbarMessageQueue(TimeSpan.FromSeconds(3));
+        _serviceProvider = serviceProvider;
+        _invoicingViewModelFactory = invoicingViewModelFactory;
         CurrentViewModel = _serviceProvider.GetRequiredService<DashboardViewModel>();
     }
 
@@ -42,5 +49,23 @@ public partial class MainViewModel : ViewModelBase
     private void NavigateToStores()
     {
         CurrentViewModel = _serviceProvider.GetRequiredService<StoreManagementViewModel>();
+    }
+
+    [RelayCommand]
+    private void NavigateToSalesInvoice()
+    {
+        // از کارخانه برای ساخت ViewModel با پارامتر صحیح استفاده می‌کنیم
+        var viewModel = _invoicingViewModelFactory.Create(InvoiceType.Sales, this.SnackbarMessageQueue);
+
+        // در اینجا منطق ناوبری به View مربوطه قرار می‌گیرد
+        CurrentViewModel = viewModel; 
+    }
+
+    // یک کامند جدا برای فاکتور خرید
+    [RelayCommand]
+    private void NavigateToPurchaseInvoice()
+    {
+        var viewModel = _invoicingViewModelFactory.Create(InvoiceType.Purchase, this.SnackbarMessageQueue);
+        CurrentViewModel = viewModel;
     }
 }

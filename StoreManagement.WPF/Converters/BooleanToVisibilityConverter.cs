@@ -1,7 +1,6 @@
-﻿using System.Globalization;
-using System.Windows.Data;
+﻿namespace StoreManagement.WPF.Converters;
 
-namespace StoreManagement.WPF.Converters;
+[ValueConversion(typeof(bool), typeof(Visibility))]
 public class BooleanToVisibilityConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -11,8 +10,12 @@ public class BooleanToVisibilityConverter : IValueConverter
         {
             flag = b;
         }
-
-        return flag ? Visibility.Visible : Visibility.Collapsed;
+        else if (value is bool?)
+        {
+            bool? nullable = (bool?)value;
+            flag = nullable.GetValueOrDefault();
+        }
+        return (flag ? Visibility.Visible : Visibility.Collapsed);
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

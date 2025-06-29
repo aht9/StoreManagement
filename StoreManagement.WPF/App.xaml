@@ -4,7 +4,9 @@
              xmlns:local="clr-namespace:StoreManagement.WPF"
              xmlns:converters="clr-namespace:StoreManagement.WPF.Converters"
              xmlns:views="clr-namespace:StoreManagement.WPF.Views"
-             xmlns:viewmodels="clr-namespace:StoreManagement.WPF.ViewModels">
+             xmlns:invviews="clr-namespace:StoreManagement.WPF.Views.Invoicing"
+             xmlns:viewmodels="clr-namespace:StoreManagement.WPF.ViewModels"
+             xmlns:invviewmodels="clr-namespace:StoreManagement.WPF.ViewModels.Invoicing">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -19,6 +21,9 @@
 
             <!-- Converters -->
             <converters:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+            <converters:NullToBooleanConverter x:Key="NullToBooleanConverter"/>
+            <converters:EnumToVisibilityConverter x:Key="EnumToVisibilityConverter" />
+
 
             <!-- DataTemplate for ViewModels -->
             <DataTemplate DataType="{x:Type viewmodels:DashboardViewModel}">
@@ -35,6 +40,9 @@
             </DataTemplate>
             <DataTemplate DataType="{x:Type viewmodels:StoreManagementViewModel}">
                 <views:StoreManagementView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type invviewmodels:InvoicingViewModel}">
+                <invviews:InvoicingView/>
             </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>

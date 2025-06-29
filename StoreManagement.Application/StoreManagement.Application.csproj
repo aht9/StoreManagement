@@ -11,6 +11,8 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="DTOs\Invoices\" />
+      <Folder Include="Features\Invoices\Queries\" />
       <Folder Include="Features\ProductVariants\Queries\" />
       <Folder Include="Features\Stores\Commands\" />
     </ItemGroup>
