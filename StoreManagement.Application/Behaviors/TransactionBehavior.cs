@@ -3,9 +3,6 @@
 public class TransactionBehavior<TRequest, TResponse>(ApplicationDbContext dbContext)
     : IPipelineBehavior<TRequest, TResponse>
 {
-    private readonly ApplicationDbContext _dbContext = dbContext;
-
-
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         if (request.ToString().EndsWith("Query"))
@@ -19,22 +16,22 @@ public class TransactionBehavior<TRequest, TResponse>(ApplicationDbContext dbCon
         {
             try
             {
-                if (_dbContext.HasActiveTransaction)
+                if (dbContext.HasActiveTransaction)
                 {
                     return await next();
                 }
 
-                var strategy = _dbContext.Database.CreateExecutionStrategy();
+                var strategy = dbContext.Database.CreateExecutionStrategy();
 
                 await strategy.ExecuteAsync(async () =>
                 {
                     Guid transactionId;
 
-                    using (var transaction = await _dbContext.BeginTransactionAsync())
+                    using (var transaction = await dbContext.BeginTransactionAsync())
                     {
                         response = await next();
 
-                        await _dbContext.CommitTransactionAsync(transaction);
+                        await dbContext.CommitTransactionAsync(transaction);
                         transactionId = transaction.TransactionId;
                     }
                 });

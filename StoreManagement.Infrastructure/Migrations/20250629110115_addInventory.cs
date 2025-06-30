@@ -33,12 +33,6 @@ namespace StoreManagement.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Inventories_ProductVariantId",
-                table: "Inventories",
-                column: "ProductVariantId",
-                unique: true);
         }
 
         /// <inheritdoc />

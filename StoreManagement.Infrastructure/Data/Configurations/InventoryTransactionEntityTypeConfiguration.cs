@@ -28,27 +28,22 @@ public class InventoryTransactionEntityTypeConfiguration : IEntityTypeConfigurat
             .IsRequired(false)
             .HasColumnType("decimal(18,2)");
 
-
-        builder
-            .Property<int>("_transactionTypeId")
-            .UsePropertyAccessMode(PropertyAccessMode.Field)
-            .HasColumnName("TransactionTypeId")
-            .IsRequired();
-
         builder.Property(it => it.ReferenceInvoiceId)
             .IsRequired(false);
 
         builder.Property(it => it.ReferenceInvoiceType)
             .IsRequired(false);
 
+
+        builder.Property<int>("_transactionTypeId")
+            .UsePropertyAccessMode(PropertyAccessMode.Field)
+            .HasColumnName("TransactionTypeId")
+            .IsRequired();
+
         builder.HasOne(it => it.ProductVariant)
             .WithMany()
             .HasForeignKey(it => it.ProductVariantId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        builder.HasOne(i=>i.TransactionType)
-            .WithMany()
-            .HasForeignKey("_transactionTypeId")
             .OnDelete(DeleteBehavior.Restrict);
+
     }
 }

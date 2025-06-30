@@ -15,8 +15,15 @@ public class InventoryTransaction : BaseEntity, IAggregateRoot
 
     public decimal? SalePrice { get; private set; }
 
-    public InventoryTransactionType TransactionType { get; private set; }
+    // This property is used for EF Core mapping to the backing field _transactionTypeId
+    [NotMapped]
+    public InventoryTransactionType TransactionType
+    {
+        get => InventoryTransactionType.FromValue<InventoryTransactionType>(_transactionTypeId);
+        private set => _transactionTypeId = value.Id; 
+    }
     private int _transactionTypeId;
+
 
     public long? ReferenceInvoiceId { get; private set; }
     public InvoiceType? ReferenceInvoiceType { get; private set; }
@@ -28,7 +35,7 @@ public class InventoryTransaction : BaseEntity, IAggregateRoot
         ProductVariant productVariant,
         DateTime transactionDate,
         int quantity,
-        InventoryTransactionType transactionType,
+        int transactionTypeId,
         long? referenceInvoiceId = null,
         InvoiceType? referenceInvoiceType = null)
     {
@@ -36,7 +43,7 @@ public class InventoryTransaction : BaseEntity, IAggregateRoot
         ProductVariant = productVariant ?? throw new ArgumentNullException(nameof(productVariant));
         TransactionDate = transactionDate;
         Quantity = quantity;
-        TransactionType = transactionType ?? throw new ArgumentNullException(nameof(transactionType));
+        _transactionTypeId = transactionTypeId;
         ReferenceInvoiceId = referenceInvoiceId;
         ReferenceInvoiceType = referenceInvoiceType;
 
@@ -63,7 +70,7 @@ public class InventoryTransaction : BaseEntity, IAggregateRoot
 
     public void UpdateTransactionType(InventoryTransactionType newTransactionType)
     {
-        TransactionType = newTransactionType ?? throw new ArgumentNullException(nameof(newTransactionType));
+        _transactionTypeId = newTransactionType.Id;
         UpdateTimestamp();
     }
 

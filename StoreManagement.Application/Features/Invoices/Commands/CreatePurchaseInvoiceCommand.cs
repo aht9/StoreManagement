@@ -1,4 +1,6 @@
-﻿namespace StoreManagement.Application.Features.Invoices.Commands;
+﻿using Microsoft.Data.SqlClient;
+
+namespace StoreManagement.Application.Features.Invoices.Commands;
 
 public class CreatePurchaseInvoiceCommand : IRequest<long>
 {
@@ -52,7 +54,13 @@ public class CreatePurchaseInvoiceCommandHandler(
             {
                 if (inventoryDict.TryGetValue(change.Key, out var inventory))
                 {
+                    if (inventory.IsDeleted)
+                    {
+                        inventory.Restore();
+                        await inventoryRepo.UpdateAsync(inventory, cancellationToken); 
+                    }
                     inventory.IncreaseStock(change.Value);
+                    await inventoryRepo.UpdateAsync(inventory, cancellationToken);
                 }
                 else
                 {
@@ -79,7 +87,7 @@ public class CreatePurchaseInvoiceCommandHandler(
 
                 var inventoryTx = new InventoryTransaction(
                     itemDto.ProductVariantId, productVariant, request.InvoiceDate, itemDto.Quantity,
-                    InventoryTransactionType.In, 0, InvoiceType.Purchase); // شناسه فاکتور موقتا صفر است
+                    InventoryTransactionType.In.Id, 0, InvoiceType.Purchase); // شناسه فاکتور موقتا صفر است
                 inventoryTx.SetPrices(itemDto.UnitPrice, itemDto.SalePriceForPurchase ?? (itemDto.UnitPrice * 1.40m));
 
                 await inventoryRepository.AddAsync(inventoryTx, cancellationToken);
@@ -183,5 +191,11 @@ public class CreatePurchaseInvoiceCommandHandler(
             logger.LogError(ex, "خطای پیش‌بینی نشده در هنگام ایجاد فاکتور خرید با شماره {InvoiceNumber}", request.InvoiceNumber);
             throw new ApplicationException("خطایی در فرآیند ثبت فاکتور رخ داد. لطفاً با پشتیبانی تماس بگیرید.", ex);
         }
+    }
+
+    private static bool IsUniqueConstraintViolation(DbUpdateException ex)
+    {
+        return ex.InnerException is SqlException sqlEx &&
+               (sqlEx.Number == 2627 || sqlEx.Number == 2601); // SQL Server unique constraint violation numbers
     }
 }

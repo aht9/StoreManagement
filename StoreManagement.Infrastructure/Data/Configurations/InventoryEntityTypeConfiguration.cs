@@ -13,8 +13,8 @@ public class InventoryEntityTypeConfiguration : IEntityTypeConfiguration<Invento
             .ValueGeneratedOnAdd()
             .IsRequired();
 
-        builder.HasIndex(i => i.ProductVariantId)
-            .IsUnique();
+        //builder.HasIndex(i => i.ProductVariantId)
+        //    .IsUnique();
 
         builder.Property(i => i.ProductVariantId)
             .IsRequired();

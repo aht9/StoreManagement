@@ -55,7 +55,7 @@ public class CreateSalesInvoiceCommandHandler(
                 productVariant,
                 request.InvoiceDate,
                 itemDto.Quantity,
-                InventoryTransactionType.Out, 
+                InventoryTransactionType.Out.Id, 
                 null,
                 InvoiceType.Sales
             );

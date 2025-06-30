@@ -8,6 +8,9 @@ public class InventoryTransactionTypeEntityTypeConfiguration : IEntityTypeConfig
 
         builder.HasKey(it => it.Id);
 
+        builder.Property(o => o.Id)
+            .ValueGeneratedNever();
+
         builder.Property(it=>it.Id)
             .HasDefaultValueSql("1")
             .ValueGeneratedNever()
@@ -19,11 +22,7 @@ public class InventoryTransactionTypeEntityTypeConfiguration : IEntityTypeConfig
 
 
         // Seed initial data
-        builder.HasData(
-            InventoryTransactionType.In,
-            InventoryTransactionType.Out,
-            InventoryTransactionType.Adjustment,
-            InventoryTransactionType.Transfer
-        );
+        builder.HasData(InventoryTransactionType.GetAll<InventoryTransactionType>());
+
     }
 }
