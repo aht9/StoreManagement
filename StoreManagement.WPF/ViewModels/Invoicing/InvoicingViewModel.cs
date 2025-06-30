@@ -147,24 +147,6 @@ public partial class InvoicingViewModel : ViewModelBase
         }
     }
 
-    [RelayCommand]
-    private async Task ShowSelectPartyDialog()
-    {
-        var partyType = (CurrentInvoiceType == InvoiceType.Sales)
-            ? PartyTypeToQuery.Customers
-            : PartyTypeToQuery.Stores;
-
-        var dialogViewModel = new SelectPartyDialogViewModel(_mediator, partyType);
-        var dialogView = new SelectPartyDialogView { DataContext = dialogViewModel };
-
-        var result = await DialogHost.Show(dialogView, "RootDialog");
-
-        if (result is PartyDto selectedParty)
-        {
-            this.SelectedParty = selectedParty;
-        }
-    }
-
     private bool CanFinalizeAndSubmit() => InvoiceItems.Any() && SelectedParty != null;
 
     [RelayCommand(CanExecute = nameof(CanFinalizeAndSubmit))]
@@ -327,5 +309,52 @@ public partial class InvoicingViewModel : ViewModelBase
         DiscountPercentageToAdd = 0;
         TaxPercentageToAdd = 0;
         SalePriceForPurchase = null;
+    }
+
+
+    [RelayCommand]
+    private async Task ShowSelectPartyDialog()
+    {
+        bool shouldAddNew;
+        do
+        {
+            shouldAddNew = false; // ریست کردن فلگ در ابتدای هر حلقه
+
+            var partyType = (CurrentInvoiceType == InvoiceType.Sales)
+                ? PartyTypeToQuery.Customers
+                : PartyTypeToQuery.Stores;
+
+            var selectDialogViewModel = new SelectPartyDialogViewModel(_mediator, partyType);
+            var selectDialogView = new SelectPartyDialogView { DataContext = selectDialogViewModel };
+
+            // دیالوگ انتخاب را باز می‌کنیم و منتظر نتیجه می‌مانیم
+            var result = await DialogHost.Show(selectDialogView, "RootDialog");
+
+            if (result is PartyDto selectedParty)
+            {
+                // اگر کاربر یک طرف حساب را انتخاب کرد، آن را ذخیره کرده و از حلقه خارج شو
+                this.SelectedParty = selectedParty;
+                return;
+            }
+
+            if (result is string str && str == "AddNew")
+            {
+                // اگر کاربر روی دکمه "افزودن جدید" کلیک کرده بود
+                shouldAddNew = true; // فلگ را برای تکرار حلقه ست می‌کنیم
+
+                var addDialogViewModel = new AddPartyDialogViewModel(_mediator); // ViewModel دیالوگ افزودن
+                var addDialogView = new AddPartyDialogView { DataContext = addDialogViewModel };
+
+                // دیالوگ افزودن را باز می‌کنیم و منتظر نتیجه می‌مانیم
+                // (این دیالوگ پس از بسته شدن دیالوگ قبلی باز می‌شود)
+                await DialogHost.Show(addDialogView, "RootDialog");
+            }
+            else
+            {
+                // اگر کاربر دیالوگ را با دکمه "لغو" یا از راه دیگری بسته بود، از حلقه خارج شو
+                return;
+            }
+
+        } while (shouldAddNew); // تا زمانی که کاربر در حال افزودن آیتم جدید است، حلقه تکرار می‌شود
     }
 }

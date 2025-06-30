@@ -27,6 +27,16 @@ public class CreateCustomerCommandHandler(
     {
         try
         {
+            // بررسی اینکه آیا مشتری با این کد ملی از قبل موجود است یا خیر
+            if (request.NationalCode.HasValue)
+            {
+                var spec = new CustomExpressionSpecification<Customer>(c => c.NationalCode == request.NationalCode.Value && !c.IsDeleted);
+                if (await _customerRepository.AnyAsync(spec, cancellationToken))
+                {
+                    throw new InvalidOperationException("مشتری با این کد ملی از قبل در سیستم ثبت شده است.");
+                }
+            }
+
             var tempPhoneNumber = PhoneNumber.Create(request.PhoneNumber);
             if (tempPhoneNumber.IsFailure)
             {
@@ -55,7 +65,7 @@ public class CreateCustomerCommandHandler(
 
             _logger.LogInformation("Customer with ID {CustomerId} created successfully.", customer.Id);
 
-            return Result.Success(customer.Id);
+            return Result<long>.Success(customer.Id);
         }
         catch (ArgumentException argEx)
         {

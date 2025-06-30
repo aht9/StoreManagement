@@ -20,7 +20,16 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Text="{Binding Title}" Style="{StaticResource CardTitleStyle}" Margin="0,0,0,16"/>
+            <Grid Grid.Row="0" Margin="0,0,0,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding Title}" Style="{StaticResource CardTitleStyle}" VerticalAlignment="Center"/>
+                <Button Grid.Column="1" Content="افزودن جدید" Style="{StaticResource BaseButtonStyle}"
+                        Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                        CommandParameter="AddNew"/>
+            </Grid>
 
             <TextBox Grid.Row="1" Style="{StaticResource SearchBoxStyle}"
                      Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>

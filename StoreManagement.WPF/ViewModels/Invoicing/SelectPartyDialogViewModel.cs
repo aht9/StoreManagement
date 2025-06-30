@@ -44,4 +44,5 @@ public partial class SelectPartyDialogViewModel : ViewModelBase
     }
 
     public bool CanSelectParty() => SelectedParty != null;
+
 }
