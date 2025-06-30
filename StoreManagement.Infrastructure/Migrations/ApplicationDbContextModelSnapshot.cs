@@ -943,7 +943,7 @@ namespace StoreManagement.Infrastructure.Migrations
 
                             b1.HasKey("CustomerId");
 
-                            b1.ToTable("Customers");
+                            b1.ToTable("Customers", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("CustomerId");
@@ -966,7 +966,7 @@ namespace StoreManagement.Infrastructure.Migrations
                                 .IsUnique()
                                 .HasDatabaseName("IX_Customers_PhoneNumber");
 
-                            b1.ToTable("Customers");
+                            b1.ToTable("Customers", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("CustomerId");
@@ -1130,7 +1130,7 @@ namespace StoreManagement.Infrastructure.Migrations
 
                             b1.HasKey("SmsMessageId");
 
-                            b1.ToTable("SmsMessages");
+                            b1.ToTable("SmsMessages", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("SmsMessageId");
@@ -1161,7 +1161,7 @@ namespace StoreManagement.Infrastructure.Migrations
 
                             b1.HasKey("StoreId");
 
-                            b1.ToTable("Stores");
+                            b1.ToTable("Stores", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("StoreId");
@@ -1184,7 +1184,7 @@ namespace StoreManagement.Infrastructure.Migrations
                                 .IsUnique()
                                 .HasDatabaseName("IX_Customers_PhoneNumber");
 
-                            b1.ToTable("Stores");
+                            b1.ToTable("Stores", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("StoreId");

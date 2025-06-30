@@ -267,16 +267,22 @@ public partial class InvoicingViewModel : ViewModelBase
                     StoreId = this.SelectedParty.Id,
                     InvoiceNumber = Guid.NewGuid().ToString(),
                     InvoiceDate = DateTime.Now,
-                    Items = new List<InvoiceItemDto>(InvoiceItems.Select(vm => new InvoiceItemDto { /* ... */ })),
+
+                    Items = new List<InvoiceItemDto>(InvoiceItems.Select(vm => new InvoiceItemDto
+                    {
+                        ProductVariantId = vm.ProductVariantId,
+                        Quantity = vm.Quantity,
+                        UnitPrice = vm.UnitPrice,
+                        DiscountPercentage = vm.DiscountPercentage,
+                        TaxPercentage = vm.TaxPercentage,
+                        SalePriceForPurchase = vm.SalePriceForPurchase
+                    })),
 
                     PaymentType = paymentResult.PaymentType,
                     BankAccountId = paymentResult.BankAccountId,
                     InstallmentDetails = paymentResult.InstallmentDetails
                 };
                 await _mediator.Send(command);
-
-                _snackbarMessageQueue.Enqueue("فاکتور با موفقیت ثبت شد.");
-
             }
             else // Sales
             {
@@ -285,25 +291,29 @@ public partial class InvoicingViewModel : ViewModelBase
                     CustomerId = this.SelectedParty.Id,
                     InvoiceNumber = Guid.NewGuid().ToString(),
                     InvoiceDate = DateTime.Now,
-                    Items = new List<InvoiceItemDto>(InvoiceItems.Select(vm => new InvoiceItemDto { /* ... */ })),
-                    
+
+                    Items = new List<InvoiceItemDto>(InvoiceItems.Select(vm => new InvoiceItemDto
+                    {
+                        ProductVariantId = vm.ProductVariantId,
+                        Quantity = vm.Quantity,
+                        UnitPrice = vm.UnitPrice,
+                        DiscountPercentage = vm.DiscountPercentage,
+                        TaxPercentage = vm.TaxPercentage
+                    })),
+
                     PaymentType = paymentResult.PaymentType,
                     BankAccountId = paymentResult.BankAccountId,
                     InstallmentDetails = paymentResult.InstallmentDetails
                 };
                 await _mediator.Send(command);
-
-                _snackbarMessageQueue.Enqueue("فاکتور با موفقیت ثبت شد.");
-
             }
 
+            _snackbarMessageQueue.Enqueue("فاکتور با موفقیت ثبت شد.");
             ClearForm();
-
-            // نمایش پیام موفقیت و پاک کردن فرم
         }
         catch (Exception ex)
         {
-            // نمایش خطا به کاربر
+            _snackbarMessageQueue.Enqueue($"خطا در ثبت فاکتور: {ex.Message}");
         }
     }
 

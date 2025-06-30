@@ -22,6 +22,7 @@ public class PurchaseInvoice : Invoice<PurchaseInvoiceItem>
     public void AddPurchaseItem(long variantId, int qty, decimal unitPrice,int discount, int tax)
     {
         var purchaseItem = new PurchaseInvoiceItem(Id, variantId, qty, unitPrice, discount, tax);
+
         AddItem(purchaseItem);
     }
     

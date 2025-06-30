@@ -19,13 +19,14 @@ public abstract class InvoiceItem : BaseEntity
         SetUnitPrice(unitPrice);
         SetDiscount(discount);
         SetTax(tax);
+        UpdateTotalPrice();
     }
 
-    private decimal UpdateTotalPrice()
+    private void UpdateTotalPrice()
     {
         decimal priceAfterDiscount = UnitPrice * (1 - Discount / 100m);
         decimal priceAfterTax = priceAfterDiscount * (1 + Tax / 100m);
-        return priceAfterTax * Quantity;
+        TotalPrice = priceAfterTax * Quantity;
     }
 
     public void SetQuantity(int quantity)

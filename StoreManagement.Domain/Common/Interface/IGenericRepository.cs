@@ -64,5 +64,4 @@ public interface IGenericRepository<T> where T : BaseEntity
     Task<int> CountAsync(IExpressionSpecification<T> specification, CancellationToken cancellationToken = default);
 
     Task<bool> AnyAsync(IExpressionSpecification<T> specification, CancellationToken cancellationToken = default);
-
 }
