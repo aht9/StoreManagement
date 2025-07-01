@@ -1,6 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
-
-namespace StoreManagement.Application.Features.Invoices.Commands;
+﻿namespace StoreManagement.Application.Features.Invoices.Commands;
 
 public class CreatePurchaseInvoiceCommand : IRequest<long>
 {
@@ -36,6 +34,9 @@ public class CreatePurchaseInvoiceCommandHandler(
             request.InvoiceDate,
             request.PaymentType,
             request.StoreId);
+
+            await invoiceRepository.AddAsync(purchaseInvoice, cancellationToken);
+            await invoiceRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
 
             var quantityChanges = request.Items
                 .GroupBy(item => item.ProductVariantId)
@@ -92,8 +93,6 @@ public class CreatePurchaseInvoiceCommandHandler(
 
                 await inventoryRepository.AddAsync(inventoryTx, cancellationToken);
             }
-
-            await invoiceRepository.AddAsync(purchaseInvoice, cancellationToken);
 
             if (request.PaymentType == PaymentType.Cash)
             {
@@ -175,6 +174,7 @@ public class CreatePurchaseInvoiceCommandHandler(
                 }
             }
 
+            await invoiceRepository.UpdateAsync(purchaseInvoice, cancellationToken);
             await invoiceRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
 
             logger.LogInformation("فاکتور خرید با شماره {InvoiceNumber} با موفقیت ایجاد شد.", request.InvoiceNumber);

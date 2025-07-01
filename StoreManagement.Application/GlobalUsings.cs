@@ -5,6 +5,7 @@ global using System.Text;
 global using AutoMapper;
 global using Dapper;
 global using MediatR;
+global using Microsoft.Data.SqlClient;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.Extensions.Logging;
 global using StoreManagement.Application.DTOs.BankAccounts;
