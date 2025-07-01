@@ -1,4 +1,4 @@
-﻿namespace StoreManagement.WPF.ViewModels.Invoicing;
+﻿namespace StoreManagement.WPF.ViewModels.Invoicing.FactoryHelper;
 
 public interface IInvoicingViewModelFactory
 {

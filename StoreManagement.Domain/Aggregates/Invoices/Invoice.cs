@@ -69,4 +69,12 @@ public abstract class Invoice<TItem> : BaseEntity, IAggregateRoot
     {
         TotalAmount = _items.Sum(item => item.TotalPrice);
     }
+
+    public void UpdateDetails(string invoiceNumber, DateTime invoiceDate)
+    {
+        if (string.IsNullOrWhiteSpace(invoiceNumber))
+            throw new ArgumentException("Invoice number cannot be null or empty.", nameof(invoiceNumber));
+        InvoiceNumber = invoiceNumber;
+        InvoiceDate = invoiceDate;
+    }
 }

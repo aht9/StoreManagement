@@ -184,7 +184,8 @@ public class CreatePurchaseInvoiceCommandHandler(
         catch (InvalidOperationException ex)
         {
             logger.LogWarning(ex, "خطای منطقی در هنگام ایجاد فاکتور خرید: {ErrorMessage}", ex.Message);
-            throw;
+            throw new ApplicationException("خطایی در فرآیند ثبت فاکتور رخ داد.", ex);
+
         }
         catch (Exception ex)
         {

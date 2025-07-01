@@ -1,40 +1,36 @@
 ﻿namespace StoreManagement.Domain.Aggregates.Installments;
 
-public class Installment : BaseEntity, IAggregateRoot
+public class Installment(
+    long invoiceId,
+    InvoiceType invoiceType,
+    int installmentNumber,
+    DateTime dueDate,
+    decimal amountDue,
+    decimal amountPaid)
+    : BaseEntity, IAggregateRoot
 {
-    public long InvoiceId { get; set; }
+    public long InvoiceId { get; set; } = invoiceId;
 
-    public InvoiceType InvoiceType { get; set; }
+    public InvoiceType InvoiceType { get; set; } = invoiceType;
 
-    public int InstallmentNumber { get; set; }
+    public int InstallmentNumber { get; set; } = installmentNumber;
 
     /// <summary>
     /// تاریخ سررسید قسط
     /// </summary>
-    public DateTime DueDate { get; private set; }
+    public DateTime DueDate { get; private set; } = dueDate;
 
     /// <summary>
     /// مبلغ قابل پرداخت 
     /// </summary>
-    public decimal AmountDue { get; private set; }
+    public decimal AmountDue { get; private set; } = amountDue;
 
     /// <summary>
     /// مبلغ پرداخت شده
     /// </summary>
-    public decimal AmountPaid { get; private set; }
+    public decimal AmountPaid { get; private set; } = amountPaid;
 
-    public InstallmentStatus Status { get; private set; }
-
-    public Installment(long invoiceId, InvoiceType invoiceType, int installmentNumber, DateTime dueDate, decimal amountDue,decimal amountPaid)
-    {
-        InvoiceId = invoiceId;
-        InvoiceType = invoiceType;
-        InstallmentNumber = installmentNumber;
-        DueDate = dueDate;
-        AmountDue = amountDue;
-        AmountPaid = amountPaid;
-        Status = InstallmentStatus.NotDue;
-    }
+    public InstallmentStatus Status { get; private set; } = InstallmentStatus.NotDue;
 
     public void MarkAsPaid(decimal paymentAmount)
     {

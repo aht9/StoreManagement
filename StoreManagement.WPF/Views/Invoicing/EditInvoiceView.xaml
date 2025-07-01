@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="StoreManagement.WPF.Views.Invoicing.EditInvoiceView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StoreManagement.WPF.Views.Invoicing"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:viewModels="clr-namespace:StoreManagement.WPF.ViewModels.Invoicing"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=viewModels:EditInvoiceViewModel, IsDesignTimeCreatable=False}"
+             FlowDirection="RightToLeft"
+             Background="{StaticResource PrimaryBackgroundBrush}">
+    <Border Style="{StaticResource CardBorderStyle}" Margin="10">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Text="{Binding PageTitle}" Style="{StaticResource CardTitleStyle}" Margin="0,0,0,20"/>
+
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,15">
+                <TextBox IsReadOnly="True" Style="{StaticResource SearchBoxStyle}" 
+                         materialDesign:HintAssist.Hint="شماره فاکتور" 
+                         Text="{Binding InvoiceNumber}" Margin="0,0,10,0" MinWidth="150"/>
+
+                <DatePicker Style="{StaticResource MaterialDesignDatePicker}"
+                            materialDesign:HintAssist.Hint="تاریخ"
+                            SelectedDate="{Binding InvoiceDate}" Margin="0,0,10,0" MinWidth="150"/>
+
+                <TextBox IsReadOnly="True" Style="{StaticResource SearchBoxStyle}"
+                         materialDesign:HintAssist.Hint="طرف حساب" 
+                         Text="{Binding PartyName}" />
+            </StackPanel>
+
+            <DataGrid Grid.Row="2" ItemsSource="{Binding Items}" Style="{StaticResource ModernDataGridStyle}" CanUserAddRows="True" CanUserDeleteRows="True">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="کالا" Binding="{Binding ProductName}" Width="*"/>
+                    <DataGridTextColumn Header="تعداد" Binding="{Binding Quantity}" />
+                    <DataGridTextColumn Header="قیمت واحد" Binding="{Binding UnitPrice, StringFormat=N0}" />
+                    <DataGridTextColumn Header="تخفیف ٪" Binding="{Binding DiscountPercentage}" />
+                    <DataGridTextColumn Header="مالیات ٪" Binding="{Binding TaxPercentage}" />
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <Button Grid.Row="3" Content="ذخیره تغییرات" Style="{StaticResource PrimaryActionButtonStyle}"
+                    Command="{Binding SaveChangesCommand}" Margin="0,15,0,0" Height="40"/>
+        </Grid>
+    </Border>
+</UserControl>

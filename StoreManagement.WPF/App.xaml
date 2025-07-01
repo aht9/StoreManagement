@@ -6,7 +6,8 @@
              xmlns:views="clr-namespace:StoreManagement.WPF.Views"
              xmlns:invviews="clr-namespace:StoreManagement.WPF.Views.Invoicing"
              xmlns:viewmodels="clr-namespace:StoreManagement.WPF.ViewModels"
-             xmlns:invviewmodels="clr-namespace:StoreManagement.WPF.ViewModels.Invoicing">
+             xmlns:invviewmodels="clr-namespace:StoreManagement.WPF.ViewModels.Invoicing"
+             xmlns:enums="clr-namespace:StoreManagement.Domain.Enums;assembly=StoreManagement.Domain">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -23,6 +24,8 @@
             <converters:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
             <converters:NullToBooleanConverter x:Key="NullToBooleanConverter"/>
             <converters:EnumToVisibilityConverter x:Key="EnumToVisibilityConverter" />
+            <converters:IsNotPaidConverter x:Key="IsNotPaidConverter" />
+            <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
 
 
             <!-- DataTemplate for ViewModels -->
@@ -43,6 +46,37 @@
             </DataTemplate>
             <DataTemplate DataType="{x:Type invviewmodels:InvoicingViewModel}">
                 <invviews:InvoicingView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type invviewmodels:InvoiceListViewModel}">
+                <ContentControl>
+                    <ContentControl.Style>
+                        <Style TargetType="ContentControl">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding InvoiceType}" Value="{x:Static enums:InvoiceType.Sales}">
+                                    <Setter Property="Content">
+                                        <Setter.Value>
+                                            <invviews:SalesInvoiceListView/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding InvoiceType}" Value="{x:Static enums:InvoiceType.Purchase}">
+                                    <Setter Property="Content">
+                                        <Setter.Value>
+                                            <invviews:PurchaseInvoiceListView/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ContentControl.Style>
+                </ContentControl>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type invviewmodels:EditInvoiceViewModel}">
+                <invviews:EditInvoiceView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type invviewmodels:InstallmentManagementViewModel}">
+                <invviews:InstallmentManagementView/>
             </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>

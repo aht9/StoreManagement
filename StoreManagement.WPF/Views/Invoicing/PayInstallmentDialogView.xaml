@@ -1,0 +1,31 @@
+﻿<UserControl x:Class="StoreManagement.WPF.Views.Invoicing.PayInstallmentDialogView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StoreManagement.WPF.Views.Invoicing"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignWidth="400" Width="400">
+    <Border Style="{StaticResource CardBorderStyle}" Padding="20">
+        <StackPanel>
+            <TextBlock Text="ثبت پرداخت قسط" Style="{StaticResource CardTitleStyle}" Margin="0,0,0,20"/>
+
+            <TextBlock Text="مبلغ پرداخت" Style="{StaticResource LabelTextStyle}" />
+            <TextBox Style="{StaticResource SearchBoxStyle}" Text="{Binding AmountToPay}" Margin="0,5,0,15"/>
+
+            <TextBlock Text="واریز به / پرداخت از حساب" Style="{StaticResource LabelTextStyle}" />
+            <ComboBox ItemsSource="{Binding BankAccounts}" SelectedItem="{Binding SelectedBankAccount}" 
+                      DisplayMemberPath="AccountName" Margin="0,5,0,0"/>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+                <Button Content="لغو" Style="{StaticResource BaseButtonStyle}" Margin="0,0,8,0"
+                        Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                        CommandParameter="{x:Null}"/>
+                <Button Content="تایید پرداخت" Style="{StaticResource PrimaryActionButtonStyle}"
+                        Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                        CommandParameter="{Binding}"/>
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</UserControl>

@@ -41,10 +41,28 @@
     <Compile Update="Views\Invoicing\AddProductDialogView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\Invoicing\ConfirmationDialogView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Invoicing\EditInvoiceView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Invoicing\InstallmentManagementView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\Invoicing\InvoicingView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\Invoicing\PayInstallmentDialogView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\Invoicing\PaymentDialogView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Invoicing\PurchaseInvoiceListView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Invoicing\SalesInvoiceListView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Invoicing\SelectPartyDialogView.xaml.cs">

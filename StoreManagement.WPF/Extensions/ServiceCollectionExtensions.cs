@@ -28,6 +28,9 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddViewModelServiceCollection(this IServiceCollection services)
     {
+        services.AddSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
+
+
         // ViewModels (transient or singleton based on need)
         services.AddSingleton<MainViewModel>();
         services.AddTransient<CustomerManagementViewModel>();
@@ -35,8 +38,11 @@ public static class ServiceCollectionExtensions
         services.AddTransient<BankAccountManagementViewModel>();
         services.AddTransient<ProductManagementViewModel>();
         services.AddTransient<StoreManagementViewModel>();
-        //services.AddTransient<InvoicingViewModel>();
-        services.AddSingleton<IInvoicingViewModelFactory, InvoicingViewModelFactory>();
+
+        services.AddSingleton<IInvoicingViewModelFactory, InvoicingViewModelFactory>(); 
+        services.AddSingleton<IInvoiceListViewModelFactory, InvoiceListViewModelFactory>(); 
+        services.AddSingleton<IEditInvoiceViewModelFactory, EditInvoiceViewModelFactory>();
+        services.AddSingleton<IInstallmentManagementViewModelFactory, InstallmentManagementViewModelFactory>();
 
 
         services.AddTransient<AddCustomerViewModel>();
@@ -54,6 +60,13 @@ public static class ServiceCollectionExtensions
         services.AddTransient<EditStoreViewModel>();
 
         services.AddTransient<InvoiceItemViewModel>();
+        services.AddTransient<PaymentDialogViewModel>();
+        services.AddTransient<AddPartyDialogViewModel>();
+        services.AddTransient<AddProductDialogViewModel>();
+        services.AddTransient<ConfirmationDialogViewModel>();
+        services.AddTransient<EditInvoiceViewModel>();
+        services.AddTransient<InstallmentManagementViewModel>();
+        services.AddTransient<PayInstallmentDialogViewModel>();
         services.AddTransient<PaymentDialogViewModel>();
         services.AddTransient<SelectPartyDialogViewModel>();
 

@@ -9,6 +9,7 @@ global using Microsoft.EntityFrameworkCore;
 global using Microsoft.Extensions.Logging;
 global using StoreManagement.Application.DTOs.BankAccounts;
 global using StoreManagement.Application.DTOs.Customers;
+global using StoreManagement.Application.DTOs.Installments;
 global using StoreManagement.Application.DTOs.Invoices;
 global using StoreManagement.Application.DTOs.Parties;
 global using StoreManagement.Application.DTOs.Products;

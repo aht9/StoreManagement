@@ -10,17 +10,19 @@ public class InventoryTransaction : BaseEntity, IAggregateRoot
     public DateTime TransactionDate { get; private set; }
 
     public int Quantity { get; private set; }
-    
+
     public decimal? PurchasePrice { get; private set; }
 
     public decimal? SalePrice { get; private set; }
+
+    public string? Description { get; private set; }
 
     // This property is used for EF Core mapping to the backing field _transactionTypeId
     [NotMapped]
     public InventoryTransactionType TransactionType
     {
         get => InventoryTransactionType.FromValue<InventoryTransactionType>(_transactionTypeId);
-        private set => _transactionTypeId = value.Id; 
+        private set => _transactionTypeId = value.Id;
     }
     private int _transactionTypeId;
 
@@ -93,7 +95,7 @@ public class InventoryTransaction : BaseEntity, IAggregateRoot
             throw new InvalidOperationException("Quantity must be greater than zero.");
     }
 
-    public void SetPrices(decimal? itemDtoUnitPrice, decimal salePrice)
+    public void SetPrices(decimal? itemDtoUnitPrice, decimal? salePrice)
     {
         if (itemDtoUnitPrice <= 0)
             throw new ArgumentException("Unit price must be greater than zero.", nameof(itemDtoUnitPrice));
@@ -101,6 +103,14 @@ public class InventoryTransaction : BaseEntity, IAggregateRoot
             throw new ArgumentException("Sale price cannot be negative.", nameof(salePrice));
         PurchasePrice = itemDtoUnitPrice;
         SalePrice = salePrice;
+        UpdateTimestamp();
+    }
+
+    public void SetDescription(string description)
+    {
+        if (string.IsNullOrWhiteSpace(description))
+            throw new ArgumentException("Description cannot be null or empty.", nameof(description));
+        Description = description;
         UpdateTimestamp();
     }
 }

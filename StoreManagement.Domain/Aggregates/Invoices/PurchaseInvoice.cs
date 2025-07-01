@@ -25,6 +25,20 @@ public class PurchaseInvoice : Invoice<PurchaseInvoiceItem>
 
         AddItem(purchaseItem);
     }
-    
 
+    public void UpdateDetailsPurchase(string requestInvoiceNumber, DateTime requestInvoiceDate, long requestStoreId)
+    {
+        if (requestStoreId <= 0)
+            throw new ArgumentOutOfRangeException(nameof(requestStoreId), "Invalid store ID.");
+        StoreId = requestStoreId;
+        UpdateDetails(requestInvoiceNumber,requestInvoiceDate);
+    }
+
+    public void ClearItems()
+    {
+        foreach (var item in Items.ToList())
+        {
+            RemoveItem(item);
+        }
+    }
 }

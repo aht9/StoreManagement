@@ -1,4 +1,4 @@
-﻿namespace StoreManagement.WPF.ViewModels.Invoicing;
+﻿namespace StoreManagement.WPF.ViewModels.Invoicing.FactoryHelper;
 
 public class InvoicingViewModelFactory(IMediator mediator) : IInvoicingViewModelFactory
 {
