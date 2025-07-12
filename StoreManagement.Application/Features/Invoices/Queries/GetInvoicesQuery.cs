@@ -28,13 +28,17 @@ SELECT
     p.Name AS PartyName,
     i.TotalAmount,
     i.InvoiceStatus,
-    CASE i.InvoiceStatus
-        WHEN {(int)InvoiceStatus.Paid} THEN N'پرداخت شده'
-        WHEN {(int)InvoiceStatus.Pending} THEN N'در انتظار پرداخت'
-        WHEN {(int)InvoiceStatus.Draft} THEN N'پیش‌ فاکتور'
-        WHEN {(int)InvoiceStatus.Cancelled} THEN N'لغو شده'
+    CASE i.PaymentType
+        WHEN {(int)PaymentType.Cash} THEN N'نقدی'
+        WHEN {(int)PaymentType.Installment} THEN N'اقساطی'
         ELSE N'نامشخص'
-    END AS PaymentStatusText -- تولید متن وضعیت برای نمایش
+    END AS PaymentStatusText,
+    CASE i.InvoiceStatus
+        WHEN {(int)InvoiceStatus.Pending} THEN N'درانتظار پرداخت'
+        WHEN {(int)InvoiceStatus.Draft} THEN N'پیش فاکتور'
+        WHEN {(int)InvoiceStatus.Cancelled} THEN N'لفو شده'
+        WHEN {(int)InvoiceStatus.Paid} THEN N'پرداخت شده'
+    END AS InvoiceStatusText
 FROM {invoiceTable} i
 {partyJoin}
 WHERE i.IsDeleted = 0");

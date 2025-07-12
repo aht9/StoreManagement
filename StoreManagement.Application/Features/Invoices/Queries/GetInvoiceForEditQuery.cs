@@ -17,6 +17,7 @@ public class GetInvoiceForEditQueryHandler(IDapperRepository dapper)
             ? "INNER JOIN Customers p ON i.CustomerId = p.Id"
             : "INNER JOIN Stores p ON i.StoreId = p.Id";
         var partyIdField = request.InvoiceType == InvoiceType.Sales ? "i.CustomerId" : "i.StoreId";
+        var foreignIdField = request.InvoiceType == InvoiceType.Sales ? "ii.SalesInvoiceId" : "ii.PurchaseInvoiceId";
 
         var sql = $@"
 SELECT 
@@ -34,7 +35,7 @@ SELECT
 FROM {itemTable} ii
 INNER JOIN ProductVariants pv ON ii.ProductVariantId = pv.Id
 INNER JOIN Products prod ON pv.ProductId = prod.Id
-WHERE ii.InvoiceId = @InvoiceId;";
+WHERE {foreignIdField} = @InvoiceId;";
 
         await using var multi = await dapper.QueryMultipleAsync(sql, new { request.InvoiceId }, cancellationToken: cancellationToken);
         var invoiceDto = await multi.ReadSingleOrDefaultAsync<InvoiceForEditDto>();

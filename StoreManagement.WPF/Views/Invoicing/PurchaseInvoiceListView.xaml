@@ -34,15 +34,18 @@
                 <Button Content="اعمال فیلتر" Style="{StaticResource BaseButtonStyle}" Command="{Binding LoadInvoicesCommand}"/>
             </StackPanel>
 
-            <DataGrid Grid.Row="2" ItemsSource="{Binding Invoices}" Style="{StaticResource ModernDataGridStyle}">
+            <DataGrid Grid.Row="2" 
+                      ItemsSource="{Binding Invoices}" 
+                      Style="{StaticResource ModernDataGridStyle}"
+                      ScrollViewer.CanContentScroll="True"
+                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                      ScrollViewer.HorizontalScrollBarVisibility="Auto">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="شماره فاکتور" Binding="{Binding InvoiceNumber}" Width="Auto"/>
-                    <DataGridTextColumn Header="تاریخ" Binding="{Binding InvoiceDate, StringFormat='yyyy/MM/dd'}" Width="Auto"/>
-
-                    <DataGridTextColumn Header="فروشنده" Binding="{Binding PartyName}" Width="*"/>
-
-                    <DataGridTextColumn Header="مبلغ کل" Binding="{Binding TotalAmount, StringFormat='{}{0:N0} ریال'}" Width="Auto"/>
-                    <DataGridTemplateColumn Header="وضعیت" Width="Auto">
+                    <DataGridTextColumn Header="شماره فاکتور" Binding="{Binding InvoiceNumber}" Width="150"/>
+                    <DataGridTextColumn Header="تاریخ" Binding="{Binding InvoiceDate, StringFormat='yyyy/MM/dd'}" Width="100"/>
+                    <DataGridTextColumn Header="فروشنده" Binding="{Binding PartyName}" Width="150"/>
+                    <DataGridTextColumn Header="مبلغ کل" Binding="{Binding TotalAmount, StringFormat='{}{0:N0} ریال'}" Width="100"/>
+                    <DataGridTemplateColumn Header="وضعیت" Width="100">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Border Padding="8,4" CornerRadius="4">
@@ -56,12 +59,12 @@
                                             </Style.Triggers>
                                         </Style>
                                     </Border.Style>
-                                    <TextBlock Text="{Binding PaymentStatusText}" Foreground="White" FontSize="10"/>
+                                    <TextBlock Text="{Binding InvoiceStatusText}" Foreground="White" FontSize="10"/>
                                 </Border>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="عملیات" Width="Auto">
+                    <DataGridTemplateColumn Header="عملیات" Width="*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
@@ -72,7 +75,7 @@
                                             Command="{Binding DataContext.DeleteInvoiceCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                             CommandParameter="{Binding}"/>
                                     <Button Content="اقساط" Style="{StaticResource BaseButtonStyle}" Margin="2"
-                                            Visibility="{Binding PaymentStatusText, Converter={StaticResource StringToVisibilityConverter}, ConverterParameter='پرداخت نشده'}"
+                                            Visibility="{Binding PaymentStatusText, Converter={StaticResource StringToVisibilityConverter}, ConverterParameter='اقساطی'}"
                                             Command="{Binding DataContext.ManageInstallmentsCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                             CommandParameter="{Binding}"/>
                                 </StackPanel>

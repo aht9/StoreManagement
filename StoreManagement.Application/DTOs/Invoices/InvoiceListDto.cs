@@ -7,6 +7,6 @@ public class InvoiceListDto
     public DateTime InvoiceDate { get; set; }
     public string PartyName { get; set; } // نام مشتری یا فروشگاه
     public decimal TotalAmount { get; set; }
-    public string PaymentStatusText { get; set; } // متن وضعیت: "پرداخت کامل" یا "پرداخت نشده"
-    public bool IsPaid { get; set; }
+    public string PaymentStatusText { get; set; }
+    public string InvoiceStatusText { get; set; }
 }
