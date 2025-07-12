@@ -21,13 +21,14 @@ public class GetInvoiceForEditQueryHandler(IDapperRepository dapper)
 
         var sql = $@"
 SELECT 
-    i.Id, i.InvoiceNumber, i.InvoiceDate, {partyIdField} as PartyId, p.Name as PartyName, i.PaymentType
+    i.Id, i.InvoiceNumber, i.InvoiceDate, {partyIdField} as PartyId, p.Name as PartyName, i.PaymentType,
+    i.TotalAmount, i.PaidAmount
 FROM {invoiceTable} i {partyJoin}
 WHERE i.Id = @InvoiceId AND i.IsDeleted = 0;
 
 SELECT 
     ii.ProductVariantId, 
-    prod.Name as ProductName, -- واکشی نام محصول
+    prod.Name as ProductName,
     ii.Quantity, 
     ii.UnitPrice, 
     ii.Discount as DiscountPercentage, 

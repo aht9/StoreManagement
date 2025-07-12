@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:StoreManagement.WPF.Views.Invoicing"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:viewModels="clr-namespace:StoreManagement.WPF.ViewModels.Invoicing"
+             xmlns:global="clr-namespace:"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=viewModels:EditInvoiceViewModel, IsDesignTimeCreatable=False}"
              FlowDirection="RightToLeft"
@@ -17,6 +18,8 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0" Text="{Binding PageTitle}" Style="{StaticResource CardTitleStyle}" Margin="0,0,0,20"/>
@@ -25,27 +28,74 @@
                 <TextBox IsReadOnly="True" Style="{StaticResource SearchBoxStyle}" 
                          materialDesign:HintAssist.Hint="شماره فاکتور" 
                          Text="{Binding InvoiceNumber}" Margin="0,0,10,0" MinWidth="150"/>
-
                 <DatePicker Style="{StaticResource MaterialDesignDatePicker}"
                             materialDesign:HintAssist.Hint="تاریخ"
                             SelectedDate="{Binding InvoiceDate}" Margin="0,0,10,0" MinWidth="150"/>
-
                 <TextBox IsReadOnly="True" Style="{StaticResource SearchBoxStyle}"
                          materialDesign:HintAssist.Hint="طرف حساب" 
                          Text="{Binding PartyName}" />
             </StackPanel>
 
-            <DataGrid Grid.Row="2" ItemsSource="{Binding Items}" Style="{StaticResource ModernDataGridStyle}" CanUserAddRows="True" CanUserDeleteRows="True">
+            <DataGrid Grid.Row="2" ItemsSource="{Binding Items}" Style="{StaticResource ModernDataGridStyle}" CanUserAddRows="False" AutoGenerateColumns="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="کالا" Binding="{Binding ProductName}" Width="*"/>
-                    <DataGridTextColumn Header="تعداد" Binding="{Binding Quantity}" />
-                    <DataGridTextColumn Header="قیمت واحد" Binding="{Binding UnitPrice, StringFormat=N0}" />
-                    <DataGridTextColumn Header="تخفیف ٪" Binding="{Binding DiscountPercentage}" />
-                    <DataGridTextColumn Header="مالیات ٪" Binding="{Binding TaxPercentage}" />
+                    <DataGridTextColumn Header="کالا" Binding="{Binding ProductName}" Width="*" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="تعداد" Binding="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}" />
+                    <DataGridTextColumn Header="قیمت واحد" Binding="{Binding UnitPrice, StringFormat=N0, UpdateSourceTrigger=PropertyChanged}" />
+                    <DataGridTextColumn Header="تخفیف ٪" Binding="{Binding DiscountPercentage, UpdateSourceTrigger=PropertyChanged}" />
+                    <DataGridTextColumn Header="مالیات ٪" Binding="{Binding TaxPercentage, UpdateSourceTrigger=PropertyChanged}" />
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Command="{Binding DataContext.DeleteItemCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                        CommandParameter="{Binding}"
+                                        Style="{StaticResource MaterialDesignIconButton}"
+                                        ToolTip="حذف آیتم">
+                                    <materialDesign:PackIcon Kind="Delete" Foreground="Red"/>
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
 
-            <Button Grid.Row="3" Content="ذخیره تغییرات" Style="{StaticResource PrimaryActionButtonStyle}"
+            <Grid Grid.Row="3" Margin="0,15,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <ComboBox Grid.Column="0" materialDesign:HintAssist.Hint="جستجوی کالا"
+                          ItemsSource="{Binding Products}"
+                          DisplayMemberPath="Name"
+                          SelectedItem="{Binding SelectedProduct}"
+                          IsEditable="True"
+                          Style="{StaticResource MaterialDesignFloatingHintComboBox}" Margin="0,0,10,0"
+                          Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                          IsSynchronizedWithCurrentItem="False"
+                          Foreground="White" />
+                <TextBox Grid.Column="1" materialDesign:HintAssist.Hint="تعداد" Text="{Binding NewItemQuantity}" Style="{StaticResource SearchBoxStyle}" MinWidth="100" Margin="0,0,10,0"/>
+                <TextBox Grid.Column="2" materialDesign:HintAssist.Hint="قیمت واحد" Text="{Binding NewItemUnitPrice, StringFormat=N0}" Style="{StaticResource SearchBoxStyle}" MinWidth="120" Margin="0,0,10,0"/>
+                <Button Grid.Column="3" Content="افزودن" Command="{Binding AddItemCommand}" Style="{StaticResource PrimaryActionButtonStyle}" Width="100"/>
+            </Grid>
+
+            <StackPanel Grid.Row="4" Orientation="Vertical" Margin="0,20,0,0">
+                <TextBlock Text="{Binding FinancialSummary}" FontWeight="Bold" Margin="0,0,0,10"/>
+                <Grid Visibility="{Binding IsBalanceChanged, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <ComboBox Grid.Column="0" materialDesign:HintAssist.Hint="انتخاب حساب برای تسویه"
+                              ItemsSource="{Binding BankAccounts}"
+                              DisplayMemberPath="AccountName"
+                              SelectedItem="{Binding SelectedBankAccountForSettlement}"
+                              Style="{StaticResource MaterialDesignFloatingHintComboBox}" Margin="0,0,10,0"/>
+                    <Button Grid.Column="1" Content="تسویه مانده حساب" Command="{Binding SettleBalanceCommand}" Style="{StaticResource PrimaryActionButtonStyle}" Width="150"/>
+                </Grid>
+            </StackPanel>
+
+            <Button Grid.Row="5" Content="ذخیره تغییرات کلی" Style="{StaticResource PrimaryActionButtonStyle}"
                     Command="{Binding SaveChangesCommand}" Margin="0,15,0,0" Height="40"/>
         </Grid>
     </Border>

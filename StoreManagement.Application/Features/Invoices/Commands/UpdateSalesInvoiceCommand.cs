@@ -7,19 +7,20 @@ public class UpdateSalesInvoiceCommand : IRequest
     public DateTime InvoiceDate { get; set; }
     public long CustomerId { get; set; }
     public List<InvoiceItemDto> Items { get; set; }
-    public long? BankAccountId { get; set; }
+    public long? BankAccountIdForAdjustment { get; set; }
 }
 
 
 public class UpdateSalesInvoiceCommandHandler(
-    IGenericRepository<SalesInvoice> invoiceRepository,
-    IGenericRepository<Inventory> inventoryRepo,
-    IGenericRepository<InventoryTransaction> inventoryTransactionRepository,
-    IGenericRepository<ProductVariant> variantRepository,
-    IGenericRepository<FinancialTransaction> financialTransactionRepository,
-    IGenericRepository<BankAccount> bankAccountRepository,
-    ILogger<UpdateSalesInvoiceCommandHandler> logger)
-    : IRequestHandler<UpdateSalesInvoiceCommand>
+        IGenericRepository<SalesInvoice> invoiceRepository,
+        IGenericRepository<Inventory> inventoryRepo,
+        IGenericRepository<InventoryTransaction> inventoryTransactionRepository,
+        IGenericRepository<ProductVariant> variantRepository,
+        IGenericRepository<FinancialTransaction> financialTransactionRepository,
+        IGenericRepository<BankAccount> bankAccountRepository,
+        IGenericRepository<Installment> installmentRepository, // اضافه کردن ریپازیتوری اقساط
+        ILogger<UpdateSalesInvoiceCommandHandler> logger)
+        : IRequestHandler<UpdateSalesInvoiceCommand>
 {
     public async Task Handle(UpdateSalesInvoiceCommand request, CancellationToken cancellationToken)
     {
@@ -36,7 +37,7 @@ public class UpdateSalesInvoiceCommandHandler(
             var allVariantIds = oldItems.Keys.Union(newItems.Keys).ToList();
 
             var inventorySpec = new CustomExpressionSpecification<Inventory>(i => allVariantIds.Contains(i.ProductVariantId));
-            var inventoriesToUpdate = (await inventoryRepo.ListAsync(inventorySpec, null as IncludeSpecification<Inventory>, cancellationToken)).ToDictionary(i => i.ProductVariantId);
+            var inventoriesToUpdate = (await inventoryRepo.ListAsync(inventorySpec, (IncludeSpecification<Inventory>)null, cancellationToken)).ToDictionary(i => i.ProductVariantId);
 
             foreach (var variantId in allVariantIds)
             {
@@ -49,8 +50,9 @@ public class UpdateSalesInvoiceCommandHandler(
                 if (!inventoriesToUpdate.TryGetValue(variantId, out var inventory))
                     throw new InvalidOperationException($"موجودی انبار برای کالای {variantId} یافت نشد.");
 
-                if (delta > 0) inventory.DecreaseStock(delta);
-                else inventory.IncreaseStock(-delta);
+                // برای فاکتور فروش، منطق برعکس فاکتور خرید است
+                if (delta > 0) inventory.DecreaseStock(delta); // افزایش تعداد در فاکتور -> کاهش موجودی
+                else inventory.IncreaseStock(-delta); // کاهش تعداد در فاکتور -> افزایش موجودی
 
                 var productVariant = await variantRepository.GetByIdAsync(variantId, cancellationToken);
                 var transactionType = delta > 0 ? InventoryTransactionType.Out : InventoryTransactionType.In;
@@ -74,64 +76,39 @@ public class UpdateSalesInvoiceCommandHandler(
             await invoiceRepository.UpdateAsync(invoice, cancellationToken);
 
             var amountDifference = invoice.TotalAmount - oldTotalAmount;
-            if (amountDifference != 0 && (invoice.PaymentType == PaymentType.Cash))
+            if (amountDifference != 0)
             {
-                // این منطق فقط برای پرداخت‌های نقدی/کارتی اعمال می‌شود
-                var financialSpec = new CustomExpressionSpecification<FinancialTransaction>(
-                    ft => ft.InvoiceId == invoice.Id && ft.InvoiceType == InvoiceType.Sales);
-                var originalTx = await financialTransactionRepository.FirstOrDefaultAsync(financialSpec, cancellationToken);
-
-                if (originalTx == null)
+                if (invoice.PaymentType == PaymentType.Cash || (invoice.PaymentType == PaymentType.Installment && !await installmentRepository.AnyAsync(new CustomExpressionSpecification<Installment>(i => i.InvoiceId == invoice.Id && i.Status != InstallmentStatus.Paid), cancellationToken)))
                 {
-                    // برای ثبت تراکنش اولیه، باید حساب بانکی مشخص شده باشد
-                    if (!request.BankAccountId.HasValue)
-                        throw new InvalidOperationException("برای ثبت پرداخت، انتخاب حساب الزامی است.");
+                    if (!request.BankAccountIdForAdjustment.HasValue)
+                        throw new InvalidOperationException("برای ثبت اصلاحیه، انتخاب حساب الزامی است.");
 
-                    var bankAccount = await bankAccountRepository.GetByIdForUpdateAsync(request.BankAccountId.Value, cancellationToken);
+                    var bankAccount = await bankAccountRepository.GetByIdForUpdateAsync(request.BankAccountIdForAdjustment.Value, cancellationToken);
                     if (bankAccount == null) throw new InvalidOperationException("حساب بانکی مورد نظر یافت نشد.");
 
-                    // یک تراکنش جدید برای کل مبلغ جدید فاکتور ایجاد می‌کنیم
-                    var newFinancialTx = new FinancialTransaction(
-                        bankAccount,
-                        invoice.TotalAmount, // مبلغ کل جدید
-                        TransactionType.Credit, // برای فاکتور فروش، پول به حساب ما واریز می‌شود
-                        $"ثبت پرداخت بابت فاکتور فروش شماره {invoice.InvoiceNumber}",
-                        invoice.Id,
-                        InvoiceType.Sales
-                    );
-                    bankAccount.AddTransaction(newFinancialTx);
+                    var adjustmentDirection = amountDifference > 0 ? TransactionType.Credit : TransactionType.Debit;
+                    var adjustmentAmount = Math.Abs(amountDifference);
+                    var description = $"اصلاحیه فاکتور فروش شماره {invoice.InvoiceNumber}";
+
+                    var adjustmentTx = new FinancialTransaction(bankAccount, adjustmentAmount, adjustmentDirection, description, invoice.Id, InvoiceType.Sales);
+                    bankAccount.AddTransaction(adjustmentTx);
                     await bankAccountRepository.UpdateAsync(bankAccount, cancellationToken);
                 }
-                else
+                else if (invoice.PaymentType == PaymentType.Installment)
                 {
-                    var bankAccount = await bankAccountRepository.GetByIdForUpdateAsync(originalTx.BankAccountId, cancellationToken);
-                    if (bankAccount == null) throw new InvalidOperationException("حساب بانکی مرتبط یافت نشد.");
+                    var installmentsSpec = new CustomExpressionSpecification<Installment>(i => i.InvoiceId == invoice.Id && i.InvoiceType == InvoiceType.Sales && i.Status != InstallmentStatus.Paid);
+                    var unpaidInstallments = await installmentRepository.ListAsync(installmentsSpec, (OrderBySpecification<Installment, object>)null, cancellationToken);
 
-                    //  ایجاد یک تراکنش معکوس برای خنثی کردن تراکنش اولیه
-                    var reversalDirection = originalTx.TransactionType == TransactionType.Credit ? TransactionType.Debit : TransactionType.Credit;
-                    var reversalTx = new FinancialTransaction(
-                        bankAccount,
-                        originalTx.Amount, // معکوس کردن با همان مبلغ اولیه
-                        reversalDirection,
-                        $"معکوس کردن تراکنش اولیه بابت اصلاح فاکتور شماره {invoice.InvoiceNumber}",
-                        invoice.Id,
-                        InvoiceType.Sales
-                    );
-                    bankAccount.AddTransaction(reversalTx);
-
-                    var correctTx = new FinancialTransaction(
-                        bankAccount,
-                        invoice.TotalAmount, // ثبت تراکنش جدید با مبلغ کل جدید
-                        originalTx.TransactionType, // جهت تراکنش جدید، مانند جهت تراکنش اولیه است
-                        $"ثبت مجدد تراکنش بابت اصلاح فاکتور شماره {invoice.InvoiceNumber}",
-                        invoice.Id,
-                        InvoiceType.Sales
-                    );
-                    bankAccount.AddTransaction(correctTx);
-
-                    await bankAccountRepository.UpdateAsync(bankAccount, cancellationToken);
+                    if (unpaidInstallments.Any())
+                    {
+                        var adjustmentPerInstallment = amountDifference / unpaidInstallments.Count;
+                        foreach (var installment in unpaidInstallments)
+                        {
+                            installment.UpdateAmountDue(installment.AmountDue + adjustmentPerInstallment);
+                            await installmentRepository.UpdateAsync(installment, cancellationToken);
+                        }
+                    }
                 }
-
             }
 
             await invoiceRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);

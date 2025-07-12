@@ -8,5 +8,7 @@ public class InvoiceForEditDto
     public long PartyId { get; set; } // شناسه مشتری یا فروشگاه
     public string PartyName { get; set; }
     public PaymentType PaymentType { get; set; }
+    public decimal TotalAmount { get; set; }
+    public decimal PaidAmount { get; set; }
     public List<InvoiceItemDto> Items { get; set; } = new List<InvoiceItemDto>();
 }
