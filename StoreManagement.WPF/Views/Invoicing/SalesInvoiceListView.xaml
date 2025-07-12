@@ -20,21 +20,32 @@
             <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,15">
                 <DatePicker materialDesign:HintAssist.Hint="از تاریخ" SelectedDate="{Binding StartDate}" Width="150" Margin="0,0,10,0"/>
                 <DatePicker materialDesign:HintAssist.Hint="تا تاریخ" SelectedDate="{Binding EndDate}" Width="150" Margin="0,0,10,0"/>
-                <ComboBox materialDesign:HintAssist.Hint="وضعیت پرداخت" SelectedItem="{Binding SelectedStatus}" Width="150" Margin="0,0,10,0">
-                    <ComboBoxItem>همه</ComboBoxItem>
-                    <ComboBoxItem>پرداخت شده</ComboBoxItem>
-                    <ComboBoxItem>پرداخت نشده</ComboBoxItem>
+                <ComboBox
+                    materialDesign:HintAssist.Hint="وضعیت پرداخت"
+                    ItemsSource="{Binding StatusOptions}"
+                    SelectedItem="{Binding SelectedStatus}"
+                    Width="200">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
                 </ComboBox>
                 <Button Content="اعمال فیلتر" Style="{StaticResource BaseButtonStyle}" Command="{Binding LoadInvoicesCommand}"/>
             </StackPanel>
 
-            <DataGrid Grid.Row="2" ItemsSource="{Binding Invoices}" Style="{StaticResource ModernDataGridStyle}">
+            <DataGrid Grid.Row="2" 
+                      ItemsSource="{Binding Invoices}" 
+                      Style="{StaticResource ModernDataGridStyle}"
+                      ScrollViewer.CanContentScroll="True"
+                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                      ScrollViewer.HorizontalScrollBarVisibility="Auto">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="شماره فاکتور" Binding="{Binding InvoiceNumber}" Width="Auto"/>
-                    <DataGridTextColumn Header="تاریخ" Binding="{Binding InvoiceDate, StringFormat='yyyy/MM/dd'}" Width="Auto"/>
-                    <DataGridTextColumn Header="مشتری" Binding="{Binding PartyName}" Width="*"/>
-                    <DataGridTextColumn Header="مبلغ کل" Binding="{Binding TotalAmount, StringFormat='{}{0:N0} ریال'}" Width="Auto"/>
-                    <DataGridTemplateColumn Header="وضعیت" Width="Auto">
+                    <DataGridTextColumn Header="شماره فاکتور" Binding="{Binding InvoiceNumber}" Width="120"/>
+                    <DataGridTextColumn Header="تاریخ" Binding="{Binding InvoiceDate, StringFormat='yyyy/MM/dd'}" Width="100"/>
+                    <DataGridTextColumn Header="مشتری" Binding="{Binding PartyName}" Width="150"/>
+                    <DataGridTextColumn Header="مبلغ کل" Binding="{Binding TotalAmount, StringFormat='{}{0:N0} ریال'}" Width="150"/>
+                    <DataGridTemplateColumn Header="وضعیت" Width="100">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Border Padding="8,4" CornerRadius="4">
@@ -53,7 +64,7 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="عملیات" Width="Auto">
+                    <DataGridTemplateColumn Header="عملیات" Width="185">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">

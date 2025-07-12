@@ -13,7 +13,8 @@ public partial class InvoiceListViewModel : ViewModelBase
     // پراپرتی‌های مربوط به فیلتر
     [ObservableProperty] private DateTime? _startDate;
     [ObservableProperty] private DateTime? _endDate;
-    [ObservableProperty] private string _selectedStatus = "همه"; // "همه", "پرداخت شده", "پرداخت نشده"
+    public IEnumerable<InvoiceStatus> StatusOptions { get; }
+    public InvoiceStatus SelectedStatus { get; set; }
 
     public string PageTitle => InvoiceType == InvoiceType.Sales ? "مدیریت فاکتورهای فروش" : "مدیریت فاکتورهای خرید";
 
@@ -23,6 +24,8 @@ public partial class InvoiceListViewModel : ViewModelBase
         _mainViewModel = mainViewModel;
         _snackbarMessageQueue = snackbarMessageQueue;
         InvoiceType = invoiceType;
+        StatusOptions = Enum.GetValues(typeof(InvoiceStatus)).Cast<InvoiceStatus>();
+
         Task.Run(LoadInvoices);
     }
 
@@ -36,7 +39,7 @@ public partial class InvoiceListViewModel : ViewModelBase
                 InvoiceType = InvoiceType,
                 StartDate = StartDate,
                 EndDate = EndDate,
-                PaymentStatus = SelectedStatus == "همه" ? null : (SelectedStatus == "پرداخت شده" ? "Paid" : "Unpaid")
+                Status = this.SelectedStatus
             };
             var result = await _mediator.Send(query);
             Invoices = new ObservableCollection<InvoiceListDto>(result);

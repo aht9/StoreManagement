@@ -1,9 +1,15 @@
-﻿namespace StoreManagement.Domain.Enums;
+﻿using System.ComponentModel;
+
+namespace StoreManagement.Domain.Enums;
 
 public enum InvoiceStatus
 {
-    Draft,       // پیش‌ فاکتور
-    Pending,     // در انتظار پرداخت
-    Paid,        // پرداخت شده
-    Cancelled    // لغو شده  
+    [Description("پیش‌ فاکتور")]
+    Draft,
+    [Description("در انتظار پرداخت")]
+    Pending,    
+    [Description("پرداخت شده")]
+    Paid,        
+    [Description("لغو شده")]
+    Cancelled   
 }

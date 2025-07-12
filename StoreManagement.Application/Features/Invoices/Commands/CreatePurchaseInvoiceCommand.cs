@@ -3,12 +3,15 @@
 public class CreatePurchaseInvoiceCommand : IRequest<long>
 {
     public long StoreId { get; set; }
+
     public string InvoiceNumber { get; set; }
+
     public DateTime InvoiceDate { get; set; }
 
     public PaymentType PaymentType { get; set; }
 
     public long? BankAccountId { get; set; }
+
     public List<InvoiceItemDto> Items { get; set; }
 
     public InstallmentDetailsDto? InstallmentDetails { get; set; }
@@ -114,6 +117,9 @@ public class CreatePurchaseInvoiceCommandHandler(
 
                 bankAccount.AddTransaction(financialTx);
                 await bankAccountRepository.UpdateAsync(bankAccount, cancellationToken);
+
+                purchaseInvoice.MarkAsPaid(purchaseInvoice.TotalAmount);
+
             }
 
             //  مدیریت پرداخت اقساطی (در صورت وجود)
@@ -148,6 +154,8 @@ public class CreatePurchaseInvoiceCommandHandler(
                     bankAccount.AddTransaction(downPaymentTx);
                     await bankAccountRepository.UpdateAsync(bankAccount, cancellationToken);
                 }
+
+                purchaseInvoice.MarkAsPaid(details.DownPayment);
 
                 // مرحله ۲: محاسبه و ایجاد رکوردهای اقساط
                 decimal remainingAmount = purchaseInvoice.TotalAmount - details.DownPayment;

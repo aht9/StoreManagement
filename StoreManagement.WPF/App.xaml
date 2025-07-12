@@ -26,6 +26,7 @@
             <converters:EnumToVisibilityConverter x:Key="EnumToVisibilityConverter" />
             <converters:IsNotPaidConverter x:Key="IsNotPaidConverter" />
             <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
+            <converters:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter"/>
 
 
             <!-- DataTemplate for ViewModels -->
