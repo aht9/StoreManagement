@@ -50,7 +50,8 @@ SELECT
     i.TotalAmount,
     i.InvoiceStatus,
     CASE WHEN cte.IsFullyPaid = 1 THEN N'پرداخت کامل' ELSE N'پرداخت نشده' END AS PaymentStatusText,
-    CONVERT(bit, cte.IsFullyPaid) as IsPaid
+    CONVERT(bit, cte.IsFullyPaid) as IsPaid,
+    CONVERT(bit, i.[PaymentType]) as IsInstallment
 FROM {invoiceTable} i
 {partyJoin}
 INNER JOIN InvoicePaymentStatusCTE cte ON i.Id = cte.Id

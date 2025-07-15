@@ -75,7 +75,7 @@
                                             Command="{Binding DataContext.DeleteInvoiceCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                             CommandParameter="{Binding}"/>
                                     <Button Content="اقساط" Style="{StaticResource BaseButtonStyle}" Margin="2"
-                                            Visibility="{Binding PaymentStatusText, Converter={StaticResource StringToVisibilityConverter}, ConverterParameter='پرداخت نشده'}"
+                                            Visibility="{Binding IsInstallment, Converter={StaticResource BoolToVisibilityConverter}}"
                                             Command="{Binding DataContext.ManageInstallmentsCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                             CommandParameter="{Binding}"/>
                                 </StackPanel>

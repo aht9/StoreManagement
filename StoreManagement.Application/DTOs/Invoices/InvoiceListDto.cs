@@ -9,6 +9,6 @@ public class InvoiceListDto
     public decimal TotalAmount { get; set; }
     public string PaymentStatusText { get; set; }
     public string InvoiceStatusText { get; set; }
-
+    public bool IsInstallment { get; set; }
     public bool IsPaid { get; set; }
 }
