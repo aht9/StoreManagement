@@ -59,7 +59,7 @@
                                             </Style.Triggers>
                                         </Style>
                                     </Border.Style>
-                                    <TextBlock Text="{Binding InvoiceStatusText}" Foreground="White" FontSize="10"/>
+                                    <TextBlock Text="{Binding PaymentStatusText}" Foreground="White" FontSize="10"/>
                                 </Border>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
