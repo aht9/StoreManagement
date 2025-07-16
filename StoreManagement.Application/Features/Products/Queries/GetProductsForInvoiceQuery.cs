@@ -14,7 +14,6 @@ public class GetProductsForInvoiceQueryHandler(IDapperRepository dapper)
         var searchTermParam = string.IsNullOrWhiteSpace(request.SearchTerm) ? null : $"%{request.SearchTerm}%";
         var parameters = new { SearchTerm = searchTermParam };
 
-        // <<<< کوئری با منطق صحیح محاسبه موجودی >>>>
         const string sql = @"
 WITH LatestSalePriceCTE AS (
     SELECT

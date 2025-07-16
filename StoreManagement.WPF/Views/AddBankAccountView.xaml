@@ -24,7 +24,7 @@
                 </Grid.RowDefinitions>
                 <TextBox Grid.Row="0" Grid.Column="0" Margin="0,15,0,0" Text="{Binding AccountName, UpdateSourceTrigger=PropertyChanged}" materialDesign:HintAssist.Hint="نام حساب (مثلا: حساب جاری)"/>
                 <TextBox Grid.Row="0" Grid.Column="2" Margin="0,15,0,0" Text="{Binding BankName, UpdateSourceTrigger=PropertyChanged}" materialDesign:HintAssist.Hint="نام بانک"/>
-                <TextBox Grid.Row="1" Grid.Column="0" Margin="0,15,0,0" Text="{Binding AccountNumber, UpdateSourceTrigger=PropertyChanged}" materialDesign:HintAssist.Hint="شماره حساب"/>
+                <TextBox Grid.Row="1" Grid.Column="0" Margin="0,15,0,0" Text="{Binding AccountNumber, UpdateSourceTrigger=PropertyChanged}" materialDesign:HintAssist.Hint="شماره حساب" MaxLength="20"/>
                 <TextBox Grid.Row="1" Grid.Column="2" Margin="0,15,0,0" Text="{Binding CardNumberLastFour, UpdateSourceTrigger=PropertyChanged}" MaxLength="4" materialDesign:HintAssist.Hint="۴ رقم آخر کارت"/>
                 <TextBox Grid.Row="2" Grid.Column="0" Margin="0,15,0,0" Text="{Binding InitialBalance, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:N0}}" materialDesign:HintAssist.Hint="موجودی اولیه (ریال)"/>
             </Grid>

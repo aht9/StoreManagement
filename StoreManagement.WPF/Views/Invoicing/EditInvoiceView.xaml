@@ -6,7 +6,6 @@
              xmlns:local="clr-namespace:StoreManagement.WPF.Views.Invoicing"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:viewModels="clr-namespace:StoreManagement.WPF.ViewModels.Invoicing"
-             xmlns:global="clr-namespace:"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=viewModels:EditInvoiceViewModel, IsDesignTimeCreatable=False}"
              FlowDirection="RightToLeft"

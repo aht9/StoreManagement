@@ -1,24 +1,13 @@
 ﻿namespace StoreManagement.WPF.ViewModels;
 
-public partial class AddBankAccountViewModel : ViewModelBase
+public partial class AddBankAccountViewModel(IMediator mediator, Func<Task> onSave, Action onCancel) : ViewModelBase
 {
-    private readonly IMediator _mediator;
-    private readonly Func<Task> _onSave;
-    private readonly Action _onCancel;
-
     [ObservableProperty][NotifyCanExecuteChangedFor(nameof(SaveCommand))] private string _accountName = "";
     [ObservableProperty][NotifyCanExecuteChangedFor(nameof(SaveCommand))] private string _bankName = "";
     [ObservableProperty][NotifyCanExecuteChangedFor(nameof(SaveCommand))] private string _accountNumber = "";
     [ObservableProperty][NotifyCanExecuteChangedFor(nameof(SaveCommand))] private string _cardNumberLastFour = "";
     [ObservableProperty] private decimal _initialBalance;
     [ObservableProperty] private bool _isBusy;
-
-    public AddBankAccountViewModel(IMediator mediator, Func<Task> onSave, Action onCancel)
-    {
-        _mediator = mediator;
-        _onSave = onSave;
-        _onCancel = onCancel;
-    }
 
     [RelayCommand(CanExecute = nameof(CanSave))]
     private async Task Save()
@@ -32,11 +21,11 @@ public partial class AddBankAccountViewModel : ViewModelBase
             CardNumberLastFour = CardNumberLastFour,
             InitialBalance = InitialBalance
         };
-        var result = await _mediator.Send(command);
+        var result = await mediator.Send(command);
         if (result.IsSuccess)
         {
             MessageBox.Show("حساب بانکی با موفقیت ایجاد شد.", "موفقیت", MessageBoxButton.OK, MessageBoxImage.Information);
-            await _onSave();
+            await onSave();
         }
         else
         {
@@ -53,5 +42,5 @@ public partial class AddBankAccountViewModel : ViewModelBase
                               !IsBusy;
 
     [RelayCommand]
-    private void Cancel() => _onCancel();
+    private void Cancel() => onCancel();
 }
