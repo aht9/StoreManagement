@@ -10,8 +10,8 @@ public partial class EditProductViewModel : ViewModelBase
     [ObservableProperty] private long _id;
     [ObservableProperty] private string _name = string.Empty;
     [ObservableProperty] private string? _description;
-    [ObservableProperty] private ProductCategoryDto? _selectedCategory;
-    [ObservableProperty] private ObservableCollection<ProductCategoryDto> _availableCategories = new();
+    [ObservableProperty] private ProductCategoryTreeDto? _selectedCategory;
+    [ObservableProperty] private ObservableCollection<ProductCategoryTreeDto> _availableCategories = new();
     [ObservableProperty] private bool _isBusy;
 
     public EditProductViewModel(IMediator mediator, long productId, Action onSaveAction, Action onCancelAction)
@@ -32,7 +32,7 @@ public partial class EditProductViewModel : ViewModelBase
             var categoriesResult = await _mediator.Send(categoriesQuery);
             if (categoriesResult.IsSuccess)
             {
-                AvailableCategories = new ObservableCollection<ProductCategoryDto>(categoriesResult.Value);
+                AvailableCategories = new ObservableCollection<ProductCategoryTreeDto>(categoriesResult.Value);
             }
             else
             {

@@ -12,6 +12,7 @@ public class ProductCategory : BaseEntity, IAggregateRoot
     private readonly List<ProductCategory> _subcategories = new List<ProductCategory>();
     public IReadOnlyCollection<ProductCategory> Subcategories => _subcategories.AsReadOnly();
 
+    public long? ParentCategoryId { get; private set; }
     public ProductCategory? ParentCategory { get; private set; }
 
     // Parameterless constructor for EF Core
@@ -81,7 +82,7 @@ public class ProductCategory : BaseEntity, IAggregateRoot
     }
 
     // Method to set the parent category
-    private void SetParentCategory(ProductCategory parentCategory)
+    public void SetParentCategory(ProductCategory parentCategory)
     {
         ParentCategory = parentCategory;
         UpdateTimestamp();

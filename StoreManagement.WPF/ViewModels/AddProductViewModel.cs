@@ -8,8 +8,8 @@ public partial class AddProductViewModel : ViewModelBase
 
     [ObservableProperty] private string _name = string.Empty;
     [ObservableProperty] private string? _description;
-    [ObservableProperty] private ProductCategoryDto? _selectedCategory;
-    [ObservableProperty] private ObservableCollection<ProductCategoryDto> _availableCategories = new();
+    [ObservableProperty] private ProductCategoryTreeDto? _selectedCategory;
+    [ObservableProperty] private ObservableCollection<ProductCategoryTreeDto> _availableCategories = new();
     [ObservableProperty] private bool _isBusy;
 
     public AddProductViewModel(IMediator mediator, Action onSaveAction, Action onCancelAction)
@@ -75,7 +75,7 @@ public partial class AddProductViewModel : ViewModelBase
             var result = await _mediator.Send(query);
             if (result.IsSuccess)
             {
-                AvailableCategories = new ObservableCollection<ProductCategoryDto>(result.Value);
+                AvailableCategories = new ObservableCollection<ProductCategoryTreeDto>(result.Value);
             }
             else
             {
