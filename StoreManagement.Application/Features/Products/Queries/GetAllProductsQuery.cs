@@ -5,17 +5,9 @@ public class GetAllProductsQuery : IRequest<Result<List<ProductDto>>>
     public string? SearchText { get; set; }
 }
 
-public class GetAllProductsQueryHandler : IRequestHandler<GetAllProductsQuery, Result<List<ProductDto>>>
+public class GetAllProductsQueryHandler(IDapperRepository dapper, ILogger<GetAllProductsQueryHandler> logger)
+    : IRequestHandler<GetAllProductsQuery, Result<List<ProductDto>>>
 {
-    private readonly IDapperRepository _dapper;
-    private readonly ILogger<GetAllProductsQueryHandler> _logger;
-
-    public GetAllProductsQueryHandler(IDapperRepository dapper, ILogger<GetAllProductsQueryHandler> logger)
-    {
-        _dapper = dapper;
-        _logger = logger;
-    }
-
     public async Task<Result<List<ProductDto>>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
     {
         try
@@ -34,12 +26,12 @@ public class GetAllProductsQueryHandler : IRequestHandler<GetAllProductsQuery, R
             }
             sqlBuilder.Append(" ORDER BY p.Name");
 
-            var result = await _dapper.QueryAsync<ProductDto>(sqlBuilder.ToString(), parameters, cancellationToken: cancellationToken);
+            var result = await dapper.QueryAsync<ProductDto>(sqlBuilder.ToString(), parameters, cancellationToken: cancellationToken);
             return Result.Success(result.ToList());
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error querying all products.");
+            logger.LogError(ex, "Error querying all products.");
             return Result.Failure<List<ProductDto>>("خطای سیستمی هنگام دریافت لیست محصولات رخ داد.");
         }
     }

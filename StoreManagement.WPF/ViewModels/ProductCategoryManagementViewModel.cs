@@ -62,7 +62,7 @@ public partial class ProductCategoryManagementViewModel : ViewModelBase
         IsBusy = true;
         try
         {
-            var query = new GetProductCategoryTreeQuery();
+            var query = new GetProductCategoryTreeQuery(){};
             var result = await _mediator.Send(query);
             if (result.IsSuccess)
             {
@@ -87,6 +87,12 @@ public partial class ProductCategoryManagementViewModel : ViewModelBase
             .Skip((CurrentPage - 1) * PageSize)
             .Take(PageSize);
         PagedProductCategories = new ObservableCollection<ProductCategoryTreeDto>(productCategory);
+    }
+
+
+    partial void OnSearchTextChanged(string value)
+    {
+        throw new NotImplementedException();
     }
 
     //Pagination Methods
