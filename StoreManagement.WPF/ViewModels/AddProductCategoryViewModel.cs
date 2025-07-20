@@ -1,6 +1,6 @@
 ﻿namespace StoreManagement.WPF.ViewModels;
 
-public partial class AddProductCategoryViewModel(IMediator mediator, Func<Task> onSave, Action onCancel, ISnackbarMessageQueue snackbarMessageQueue) : ViewModelBase
+public partial class AddProductCategoryViewModel(IMediator mediator, Action onSave, Action onCancel, ISnackbarMessageQueue snackbarMessageQueue) : ViewModelBase
 {
     [ObservableProperty] private string _name = string.Empty;
     [ObservableProperty] private string _description = string.Empty;
@@ -26,7 +26,7 @@ public partial class AddProductCategoryViewModel(IMediator mediator, Func<Task> 
             if (result.IsSuccess)
             {
                 snackbarMessageQueue.Enqueue("دسته بندی با موفقیت ایجاد شد.");
-                await onSave();
+                onSave?.Invoke();
             }
             else
             {
@@ -47,5 +47,5 @@ public partial class AddProductCategoryViewModel(IMediator mediator, Func<Task> 
 
 
     [RelayCommand]
-    private void Cancel() => onCancel();
+    private void Cancel() => onCancel?.Invoke();
 }

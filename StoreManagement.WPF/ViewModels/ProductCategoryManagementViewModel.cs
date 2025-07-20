@@ -81,6 +81,7 @@ public partial class ProductCategoryManagementViewModel : ViewModelBase
         }
     }
 
+
     private void UpdatePagedProductsCategory()
     {
         var productCategory = _allProductCategories
@@ -92,7 +93,35 @@ public partial class ProductCategoryManagementViewModel : ViewModelBase
 
     partial void OnSearchTextChanged(string value)
     {
-        throw new NotImplementedException();
+        CurrentPage = 1;
+        LoadProductCategoriesAsync();
+    }
+
+    partial void OnPageSizeChanged(int value)
+    {
+        CurrentPage = 1;
+        UpdatePagedProductsCategory();
+    }
+
+    partial void OnCurrentPageChanged(int value)
+    {
+        LoadProductCategoriesAsync();
+    }
+
+
+    [RelayCommand]
+    private async Task OpenAddProductCategoryDialogAsync()
+    {
+        Action onSaveAction = async () =>
+        {
+            IsAddProductCategoryDialogOpen = false;
+            await LoadProductCategoriesAsync();
+        };
+
+        Action onCancelAction = () => IsAddProductCategoryDialogOpen = false;
+
+        AddProductCategoryViewModel = new AddProductCategoryViewModel(_mediator, onSaveAction, onCancelAction, _snackbarMessageQueue);
+        IsAddProductCategoryDialogOpen = true;
     }
 
     //Pagination Methods
