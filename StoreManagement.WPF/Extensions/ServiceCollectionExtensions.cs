@@ -38,6 +38,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<BankAccountManagementViewModel>();
         services.AddTransient<ProductManagementViewModel>();
         services.AddTransient<StoreManagementViewModel>();
+        services.AddTransient<ProductCategoryManagementViewModel>();
 
         services.AddSingleton<IInvoicingViewModelFactory, InvoicingViewModelFactory>(); 
         services.AddSingleton<IInvoiceListViewModelFactory, InvoiceListViewModelFactory>(); 
@@ -55,6 +56,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<EditProductViewModel>();
         services.AddTransient<AddProductVariantViewModel>();
         services.AddTransient<EditProductVariantViewModel>();
+        services.AddTransient<AddProductCategoryViewModel>();
 
         services.AddTransient<AddStoreViewModel>();
         services.AddTransient<EditStoreViewModel>();

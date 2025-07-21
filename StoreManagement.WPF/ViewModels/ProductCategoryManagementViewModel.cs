@@ -1,4 +1,6 @@
-﻿namespace StoreManagement.WPF.ViewModels;
+﻿using StoreManagement.WPF.Views;
+
+namespace StoreManagement.WPF.ViewModels;
 
 public partial class ProductCategoryManagementViewModel : ViewModelBase
 {
@@ -6,69 +8,32 @@ public partial class ProductCategoryManagementViewModel : ViewModelBase
     private readonly ISnackbarMessageQueue _snackbarMessageQueue;
 
 
-    private List<ProductCategoryTreeDto> _allProductCategories;
-
-    [ObservableProperty] private ObservableCollection<ProductCategoryTreeDto> _pagedProductCategories = new();
+    [ObservableProperty] private ObservableCollection<ProductCategoryTreeDto> _categories;
 
     [ObservableProperty] private bool _isBusy;
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(HasSelectedProductCategory))]
-    private ProductCategoryTreeDto? _selectedProductCategory;
-
-    //Dialog View Model
-    [ObservableProperty] private AddProductCategoryViewModel _addProductCategoryViewModel;
-    [ObservableProperty] private bool _isAddProductCategoryDialogOpen = false;
-
-
-    //Pagination
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(GoToNextPageCommand))]
-    [NotifyCanExecuteChangedFor(nameof(GoToPreviousPageCommand))]
-    private int _pageSize = 10;
-
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(GoToNextPageCommand))]
-    [NotifyCanExecuteChangedFor(nameof(GoToPreviousPageCommand))] 
-    private int _currentPage = 1;
-
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(TotalPages))]
-    [NotifyCanExecuteChangedFor(nameof(GoToNextPageCommand))]
-    [NotifyCanExecuteChangedFor(nameof(GoToPreviousPageCommand))] 
     private string _searchText = string.Empty;
-
-    private bool HasSelectedProductCategory => SelectedProductCategory != null;
-
-    private IEnumerable<ProductCategoryTreeDto> FilteredCategoryProducts =>
-        string.IsNullOrWhiteSpace(SearchText)
-            ? _allProductCategories
-            : _allProductCategories.Where(p =>
-                p.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
-                (p.Description != null && p.Description.Contains(SearchText, StringComparison.OrdinalIgnoreCase)));
-
-    public int TotalPages => (_allProductCategories == null || _allProductCategories.Count == 0) ? 1 : (int)Math.Ceiling((double)FilteredCategoryProducts.Count() / PageSize);
 
 
     public ProductCategoryManagementViewModel(IMediator mediator, ISnackbarMessageQueue snackbarMessageQueue)
     {
         _mediator = mediator;
         _snackbarMessageQueue = snackbarMessageQueue;
+        Task.Run(LoadCategoriesAsync);
     }
 
     [RelayCommand]
-    private async Task LoadProductCategoriesAsync()
+    private async Task LoadCategoriesAsync()
     {
         IsBusy = true;
         try
         {
-            var query = new GetProductCategoryTreeQuery(){};
+            var query = new GetProductCategoryTreeQuery { SearchText = this.SearchText };
             var result = await _mediator.Send(query);
             if (result.IsSuccess)
             {
-                _allProductCategories = result.Value;
-                CurrentPage = 1;
-                UpdatePagedProductsCategory();
+                Categories = new ObservableCollection<ProductCategoryTreeDto>(result.Value);
             }
         }
         catch (Exception ex)
@@ -81,64 +46,28 @@ public partial class ProductCategoryManagementViewModel : ViewModelBase
         }
     }
 
-
-    private void UpdatePagedProductsCategory()
-    {
-        var productCategory = _allProductCategories
-            .Skip((CurrentPage - 1) * PageSize)
-            .Take(PageSize);
-        PagedProductCategories = new ObservableCollection<ProductCategoryTreeDto>(productCategory);
-    }
-
-
     partial void OnSearchTextChanged(string value)
     {
-        CurrentPage = 1;
-        LoadProductCategoriesAsync();
-    }
-
-    partial void OnPageSizeChanged(int value)
-    {
-        CurrentPage = 1;
-        UpdatePagedProductsCategory();
-    }
-
-    partial void OnCurrentPageChanged(int value)
-    {
-        LoadProductCategoriesAsync();
+        LoadCategoriesCommand.Execute(null);
     }
 
 
     [RelayCommand]
-    private async Task OpenAddProductCategoryDialogAsync()
+    private async Task OpenAddDialogAsync(ProductCategoryTreeDto parentCategory)
     {
-        Action onSaveAction = async () =>
+        var dialogViewModel = new AddProductCategoryViewModel(_mediator, _snackbarMessageQueue, parentCategory);
+        var dialogView = new AddProductCategoryView { DataContext = dialogViewModel };
+        var result = await DialogHost.Show(dialogView, "RootDialog");
+
+
+        if (result is true)
         {
-            IsAddProductCategoryDialogOpen = false;
-            await LoadProductCategoriesAsync();
-        };
-
-        Action onCancelAction = () => IsAddProductCategoryDialogOpen = false;
-
-        AddProductCategoryViewModel = new AddProductCategoryViewModel(_mediator, onSaveAction, onCancelAction, _snackbarMessageQueue);
-        IsAddProductCategoryDialogOpen = true;
+            await LoadCategoriesAsync(); 
+        }
     }
 
-    //Pagination Methods
 
-    private bool CanGoToNextPage => CurrentPage < TotalPages;
 
     [RelayCommand]
-    private void GoToNextPage()
-    {
-        CurrentPage++;
-    }
-
-    private bool CanGoToPreviousPage => CurrentPage > 1;
-
-    [RelayCommand]
-    private void GoToPreviousPage()
-    {
-        CurrentPage--;
-    }
+    private async Task Refresh() => await LoadCategoriesAsync();
 }

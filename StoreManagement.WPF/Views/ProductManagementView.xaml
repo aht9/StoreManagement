@@ -45,7 +45,7 @@
 
                 <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
                          Style="{StaticResource SearchBoxStyle}"
-                         Width="300"
+                         MinWidth="100"
                          Margin="20,0,0,0"/>
 
                 <Button Command="{Binding RefreshCommand}" 

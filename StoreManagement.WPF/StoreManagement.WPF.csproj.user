@@ -5,6 +5,9 @@
     <Compile Update="Views\AddBankAccountView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\AddProductCategoryView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\AddProductVariantView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -66,6 +69,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Invoicing\SelectPartyDialogView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\ProductCategoryManagementView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\ProductManagementView.xaml.cs">

@@ -98,4 +98,11 @@ public partial class MainViewModel : ViewModelBase
     {
         CurrentViewModel = _installmentManagementFactory.Create(invoiceId, invoiceType);
     }
+
+    [RelayCommand]
+    public void NavigateToProductCategory()
+    {
+        CurrentViewModel = _serviceProvider.GetRequiredService<ProductCategoryManagementViewModel>();
+    }
+
 }

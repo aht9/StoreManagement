@@ -79,6 +79,9 @@
             <DataTemplate DataType="{x:Type invviewmodels:InstallmentManagementViewModel}">
                 <invviews:InstallmentManagementView/>
             </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:ProductCategoryManagementViewModel}">
+                <views:ProductCategoryManagementView/>
+            </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
