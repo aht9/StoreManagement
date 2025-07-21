@@ -53,10 +53,16 @@ public partial class InventoryManagementViewModel : ViewModelBase
         Task.Run(LoadInventoryAsync);
         
     }
-
+    
+    
     [RelayCommand]
-    private void AdjustStock(InventoryStatusDto item)
+    private async Task ShowHistory(InventoryStatusDto item)
     {
-        // This will be implemented in the next phase for manual adjustments
+        if (item == null) return;
+
+        var dialogViewModel = new TransactionHistoryDialogViewModel(_mediator, item);
+        var dialogView = new TransactionHistoryDialogView { DataContext = dialogViewModel };
+        
+        await DialogHost.Show(dialogView, "RootDialog");
     }
 }

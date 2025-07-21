@@ -37,9 +37,9 @@
                     <DataGridTemplateColumn Header="عملیات" Width="Auto">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Content="تطبیق موجودی" 
+                                <Button Content="نمایش گردش" 
                                         Style="{StaticResource BaseButtonStyle}" 
-                                        Command="{Binding DataContext.AdjustStockCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                        Command="{Binding DataContext.ShowHistoryCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                         CommandParameter="{Binding}"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>

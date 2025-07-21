@@ -1,0 +1,51 @@
+<UserControl x:Class="StoreManagement.WPF.Views.TransactionHistoryDialogView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StoreManagement.WPF.Views"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="700" Width="700"
+             FlowDirection="RightToLeft">
+    <Border Style="{StaticResource CardBorderStyle}" Padding="20">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Style="{StaticResource CardTitleStyle}" Margin="0,0,0,20">
+                <Run Text="گردش کالای: "/>
+                <Run Text="{Binding ProductName}" FontWeight="Bold"/>
+            </TextBlock>
+
+            <DataGrid Grid.Row="1" ItemsSource="{Binding History}" Style="{StaticResource ModernDataGridStyle}" IsReadOnly="True">
+                
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsIncrease}" Value="True">
+                                <Setter Property="Background" Value="#1A3FB950"/> </DataTrigger>
+                            <DataTrigger Binding="{Binding IsIncrease}" Value="False">
+                                <Setter Property="Background" Value="#1AF85149"/> </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.RowStyle>
+                
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="تاریخ" Binding="{Binding TransactionDate, StringFormat='yyyy/MM/dd HH:mm'}" Width="Auto"/>
+                    <DataGridTextColumn Header="نوع تراکنش" Binding="{Binding TransactionType}" Width="Auto"/>
+                    <DataGridTextColumn Header="مقدار تغییر" Binding="{Binding QuantityChange}" Width="Auto" FontWeight="Bold"/>
+                    <DataGridTextColumn Header="شماره فاکتور" Binding="{Binding ReferenceInvoiceNumber}" Width="*"/>
+                    <DataGridTextColumn Header="توضیحات" Binding="{Binding Description}" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            
+            <Button Grid.Row="2" Content="بستن" Style="{StaticResource BaseButtonStyle}"
+                    Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                    HorizontalAlignment="Right" Margin="0,15,0,0"/>
+        </Grid>
+    </Border>
+</UserControl>
