@@ -51,4 +51,5 @@ global using StoreManagement.Infrastructure.Data.DbContexts;
 global using StoreManagement.WPF.Extensions;
 global using StoreManagement.WPF.ViewModels;
 global using StoreManagement.WPF.ViewModels.Invoicing.FactoryHelper;
+global using StoreManagement.WPF.Views;
 global using StoreManagement.WPF.Views.Invoicing;

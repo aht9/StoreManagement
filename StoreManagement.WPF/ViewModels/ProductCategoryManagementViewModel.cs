@@ -1,6 +1,4 @@
-﻿using StoreManagement.WPF.Views;
-
-namespace StoreManagement.WPF.ViewModels;
+﻿namespace StoreManagement.WPF.ViewModels;
 
 public partial class ProductCategoryManagementViewModel : ViewModelBase
 {

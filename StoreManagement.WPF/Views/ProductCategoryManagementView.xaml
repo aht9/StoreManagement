@@ -34,7 +34,8 @@
             </StackPanel>
 
             <Border Grid.Row="2" Style="{StaticResource CardBorderStyle}" Margin="20">
-                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+
                     <TreeView ItemsSource="{Binding Categories}" Background="Transparent" BorderThickness="0">
                         <TreeView.ItemContainerStyle>
                             <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource {x:Type TreeViewItem}}">
@@ -45,7 +46,7 @@
 
                         <TreeView.ItemTemplate>
                             <HierarchicalDataTemplate DataType="{x:Type dto:ProductCategoryTreeDto}" 
-                                                  ItemsSource="{Binding Subcategories}">
+                                          ItemsSource="{Binding Subcategories}">
                                 <Grid MinWidth="400">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
@@ -53,26 +54,23 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <materialDesign:PackIcon Kind="Folder" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                    <materialDesign:PackIcon Kind="FolderOutline" VerticalAlignment="Center" Margin="0,0,8,0" Foreground="{StaticResource SecondaryTextBrush}"/>
+
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                         <TextBlock Text="{Binding Name}" FontWeight="SemiBold"/>
-                                        <TextBlock Text="{Binding Description}" FontSize="11" Foreground="{StaticResource SecondaryTextBrush}"/>
+                                        <TextBlock Text="{Binding Description}" FontSize="11" Foreground="{StaticResource SecondaryTextBrush}" TextTrimming="CharacterEllipsis"/>
                                     </StackPanel>
 
                                     <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                                        <Button Style="{StaticResource HeaderIconButtonStyle}" ToolTip="اضافه کردن دسته بندی"
-                                            Command="{Binding DataContext.OpenAddDialogCommand, RelativeSource={RelativeSource AncestorType=TreeView}}"
-                                            CommandParameter="{Binding}">
+                                        <Button Style="{StaticResource HeaderIconButtonStyle}" ToolTip="افزودن زیرشاخه"
+                                    Command="{Binding DataContext.OpenAddDialogCommand, RelativeSource={RelativeSource AncestorType=TreeView}}"
+                                    CommandParameter="{Binding}">
                                             <materialDesign:PackIcon Kind="PlusBoxOutline" />
                                         </Button>
-                                        <Button Style="{StaticResource HeaderIconButtonStyle}" ToolTip="Edit" Margin="5,0,0,0"
-                                            Command="{Binding DataContext.OpenEditDialogCommand, RelativeSource={RelativeSource AncestorType=TreeView}}"
-                                            CommandParameter="{Binding}">
+                                        <Button Style="{StaticResource HeaderIconButtonStyle}" ToolTip="ویرایش" Margin="5,0,0,0">
                                             <materialDesign:PackIcon Kind="PencilOutline" />
                                         </Button>
-                                        <Button Style="{StaticResource HeaderIconButtonStyle}" ToolTip="Delete" Margin="5,0,0,0"
-                                            Command="{Binding DataContext.DeleteCategoryCommand, RelativeSource={RelativeSource AncestorType=TreeView}}"
-                                            CommandParameter="{Binding}">
+                                        <Button Style="{StaticResource HeaderIconButtonStyle}" ToolTip="حذف" Margin="5,0,0,0">
                                             <materialDesign:PackIcon Kind="DeleteOutline" Foreground="{StaticResource DangerBrush}"/>
                                         </Button>
                                     </StackPanel>
@@ -80,6 +78,7 @@
                             </HierarchicalDataTemplate>
                         </TreeView.ItemTemplate>
                     </TreeView>
+
                 </ScrollViewer>
             </Border>
         </Grid>

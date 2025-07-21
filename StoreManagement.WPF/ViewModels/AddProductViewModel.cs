@@ -8,16 +8,17 @@ public partial class AddProductViewModel : ViewModelBase
 
     [ObservableProperty] private string _name = string.Empty;
     [ObservableProperty] private string? _description;
-    [ObservableProperty] private ProductCategoryTreeDto? _selectedCategory;
-    [ObservableProperty] private ObservableCollection<ProductCategoryTreeDto> _availableCategories = new();
     [ObservableProperty] private bool _isBusy;
+
+    public TreeComboBoxViewModel CategorySelector { get; }
+
 
     public AddProductViewModel(IMediator mediator, Action onSaveAction, Action onCancelAction)
     {
         _mediator = mediator;
         _onSaveAction = onSaveAction;
         _onCancelAction = onCancelAction;
-        LoadCategoriesAsync();
+        CategorySelector = new TreeComboBoxViewModel(mediator);
     }
 
     [RelayCommand(CanExecute = nameof(CanSave))]
@@ -30,7 +31,7 @@ public partial class AddProductViewModel : ViewModelBase
             {
                 Name = Name,
                 Description = Description,
-                CategoryId = SelectedCategory?.Id
+                CategoryId = CategorySelector.SelectedCategory?.Id
             };
 
             var result = await _mediator.Send(command);
@@ -64,32 +65,6 @@ public partial class AddProductViewModel : ViewModelBase
     private void Cancel()
     {
         _onCancelAction?.Invoke();
-    }
-
-    private async void LoadCategoriesAsync()
-    {
-        IsBusy = true;
-        try
-        {
-            var query = new GetAllProductCategoriesQuery();
-            var result = await _mediator.Send(query);
-            if (result.IsSuccess)
-            {
-                AvailableCategories = new ObservableCollection<ProductCategoryTreeDto>(result.Value);
-            }
-            else
-            {
-                MessageBox.Show(result.Error, "خطا در بارگذاری دسته‌بندی‌ها", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"خطای غیرمنتظره در بارگذاری دسته‌بندی‌ها: {ex.Message}", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
-        finally
-        {
-            IsBusy = false;
-        }
     }
 
     partial void OnNameChanged(string value) => SaveCommand.NotifyCanExecuteChanged();

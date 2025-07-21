@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:viewModels="clr-namespace:StoreManagement.WPF.ViewModels"
+             xmlns:shared="clr-namespace:StoreManagement.WPF.Views.Shared"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=viewModels:AddProductViewModel}"
              FontFamily="{StaticResource PersianFont}"
@@ -40,13 +41,10 @@
                          MinHeight="50"
                          Margin="0 8 0 0"/>
 
-                <ComboBox Grid.Row="3"
-                          materialDesign:HintAssist.Hint="دسته‌بندی"
-                          Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                          ItemsSource="{Binding AvailableCategories}"
-                          SelectedItem="{Binding SelectedCategory}"
-                          DisplayMemberPath="Name"
-                          Margin="0 8 0 0"/>
+                <StackPanel Grid.Row="3" Margin="0 8 0 0">
+                    <TextBlock Text="انتخاب دسته بندی" Style="{StaticResource LabelTextStyle}" Margin="0,0,0,5"/>
+                    <shared:TreeComboBox DataContext="{Binding CategorySelector}"/>
+                </StackPanel>
 
                 <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 24 0 0">
                     <Button Style="{StaticResource PrimaryActionButtonStyle}" Content="ذخیره" Command="{Binding SaveCommand}" Margin="0 0 8 0"/>
