@@ -39,6 +39,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<ProductManagementViewModel>();
         services.AddTransient<StoreManagementViewModel>();
         services.AddTransient<ProductCategoryManagementViewModel>();
+        services.AddTransient<InventoryManagementViewModel>();
 
         services.AddSingleton<IInvoicingViewModelFactory, InvoicingViewModelFactory>(); 
         services.AddSingleton<IInvoiceListViewModelFactory, InvoiceListViewModelFactory>(); 

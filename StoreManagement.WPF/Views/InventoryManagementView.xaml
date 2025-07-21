@@ -1,0 +1,59 @@
+<UserControl x:Class="StoreManagement.WPF.Views.InventoryManagementView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StoreManagement.WPF.Views"
+             xmlns:viewModels="clr-namespace:StoreManagement.WPF.ViewModels"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=viewModels:InventoryManagementViewModel}"
+             FontFamily="{StaticResource PersianFont}"
+             FlowDirection="RightToLeft">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="مدیریت موجودی انبار" Style="{StaticResource DisplayTitleStyle}" Margin="20"/>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="20,0">
+            <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                     Style="{StaticResource SearchBoxStyle}"
+                     materialDesign:HintAssist.Hint="جستوجو بر اساس نام، SKU ..."
+                     Width="300"/>
+        </StackPanel>
+
+        <Border Grid.Row="2" Style="{StaticResource CardBorderStyle}" Margin="20">
+            <DataGrid ItemsSource="{Binding InventoryItems}" Style="{StaticResource ModernDataGridStyle}" IsReadOnly="True">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="دسته بندی" Binding="{Binding CategoryName}" Width="Auto" MinWidth="120"/>
+                    <DataGridTextColumn Header="نام محصول" Binding="{Binding ProductName}" Width="*"/>
+                    <DataGridTextColumn Header="ویژگی" Binding="{Binding DisplayVariantName}" Width="*"/>
+                    <DataGridTextColumn Header="SKU" Binding="{Binding Sku}" Width="Auto"/>
+                    <DataGridTextColumn Header="تعداد مجود در انبار" Binding="{Binding QuantityOnHand}" Width="Auto" FontWeight="Bold"/>
+                    <DataGridTemplateColumn Header="عملیات" Width="Auto">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="تطبیق موجودی" 
+                                        Style="{StaticResource BaseButtonStyle}" 
+                                        Command="{Binding DataContext.AdjustStockCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                        CommandParameter="{Binding}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+        
+        <materialDesign:Card Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}"
+                             VerticalAlignment="Center" HorizontalAlignment="Center" Padding="20">
+            <StackPanel Orientation="Horizontal">
+                <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}" IsIndeterminate="True" />
+                <TextBlock Text="درحال بارگذاری ..." Margin="15,0,0,0" VerticalAlignment="Center"/>
+            </StackPanel>
+        </materialDesign:Card>
+    </Grid>
+</UserControl>

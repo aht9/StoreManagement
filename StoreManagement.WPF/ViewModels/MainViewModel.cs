@@ -105,4 +105,10 @@ public partial class MainViewModel : ViewModelBase
         CurrentViewModel = _serviceProvider.GetRequiredService<ProductCategoryManagementViewModel>();
     }
 
+    [RelayCommand]
+    public void NavigateToInventory()
+    {
+        CurrentViewModel = _serviceProvider.GetRequiredService<InventoryManagementViewModel>();
+    }
+    
 }

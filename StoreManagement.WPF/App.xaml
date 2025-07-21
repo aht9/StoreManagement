@@ -47,6 +47,9 @@
             <DataTemplate DataType="{x:Type viewmodels:StoreManagementViewModel}">
                 <views:StoreManagementView/>
             </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:InventoryManagementViewModel}">
+                <views:InventoryManagementView/>
+            </DataTemplate>
             <DataTemplate DataType="{x:Type invviewmodels:InvoicingViewModel}">
                 <invviews:InvoicingView/>
             </DataTemplate>
