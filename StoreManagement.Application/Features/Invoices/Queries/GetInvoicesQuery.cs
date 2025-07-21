@@ -14,10 +14,11 @@ public class GetInvoicesQueryHandler(IDapperRepository dapper)
     public async Task<IEnumerable<InvoiceListDto>> Handle(GetInvoicesQuery request, CancellationToken cancellationToken)
     {
         // تعیین نام جدول و جوین مربوطه بر اساس نوع فاکتور
-        var invoiceTable = request.InvoiceType == InvoiceType.Sales ? "SalesInvoices" : "PurchaseInvoices";
+        var invoiceTable = request.InvoiceType == InvoiceType.Sales ? "SaleInvoices" : "PurchaseInvoices";
         var partyJoin = request.InvoiceType == InvoiceType.Sales
             ? "INNER JOIN Customers p ON i.CustomerId = p.Id"
             : "INNER JOIN Stores p ON i.StoreId = p.Id";
+        var name = request.InvoiceType == InvoiceType.Sales ? "p.FirstName+' '+ p.LastName" : "p.Name";
 
         var queryBuilder = new StringBuilder($@"
 -- CTE برای محاسبه وضعیت پرداخت واقعی هر فاکتور
@@ -46,7 +47,7 @@ SELECT
     i.Id,
     i.InvoiceNumber,
     i.InvoiceDate,
-    p.Name AS PartyName,
+    {name} AS PartyName,
     i.TotalAmount,
     i.InvoiceStatus,
     CASE WHEN cte.IsFullyPaid = 1 THEN N'پرداخت کامل' ELSE N'پرداخت نشده' END AS PaymentStatusText,
@@ -60,13 +61,6 @@ WHERE 1=1 ");
         var parameters = new DynamicParameters();
         parameters.Add("@InvoiceType", (int)request.InvoiceType);
 
-
-        //// افزودن فیلتر بر اساس وضعیت فاکتور (با فرض وجود پراپرتی Status در request)
-        //if (request.Status.HasValue)
-        //{
-        //    queryBuilder.Append(" AND i.InvoiceStatus = @Status");
-        //    parameters.Add("@Status", request.Status.Value);
-        //}
 
         // افزودن فیلترهای تاریخ (بدون تغییر)
         if (request.StartDate.HasValue)

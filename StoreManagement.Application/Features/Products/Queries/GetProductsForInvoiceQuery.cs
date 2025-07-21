@@ -20,7 +20,7 @@ WITH LatestSalePriceCTE AS (
         it.ProductVariantId, it.SalePrice,
         ROW_NUMBER() OVER(PARTITION BY it.ProductVariantId ORDER BY it.TransactionDate DESC) as rn
     FROM InventoryTransactions it
-    WHERE it.SalePrice IS NOT NULL AND it.TransactionTypeId = 2 -- 2 = Out (Sales)
+    WHERE it.SalePrice IS NOT NULL AND it.TransactionTypeId = 1 -- 1 = In (Purchase)
 ),
 StockCTE AS (
     SELECT

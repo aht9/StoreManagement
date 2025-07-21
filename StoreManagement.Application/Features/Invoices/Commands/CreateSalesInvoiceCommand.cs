@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using StoreManagement.Domain.Aggregates.Invoices;
-
-namespace StoreManagement.Application.Features.Invoices.Commands;
+﻿namespace StoreManagement.Application.Features.Invoices.Commands;
 
 public class CreateSalesInvoiceCommand : IRequest<long>
 {
@@ -67,7 +64,7 @@ public class CreateSalesInvoiceCommandHandler(
                     request.InvoiceDate,
                     itemDto.Quantity,
                     InventoryTransactionType.Out.Id,
-                    null,
+                    salesInvoice.Id,
                     InvoiceType.Sales
                 );
                 inventoryTx.SetPrices(null, itemDto.UnitPrice);

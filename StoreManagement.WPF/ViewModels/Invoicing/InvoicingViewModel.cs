@@ -7,6 +7,7 @@ public partial class InvoicingViewModel : ViewModelBase
 
     [ObservableProperty]
     private InvoiceType _currentInvoiceType;
+    public bool IsSalesMode => CurrentInvoiceType == InvoiceType.Sales;
 
     public string PageTitle => CurrentInvoiceType == InvoiceType.Sales ? "صدور فاکتور فروش" : "ثبت فاکتور خرید";
     public string PartySelectionTitle => CurrentInvoiceType == InvoiceType.Sales ? "انتخاب مشتری" : "انتخاب فروشگاه";
@@ -356,5 +357,18 @@ public partial class InvoicingViewModel : ViewModelBase
             }
 
         } while (shouldAddNew); // تا زمانی که کاربر در حال افزودن آیتم جدید است، حلقه تکرار می‌شود
+    }
+
+    partial void OnSelectedProductChanged(ProductSearchResultDto value)
+    {
+        if (CurrentInvoiceType == InvoiceType.Sales && value != null)
+        {
+            PriceToAdd = value.LastSalePrice ?? 0;
+        }
+    }
+
+    partial void OnCurrentInvoiceTypeChanged(InvoiceType value)
+    {
+        OnPropertyChanged(nameof(IsSalesMode));
     }
 }

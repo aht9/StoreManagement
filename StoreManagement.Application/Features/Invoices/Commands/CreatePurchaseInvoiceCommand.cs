@@ -91,7 +91,7 @@ public class CreatePurchaseInvoiceCommandHandler(
 
                 var inventoryTx = new InventoryTransaction(
                     itemDto.ProductVariantId, productVariant, request.InvoiceDate, itemDto.Quantity,
-                    InventoryTransactionType.In.Id, 0, InvoiceType.Purchase); // شناسه فاکتور موقتا صفر است
+                    InventoryTransactionType.In.Id, purchaseInvoice.Id, InvoiceType.Purchase); 
                 inventoryTx.SetPrices(itemDto.UnitPrice, itemDto.SalePriceForPurchase ?? (itemDto.UnitPrice * 1.40m));
 
                 await inventoryRepository.AddAsync(inventoryTx, cancellationToken);

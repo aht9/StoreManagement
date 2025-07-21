@@ -27,6 +27,8 @@
             <converters:IsNotPaidConverter x:Key="IsNotPaidConverter" />
             <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
             <converters:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter"/>
+            <converters:DecimalFormattingConverter x:Key="DecimalFormattingConverter" />
+
 
 
             <!-- DataTemplate for ViewModels -->
