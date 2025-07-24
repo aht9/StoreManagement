@@ -2,6 +2,8 @@
 
 public enum PaymentType
 {
-    Cash,
+    [Description("نقدی")]
+    Cash, 
+    [Description("اقساطی")]
     Installment
 }

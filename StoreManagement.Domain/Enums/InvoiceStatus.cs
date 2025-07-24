@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace StoreManagement.Domain.Enums;
+﻿namespace StoreManagement.Domain.Enums;
 
 public enum InvoiceStatus
 {

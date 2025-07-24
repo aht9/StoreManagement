@@ -1,4 +1,6 @@
-﻿namespace StoreManagement.WPF
+﻿using QuestPDF.Infrastructure;
+
+namespace StoreManagement.WPF
 {
     /// <summary>
     /// Interaction logic for App.xaml
@@ -85,10 +87,12 @@
 
         private void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
+            QuestPDF.Settings.License = LicenseType.Community;
+
             services.AddInfrastructure(configuration);
 
             services.AddPublicServiceCollection();
-            
+
             services.AddViewModelServiceCollection();
 
             // Main Window
@@ -148,5 +152,4 @@
             base.OnExit(e);
         }
     }
-
 }

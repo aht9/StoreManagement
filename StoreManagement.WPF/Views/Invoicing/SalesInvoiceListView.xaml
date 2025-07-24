@@ -13,6 +13,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <TextBlock Text="{Binding PageTitle}" Style="{StaticResource CardTitleStyle}" Margin="0,0,0,20"/>
@@ -35,7 +36,7 @@
             </StackPanel>
 
             <DataGrid Grid.Row="2" 
-                      ItemsSource="{Binding Invoices}" 
+                      ItemsSource="{Binding PagedInvoices}" 
                       Style="{StaticResource ModernDataGridStyle}"
                       ScrollViewer.CanContentScroll="True"
                       ScrollViewer.VerticalScrollBarVisibility="Auto"
@@ -64,7 +65,7 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="عملیات" Width="185">
+                    <DataGridTemplateColumn Header="عملیات" Width="Auto" MinWidth="185">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
@@ -78,6 +79,9 @@
                                             Visibility="{Binding IsInstallment, Converter={StaticResource BoolToVisibilityConverter}}"
                                             Command="{Binding DataContext.ManageInstallmentsCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                             CommandParameter="{Binding}"/>
+                                    <Button Content="چاپ" Style="{StaticResource BaseButtonStyle}" Margin="2"
+                                            Command="{Binding DataContext.PrintInvoiceCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                            CommandParameter="{Binding}"/>
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -85,6 +89,18 @@
                 </DataGrid.Columns>
             </DataGrid>
 
+            
+            <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,15,0,0">
+                <Button Command="{Binding GoToPreviousPageCommand}" Content="قبلی" Style="{StaticResource BaseButtonStyle}"/>
+                <TextBlock VerticalAlignment="Center" Margin="15,0">
+                    <Run Text="صفحه"/>
+                    <Run Text="{Binding CurrentPage, Mode=OneWay}"/>
+                    <Run Text="از"/>
+                    <Run Text="{Binding TotalPages, Mode=OneWay}"/>
+                </TextBlock>
+                <Button Command="{Binding GoToNextPageCommand}" Content="بعدی" Style="{StaticResource BaseButtonStyle}"/>
+            </StackPanel>
+            
         </Grid>
     </Border>
 </UserControl>

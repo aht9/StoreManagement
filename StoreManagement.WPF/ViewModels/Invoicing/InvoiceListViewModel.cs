@@ -6,9 +6,16 @@ public partial class InvoiceListViewModel : ViewModelBase
     private readonly MainViewModel _mainViewModel;
     private readonly ISnackbarMessageQueue _snackbarMessageQueue;
     public InvoiceType InvoiceType { get; }
-
+    
+    private List<InvoiceListDto> _allInvoices = new();
     [ObservableProperty]
-    private ObservableCollection<InvoiceListDto> _invoices;
+    private ObservableCollection<InvoiceListDto> _pagedInvoices;
+    // --- پراپرتی‌های صفحه‌بندی ---
+    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(GoToNextPageCommand))] [NotifyCanExecuteChangedFor(nameof(GoToPreviousPageCommand))]
+    private int _currentPage = 1;
+    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(GoToNextPageCommand))] [NotifyCanExecuteChangedFor(nameof(GoToPreviousPageCommand))]
+    private int _pageSize = 10; // می‌توانید این مقدار را تغییر دهید
+    public int TotalPages => (_allInvoices == null || !_allInvoices.Any()) ? 1 : (int)Math.Ceiling((double)_allInvoices.Count / _pageSize);
 
     // پراپرتی‌های مربوط به فیلتر
     [ObservableProperty] private DateTime? _startDate;
@@ -42,12 +49,23 @@ public partial class InvoiceListViewModel : ViewModelBase
                 Status = this.SelectedStatus
             };
             var result = await _mediator.Send(query);
-            Invoices = new ObservableCollection<InvoiceListDto>(result);
+            _allInvoices = result.ToList();
+            CurrentPage = 1; 
+            OnPropertyChanged(nameof(TotalPages)); 
+            UpdatePagedInvoices();
         }
         catch (Exception ex)
         {
             _snackbarMessageQueue.Enqueue($"خطا در بارگذاری فاکتورها: {ex.Message}");
         }
+    }
+    
+    private void UpdatePagedInvoices()
+    {
+        var pagedData = _allInvoices
+            .Skip((CurrentPage - 1) * PageSize)
+            .Take(PageSize);
+        PagedInvoices = new ObservableCollection<InvoiceListDto>(pagedData);
     }
 
     [RelayCommand]
@@ -86,4 +104,37 @@ public partial class InvoiceListViewModel : ViewModelBase
     {
         _mainViewModel.NavigateToInstallmentManagement(invoice.Id, InvoiceType);
     }
+    
+    [RelayCommand]
+    private async Task PrintInvoice(InvoiceListDto invoice)
+    {
+        if (invoice == null) return;
+
+        try
+        {
+            var printViewModel = new PrintPreviewViewModel(_mediator, invoice.Id, InvoiceType);
+            await printViewModel.InitializeAsync();
+
+            var printWindow = new PrintPreviewWindow
+            {
+                DataContext = printViewModel
+            };
+
+            printWindow.ShowDialog();
+        }
+        catch (Exception ex)
+        {
+            _snackbarMessageQueue.Enqueue($"خطا در آماده‌سازی فاکتور برای چاپ: {ex.Message}");
+        }
+    }
+    
+    partial void OnCurrentPageChanged(int value) => UpdatePagedInvoices();
+
+    private bool CanGoToNextPage() => CurrentPage < TotalPages;
+    [RelayCommand(CanExecute = nameof(CanGoToNextPage))]
+    private void GoToNextPage() => CurrentPage++;
+
+    private bool CanGoToPreviousPage() => CurrentPage > 1;
+    [RelayCommand(CanExecute = nameof(CanGoToPreviousPage))]
+    private void GoToPreviousPage() => CurrentPage--;
 }

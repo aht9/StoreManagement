@@ -5,6 +5,7 @@ namespace StoreManagement.Application.Features.Inventories.Queries;
 public class GetTransactionHistoryQuery : IRequest<Result<List<InventoryTransactionHistoryDto>>>
 {
     public long ProductVariantId { get; set; }
+    
 }
 
 public class GetTransactionHistoryQueryHandler : IRequestHandler<GetTransactionHistoryQuery, Result<List<InventoryTransactionHistoryDto>>>

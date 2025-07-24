@@ -27,6 +27,8 @@ public partial class PaymentDialogViewModel : ViewModelBase
     [ObservableProperty] private int _installmentMonths = 1;
     [ObservableProperty] private double _interestRate;
 
+    public IEnumerable<PaymentType> PaymentTypeOptions { get; }
+    
     public bool IsCashPayment => SelectedPaymentType == PaymentType.Cash;
     public bool IsInstallmentPayment => SelectedPaymentType == PaymentType.Installment;
 
@@ -34,6 +36,9 @@ public partial class PaymentDialogViewModel : ViewModelBase
     {
         _mediator = mediator;
         _grandTotal = grandTotal;
+        
+        PaymentTypeOptions = Enum.GetValues(typeof(PaymentType)).Cast<PaymentType>();
+
         Task.Run(LoadBankAccounts);
     }
 

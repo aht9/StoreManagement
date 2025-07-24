@@ -19,12 +19,17 @@
 
             <TextBlock Text="روش پرداخت" Style="{StaticResource LabelTextStyle}" />
             <StackPanel Margin="0,5,0,15">
-                <ComboBox ItemsSource="{Binding Source={helpers:EnumBindingSource {x:Type enums:PaymentType}}}"
-                          SelectedValue="{Binding SelectedPaymentType}"
-                          SelectedValuePath="Value"
-                          DisplayMemberPath="Description"/>
+                <ComboBox ItemsSource="{Binding PaymentTypeOptions}"
+                          SelectedItem="{Binding SelectedPaymentType}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
             </StackPanel>
-
+            
+            
             <StackPanel Margin="0,8">
                 <TextBlock Text="پرداخت از/به حساب" Style="{StaticResource LabelTextStyle}" />
                 <ComboBox ItemsSource="{Binding BankAccounts}" SelectedItem="{Binding SelectedBankAccount}" DisplayMemberPath="AccountName" Margin="0,5,0,0"/>

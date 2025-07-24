@@ -1,6 +1,4 @@
-﻿using System.Windows.Controls;
-
-namespace StoreManagement.WPF.Views
+﻿namespace StoreManagement.WPF.Views
 {
     /// <summary>
     /// Interaction logic for CustomerManagementView.xaml

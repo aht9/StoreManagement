@@ -1,0 +1,27 @@
+<Window x:Class="StoreManagement.WPF.Views.Invoicing.PrintPreviewWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:StoreManagement.WPF.Views.Invoicing"
+        mc:Ignorable="d"
+        Title="PrintPreviewWindow" Height="450" Width="800"
+        WindowStartupLocation="CenterScreen"
+        Background="White"
+        Foreground="Black">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <local:PrintInvoiceView x:Name="PrintableContent" DataContext="{Binding Invoice}" />
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+            <Button Content="چاپ" Command="{Binding PrintCommand}" />
+            <Button Content="بستن" IsCancel="True" Margin="10,0,0,0" Foreground="Black" Background="White" />
+        </StackPanel>
+    </Grid>
+</Window>

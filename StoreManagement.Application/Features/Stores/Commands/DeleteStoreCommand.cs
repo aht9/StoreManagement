@@ -1,4 +1,6 @@
-﻿namespace StoreManagement.Application.Features.Stores.Commands;
+﻿using Unit = MediatR.Unit;
+
+namespace StoreManagement.Application.Features.Stores.Commands;
 
 public record DeleteStoreCommand : IRequest<Result<Unit>>
 {

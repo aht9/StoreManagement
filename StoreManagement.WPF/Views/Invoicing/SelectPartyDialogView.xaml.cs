@@ -1,6 +1,4 @@
-﻿using System.Windows.Controls;
-
-namespace StoreManagement.WPF.Views.Invoicing
+﻿namespace StoreManagement.WPF.Views.Invoicing
 {
     /// <summary>
     /// Interaction logic for SelectPartyDialogView.xaml

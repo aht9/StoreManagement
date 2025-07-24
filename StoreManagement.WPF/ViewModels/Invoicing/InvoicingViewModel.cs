@@ -5,46 +5,35 @@ public partial class InvoicingViewModel : ViewModelBase
     private readonly IMediator _mediator;
     private readonly ISnackbarMessageQueue _snackbarMessageQueue;
 
-    [ObservableProperty]
-    private InvoiceType _currentInvoiceType;
+    [ObservableProperty] private InvoiceType _currentInvoiceType;
     public bool IsSalesMode => CurrentInvoiceType == InvoiceType.Sales;
 
     public string PageTitle => CurrentInvoiceType == InvoiceType.Sales ? "صدور فاکتور فروش" : "ثبت فاکتور خرید";
     public string PartySelectionTitle => CurrentInvoiceType == InvoiceType.Sales ? "انتخاب مشتری" : "انتخاب فروشگاه";
 
-    [ObservableProperty]
-    private string _searchQuery;
+    [ObservableProperty] private string _searchQuery;
 
-    [ObservableProperty]
-    private ObservableCollection<ProductSearchResultDto> _products;
+    [ObservableProperty] private ObservableCollection<ProductSearchResultDto> _products;
 
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(AddItemToInvoiceCommand))]
+    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(AddItemToInvoiceCommand))]
     private ProductSearchResultDto _selectedProduct;
 
-    [ObservableProperty]
-    private ObservableCollection<InvoiceItemViewModel> _invoiceItems = new();
+    [ObservableProperty] private ObservableCollection<InvoiceItemViewModel> _invoiceItems = new();
 
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(ShowPaymentDialogCommand))]
+    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(ShowPaymentDialogCommand))]
     private PartyDto _selectedParty;
 
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(AddItemToInvoiceCommand))]
+    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(AddItemToInvoiceCommand))]
     private int _quantityToAdd = 1;
 
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(AddItemToInvoiceCommand))]
+    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(AddItemToInvoiceCommand))]
     private decimal _priceToAdd;
 
-    [ObservableProperty]
-    private int _discountPercentageToAdd;
+    [ObservableProperty] private int _discountPercentageToAdd;
 
-    [ObservableProperty]
-    private int _taxPercentageToAdd;
+    [ObservableProperty] private int _taxPercentageToAdd;
 
-    [ObservableProperty]
-    private decimal? _salePriceForPurchase;
+    [ObservableProperty] private decimal? _salePriceForPurchase;
 
     /// <summary>
     /// مبلغ کل نهایی فاکتور که به صورت خودکار به‌روز می‌شود.
@@ -65,7 +54,6 @@ public partial class InvoicingViewModel : ViewModelBase
     /// </summary>
     private void OnInvoiceItemsChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-     
         OnPropertyChanged(nameof(GrandTotal));
         ShowPaymentDialogCommand.NotifyCanExecuteChanged();
 
@@ -76,6 +64,7 @@ public partial class InvoicingViewModel : ViewModelBase
                 item.PropertyChanged += Item_PropertyChanged;
             }
         }
+
         if (e.OldItems != null)
         {
             foreach (InvoiceItemViewModel item in e.OldItems)
@@ -117,8 +106,8 @@ public partial class InvoicingViewModel : ViewModelBase
         return SelectedProduct != null &&
                QuantityToAdd > 0 &&
                PriceToAdd > 0 &&
-               DiscountPercentageToAdd >= 0 && 
-               TaxPercentageToAdd >= 0;        
+               DiscountPercentageToAdd >= 0 &&
+               TaxPercentageToAdd >= 0;
     }
 
     [RelayCommand(CanExecute = nameof(CanAddItemToInvoice))]
@@ -135,7 +124,6 @@ public partial class InvoicingViewModel : ViewModelBase
             SalePriceForPurchase = SalePriceForPurchase
         };
         InvoiceItems.Add(newItem);
-        FinalizeAndSubmitCommand.NotifyCanExecuteChanged();
     }
 
     [RelayCommand]
@@ -144,61 +132,6 @@ public partial class InvoicingViewModel : ViewModelBase
         if (item != null)
         {
             InvoiceItems.Remove(item);
-            FinalizeAndSubmitCommand.NotifyCanExecuteChanged();
-        }
-    }
-
-    private bool CanFinalizeAndSubmit() => InvoiceItems.Any() && SelectedParty != null;
-
-    [RelayCommand(CanExecute = nameof(CanFinalizeAndSubmit))]
-    private async Task FinalizeAndSubmit()
-    {
-        try
-        {
-            if (CurrentInvoiceType == InvoiceType.Purchase)
-            {
-                var command = new CreatePurchaseInvoiceCommand
-                {
-                    StoreId = SelectedParty.Id,
-                    InvoiceNumber = Guid.NewGuid().ToString(),
-                    InvoiceDate = DateTime.Now,
-                    PaymentType = PaymentType.Cash, 
-                    Items = new List<InvoiceItemDto>(InvoiceItems.Select(vm => new InvoiceItemDto
-                    {
-                        ProductVariantId = vm.ProductVariantId,
-                        Quantity = vm.Quantity,
-                        UnitPrice = vm.UnitPrice,
-                        DiscountPercentage = vm.DiscountPercentage,
-                        TaxPercentage = vm.TaxPercentage,
-                        SalePriceForPurchase = vm.SalePriceForPurchase
-                    }))
-                };
-                await _mediator.Send(command);
-            }
-            else // Sales
-            {
-                var command = new CreateSalesInvoiceCommand
-                {
-                    CustomerId = SelectedParty.Id,
-                    InvoiceNumber = Guid.NewGuid().ToString(),
-                    InvoiceDate = DateTime.Now,
-                    PaymentType = PaymentType.Cash,
-                    Items = new List<InvoiceItemDto>(InvoiceItems.Select(vm => new InvoiceItemDto
-                    {
-                        ProductVariantId = vm.ProductVariantId,
-                        Quantity = vm.Quantity,
-                        UnitPrice = vm.UnitPrice,
-                        DiscountPercentage = vm.DiscountPercentage,
-                        TaxPercentage = vm.TaxPercentage
-                    }))
-                };
-                await _mediator.Send(command);
-            }
-            // نمایش پیام موفقیت و پاک کردن فرم
-        }
-        catch (Exception ex)
-        {
-            // نمایش خطا به کاربر
         }
     }
 
@@ -243,6 +176,60 @@ public partial class InvoicingViewModel : ViewModelBase
     {
         try
         {
+            if (paymentResult == null)
+            {
+                _snackbarMessageQueue.Enqueue("پرداخت انجام نشد.");
+                return;
+            }
+
+            if (paymentResult.PaymentType == PaymentType.Installment && paymentResult.InstallmentDetails == null)
+            {
+                _snackbarMessageQueue.Enqueue("برای پرداخت اقساطی، جزئیات اقساط را وارد کنید.");
+                return;
+            }
+
+            if (paymentResult.PaymentType == PaymentType.Cash && paymentResult.BankAccountId == null)
+            {
+                _snackbarMessageQueue.Enqueue("برای پرداخت نقدی، حساب بانکی را انتخاب کنید.");
+                return;
+            }
+
+            if (paymentResult.PaymentType == PaymentType.Installment &&
+                paymentResult.InstallmentDetails.DownPayment > this.GrandTotal)
+            {
+                _snackbarMessageQueue.Enqueue("پرداخت پیش‌پرداخت نمی‌تواند بیشتر از مبلغ کل فاکتور باشد.");
+                return;
+            }
+
+            if (paymentResult.PaymentType == PaymentType.Installment &&
+                paymentResult.InstallmentDetails.DownPayment < 0)
+            {
+                _snackbarMessageQueue.Enqueue("پرداخت پیش‌پرداخت نمی‌تواند منفی باشد.");
+                return;
+            }
+
+            if (paymentResult.PaymentType == PaymentType.Installment && paymentResult.InstallmentDetails.Months <= 0)
+            {
+                _snackbarMessageQueue.Enqueue("تعداد ماه‌های اقساط باید بیشتر از صفر باشد.");
+                return;
+            }
+
+            if (paymentResult.PaymentType == PaymentType.Installment &&
+                paymentResult.InstallmentDetails.InterestRate < 0)
+            {
+                _snackbarMessageQueue.Enqueue("نرخ بهره نمی‌تواند منفی باشد.");
+                return;
+            }
+
+            if (paymentResult.PaymentType == PaymentType.Installment &&
+                paymentResult.InstallmentDetails.InterestRate > 100)
+            {
+                _snackbarMessageQueue.Enqueue("نرخ بهره نمی‌تواند بیشتر از 100 درصد باشد.");
+                return;
+            }
+
+
+            long newInvoiceId = 0;
             if (CurrentInvoiceType == InvoiceType.Purchase)
             {
                 var command = new CreatePurchaseInvoiceCommand
@@ -265,7 +252,7 @@ public partial class InvoicingViewModel : ViewModelBase
                     BankAccountId = paymentResult.BankAccountId,
                     InstallmentDetails = paymentResult.InstallmentDetails
                 };
-                await _mediator.Send(command);
+                newInvoiceId = await _mediator.Send(command);
             }
             else // Sales
             {
@@ -288,10 +275,22 @@ public partial class InvoicingViewModel : ViewModelBase
                     BankAccountId = paymentResult.BankAccountId,
                     InstallmentDetails = paymentResult.InstallmentDetails
                 };
-                await _mediator.Send(command);
+                newInvoiceId = await _mediator.Send(command);
             }
 
             _snackbarMessageQueue.Enqueue("فاکتور با موفقیت ثبت شد.");
+
+            var printConfirmViewModel = new ConfirmationDialogViewModel("چاپ فاکتور", "آیا مایل به چاپ فاکتور هستید؟");
+            var result = await DialogHost.Show(new ConfirmationDialogView { DataContext = printConfirmViewModel }, "RootDialog");
+
+            if (result is bool confirmation && confirmation)
+            {
+                var printViewModel = new PrintPreviewViewModel(_mediator, newInvoiceId, CurrentInvoiceType);
+                await printViewModel.InitializeAsync();
+                var printWindow = new PrintPreviewWindow { DataContext = printViewModel };
+                printWindow.ShowDialog();
+            }
+
             ClearForm();
         }
         catch (Exception ex)
@@ -355,7 +354,6 @@ public partial class InvoicingViewModel : ViewModelBase
                 // اگر کاربر دیالوگ را با دکمه "لغو" یا از راه دیگری بسته بود، از حلقه خارج شو
                 return;
             }
-
         } while (shouldAddNew); // تا زمانی که کاربر در حال افزودن آیتم جدید است، حلقه تکرار می‌شود
     }
 

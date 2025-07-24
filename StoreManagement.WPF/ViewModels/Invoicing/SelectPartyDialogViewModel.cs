@@ -12,6 +12,7 @@ public partial class SelectPartyDialogViewModel : ViewModelBase
     private ObservableCollection<PartyDto> _parties;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanSelectParty))]
     private PartyDto _selectedParty;
 
     public string Title => _partyType == PartyTypeToQuery.Customers ? "انتخاب مشتری" : "انتخاب فروشگاه";
@@ -43,6 +44,6 @@ public partial class SelectPartyDialogViewModel : ViewModelBase
         }
     }
 
-    public bool CanSelectParty() => SelectedParty != null;
+    public bool CanSelectParty => SelectedParty != null;
 
 }
