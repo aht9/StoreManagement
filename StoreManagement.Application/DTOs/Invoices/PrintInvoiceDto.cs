@@ -3,8 +3,8 @@ namespace StoreManagement.Application.DTOs.Invoices;
 public class PrintInvoiceDto
 {
     public string SellerName { get; set; } = "فروشگاه پرفروش";
-    public string SellerAddress { get; set; } = "آدرس فروشگاه شما";
-    public string SellerPhone { get; set; } = "تلفن تماس شما";
+    public string SellerAddress { get; set; } = "خرم آباد، مینی سیتی";
+    public string SellerPhone { get; set; } = "066-12345678";
         
     // Invoice Info
     public string InvoiceNumber { get; set; }
