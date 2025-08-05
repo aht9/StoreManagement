@@ -67,7 +67,10 @@
                                     CommandParameter="{Binding}">
                                             <materialDesign:PackIcon Kind="PlusBoxOutline" />
                                         </Button>
-                                        <Button Style="{StaticResource HeaderIconButtonStyle}" ToolTip="ویرایش" Margin="5,0,0,0">
+                                        <Button 
+                                            Command="{Binding DataContext.OpenEditDialogCommand, RelativeSource={RelativeSource AncestorType=TreeView}}"
+                                            CommandParameter="{Binding}"
+                                            Style="{StaticResource HeaderIconButtonStyle}" ToolTip="ویرایش" Margin="5,0,0,0">
                                             <materialDesign:PackIcon Kind="PencilOutline" />
                                         </Button>
                                         <Button Style="{StaticResource HeaderIconButtonStyle}" ToolTip="حذف" Margin="5,0,0,0">

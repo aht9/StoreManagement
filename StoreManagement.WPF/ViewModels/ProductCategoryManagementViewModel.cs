@@ -63,9 +63,20 @@ public partial class ProductCategoryManagementViewModel : ViewModelBase
             await LoadCategoriesAsync(); 
         }
     }
-
-
-
+    
     [RelayCommand]
     private async Task Refresh() => await LoadCategoriesAsync();
+    
+    [RelayCommand]
+    private async Task OpenEditDialogAsync(ProductCategoryTreeDto category)
+    {
+        var dialogViewModel = new EditProductCategoryViewModel(_mediator, _snackbarMessageQueue, category.Id);
+        var dialogView = new EditProductCategoryView { DataContext = dialogViewModel };
+        var result = await DialogHost.Show(dialogView, "RootDialog");
+
+        if (result is true)
+        {
+            await LoadCategoriesAsync();
+        }
+    }
 }

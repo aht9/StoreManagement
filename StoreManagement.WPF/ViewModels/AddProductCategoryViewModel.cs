@@ -1,6 +1,6 @@
 ﻿namespace StoreManagement.WPF.ViewModels;
 
-public partial class AddProductCategoryViewModel : ViewModelBase
+public partial class  AddProductCategoryViewModel : ViewModelBase
 {
     private readonly IMediator _mediator;
     private readonly ISnackbarMessageQueue _snackbarMessageQueue;
