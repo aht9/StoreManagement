@@ -214,7 +214,7 @@ public partial class ProductManagementViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private async Task DeleteProduct(ProductDto productToDelete) // Renamed from DeleteCustomer
+    private async Task DeleteProduct(ProductDto productToDelete) 
     {
         if (productToDelete == null) return;
 

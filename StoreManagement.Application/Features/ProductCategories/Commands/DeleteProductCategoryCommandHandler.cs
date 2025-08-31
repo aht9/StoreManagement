@@ -1,6 +1,4 @@
-﻿using StoreManagement.Domain.Specifications;
-
-namespace StoreManagement.Application.Features.ProductCategories.Commands;
+﻿namespace StoreManagement.Application.Features.ProductCategories.Commands;
 
 public class DeleteProductCategoryCommand : IRequest<Result>
 {

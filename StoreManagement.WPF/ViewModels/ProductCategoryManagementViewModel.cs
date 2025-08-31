@@ -1,4 +1,6 @@
-﻿namespace StoreManagement.WPF.ViewModels;
+﻿using StoreManagement.Application.Features.ProductCategories.Commands;
+
+namespace StoreManagement.WPF.ViewModels;
 
 public partial class ProductCategoryManagementViewModel : ViewModelBase
 {
@@ -77,6 +79,38 @@ public partial class ProductCategoryManagementViewModel : ViewModelBase
         if (result is true)
         {
             await LoadCategoriesAsync();
+        }
+    }
+
+    [RelayCommand]
+    private async Task DeleteCategoryAsync(ProductCategoryTreeDto category)
+    {
+        var confirmResult = MessageBox.Show($"آیا از حذف دسته بندی '{category.Name}' اطمینان دارید؟",
+            "تایید حذف", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+        if (confirmResult != MessageBoxResult.Yes)
+            return;
+        IsBusy = true;
+        try
+        {
+            var command = new DeleteProductCategoryCommand { Id = category.Id };
+            var result = await _mediator.Send(command);
+            if (result.IsSuccess)
+            {
+                _snackbarMessageQueue.Enqueue("دسته بندی با موفقیت حذف شد.");
+                await LoadCategoriesAsync();
+            }
+            else
+            {
+                _snackbarMessageQueue.Enqueue($"خطا در حذف دسته بندی: {result.Error}");
+            }
+        }
+        catch (Exception ex)
+        {
+            _snackbarMessageQueue.Enqueue($"خطا در حذف دسته بندی: {ex.Message}");
+        }
+        finally
+        {
+            IsBusy = false;
         }
     }
 }
