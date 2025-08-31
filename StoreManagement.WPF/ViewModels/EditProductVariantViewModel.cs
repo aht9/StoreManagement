@@ -3,7 +3,7 @@
 public partial class EditProductVariantViewModel : ViewModelBase
 {
     private readonly IMediator _mediator;
-    private readonly Action _onSaveAction; 
+    private readonly Action _onSaveAction;
     private readonly Action _onCancelAction;
     private readonly long _productId;
 
@@ -34,8 +34,8 @@ public partial class EditProductVariantViewModel : ViewModelBase
     private async Task LoadVariantsAsync()
     {
         IsBusy = true;
-        SelectedVariant = null; 
-        ClearCurrentVariantFields(); 
+        SelectedVariant = null;
+        ClearCurrentVariantFields();
         try
         {
             var query = new GetVariantsForProductQuery { ProductId = _productId };
@@ -65,7 +65,7 @@ public partial class EditProductVariantViewModel : ViewModelBase
         IsBusy = true;
         try
         {
-            if (SelectedVariant != null && SelectedVariant.Id != 0) 
+            if (SelectedVariant != null && SelectedVariant.Id != 0)
             {
                 var command = new UpdateProductVariantCommand
                 {
@@ -78,7 +78,7 @@ public partial class EditProductVariantViewModel : ViewModelBase
                 if (result.IsSuccess)
                 {
                     MessageBox.Show("واریانت با موفقیت ویرایش شد.", "موفقیت", MessageBoxButton.OK, MessageBoxImage.Information);
-                    await LoadVariantsAsync(); 
+                    await LoadVariantsAsync();
                 }
                 else
                 {
@@ -98,8 +98,7 @@ public partial class EditProductVariantViewModel : ViewModelBase
                 if (result.IsSuccess)
                 {
                     MessageBox.Show("واریانت جدید با موفقیت اضافه شد.", "موفقیت", MessageBoxButton.OK, MessageBoxImage.Information);
-                    await LoadVariantsAsync(); 
-                    NewVariant(); 
+                    await LoadVariantsAsync();
                 }
                 else
                 {
@@ -119,7 +118,7 @@ public partial class EditProductVariantViewModel : ViewModelBase
 
     private bool CanSaveUpdateVariant()
     {
-        return !string.IsNullOrWhiteSpace(CurrentSku); 
+        return !string.IsNullOrWhiteSpace(CurrentSku);
     }
 
     [RelayCommand(CanExecute = nameof(HasSelectedVariant))]
@@ -141,7 +140,7 @@ public partial class EditProductVariantViewModel : ViewModelBase
             if (result.IsSuccess)
             {
                 MessageBox.Show("واریانت با موفقیت حذف شد.", "موفقیت", MessageBoxButton.OK, MessageBoxImage.Information);
-                await LoadVariantsAsync(); 
+                await LoadVariantsAsync();
             }
             else
             {
@@ -155,9 +154,41 @@ public partial class EditProductVariantViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void NewVariant()
+    private async Task NewVariant()
     {
         SelectedVariant = null;
+        IsBusy = true;
+        try
+        {
+            var command = new CreateProductVariantCommand
+            {
+                ProductId = _productId,
+                SKU = CurrentSku,
+                Color = CurrentColor,
+                Size = CurrentSize
+            };
+
+            var result = await _mediator.Send(command);
+
+            if (result.IsSuccess)
+            {
+                await LoadVariantsAsync();
+                MessageBox.Show("واریانت محصول با موفقیت اضافه شد.", "موفقیت", MessageBoxButton.OK, MessageBoxImage.Information);
+                _onSaveAction?.Invoke();
+            }
+            else
+            {
+                MessageBox.Show(result.Error, "خطا در افزودن واریانت محصول", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"خطای غیرمنتظره: {ex.Message}", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
         ClearCurrentVariantFields();
     }
 
@@ -180,7 +211,7 @@ public partial class EditProductVariantViewModel : ViewModelBase
         {
             ClearCurrentVariantFields();
         }
-        SaveUpdateVariantCommand.NotifyCanExecuteChanged(); 
+        SaveUpdateVariantCommand.NotifyCanExecuteChanged();
         DeleteVariantCommand.NotifyCanExecuteChanged();
     }
 
