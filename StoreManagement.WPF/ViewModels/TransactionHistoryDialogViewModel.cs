@@ -7,7 +7,7 @@ public partial class TransactionHistoryDialogViewModel : ViewModelBase
 
     [ObservableProperty] private ObservableCollection<InventoryTransactionHistoryDto> _pagedHistory;
 
-    public string ProductName { get; }
+    public string ProductName { set; get; }
     public long ProductVariantId { get; }
 
 

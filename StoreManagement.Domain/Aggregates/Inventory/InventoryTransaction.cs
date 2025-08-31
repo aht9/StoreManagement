@@ -95,15 +95,28 @@ public class InventoryTransaction : BaseEntity, IAggregateRoot
             throw new InvalidOperationException("Quantity must be greater than zero.");
     }
 
-    public void SetPrices(decimal? itemDtoUnitPrice, decimal? salePrice)
+    public void SetPrices(decimal? itemDtoUnitPrice, decimal? salePrice, int discount, int tax)
     {
+        decimal? totalPrice = salePrice;
+
         if (itemDtoUnitPrice <= 0)
             throw new ArgumentException("Unit price must be greater than zero.", nameof(itemDtoUnitPrice));
+        
+
         if (salePrice < 0)
             throw new ArgumentException("Sale price cannot be negative.", nameof(salePrice));
-        PurchasePrice = itemDtoUnitPrice;
-        SalePrice = salePrice;
+
+
+        PurchasePrice = itemDtoUnitPrice.HasValue ? CalculatedTotalPrice((decimal)itemDtoUnitPrice,discount,tax) : itemDtoUnitPrice;
+        SalePrice = salePrice.HasValue ? CalculatedTotalPrice((decimal)salePrice, discount, tax) : salePrice;
         UpdateTimestamp();
+    }
+
+    private decimal CalculatedTotalPrice(decimal unitPrice,int discount, int tax)
+    {
+        decimal priceAfterDiscount = unitPrice * (1 - discount / 100m);
+        decimal priceAfterTax = priceAfterDiscount * (1 + tax / 100m);
+        return  priceAfterTax * Quantity;
     }
 
     public void SetDescription(string description)

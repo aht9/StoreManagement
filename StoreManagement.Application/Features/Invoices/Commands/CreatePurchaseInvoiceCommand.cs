@@ -92,7 +92,8 @@ public class CreatePurchaseInvoiceCommandHandler(
                 var inventoryTx = new InventoryTransaction(
                     itemDto.ProductVariantId, productVariant, request.InvoiceDate, itemDto.Quantity,
                     InventoryTransactionType.In.Id, purchaseInvoice.Id, InvoiceType.Purchase); 
-                inventoryTx.SetPrices(itemDto.UnitPrice, itemDto.SalePriceForPurchase ?? (itemDto.UnitPrice * 1.40m));
+
+                inventoryTx.SetPrices(itemDto.UnitPrice, itemDto.SalePriceForPurchase ?? (itemDto.UnitPrice * 1.40m), itemDto.DiscountPercentage, itemDto.TaxPercentage);
 
                 await inventoryRepository.AddAsync(inventoryTx, cancellationToken);
             }

@@ -18,6 +18,7 @@ public class CreateSalesInvoiceCommandHandler(
     IGenericRepository<ProductVariant> variantRepository,
     IGenericRepository<Installment> installmentRepository,
     IGenericRepository<BankAccount> bankAccountRepository,
+    IGenericRepository<Inventory> inventoryRepo,
     ILogger<CreatePurchaseInvoiceCommandHandler> logger,
     IDapperRepository dapperRepository)
     : IRequestHandler<CreateSalesInvoiceCommand, long>
@@ -51,6 +52,36 @@ public class CreateSalesInvoiceCommandHandler(
             await invoiceRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
 
 
+            var quantityChanges = request.Items
+                .GroupBy(item => item.ProductVariantId)
+                .ToDictionary(group => group.Key, group => group.Sum(item => item.Quantity));
+            var variantIds = quantityChanges.Keys.ToList();
+            var inventorySpec = new CustomExpressionSpecification<Inventory>(i => variantIds.Contains(i.ProductVariantId));
+            var existingInventories = await inventoryRepo.ListAsync(
+                inventorySpec,
+                (OrderBySpecification<Inventory, object>?)null,
+                cancellationToken
+            );
+            var inventoryDict = existingInventories.ToDictionary(i => i.ProductVariantId);
+
+            foreach (var change in quantityChanges)
+            {
+                if (inventoryDict.TryGetValue(change.Key, out var inventory))
+                {
+                    if (inventory.IsDeleted)
+                    {
+                        inventory.Restore();
+                        await inventoryRepo.UpdateAsync(inventory, cancellationToken);
+                    }
+                    inventory.DecreaseStock(change.Value);
+                    await inventoryRepo.UpdateAsync(inventory, cancellationToken);
+                }
+                else
+                {
+                    throw new InvalidOperationException("کالای انتخاب شده معتبر نیست.");
+                }
+            }
+
             foreach (var itemDto in request.Items)
             {
                 var productVariant = await variantRepository.GetByIdAsync(itemDto.ProductVariantId, cancellationToken);
@@ -67,7 +98,7 @@ public class CreateSalesInvoiceCommandHandler(
                     salesInvoice.Id,
                     InvoiceType.Sales
                 );
-                inventoryTx.SetPrices(null, itemDto.UnitPrice);
+                inventoryTx.SetPrices(null, itemDto.UnitPrice, itemDto.DiscountPercentage, itemDto.TaxPercentage);
 
                 await inventoryRepository.AddAsync(inventoryTx, cancellationToken);
             }
@@ -85,10 +116,10 @@ public class CreateSalesInvoiceCommandHandler(
                 var financialTx = new FinancialTransaction(
                     bankAccount,
                     salesInvoice.TotalAmount,
-                    TransactionType.Debit,
-                    $"پرداخت بابت فاکتور خرید شماره {salesInvoice.InvoiceNumber}",
+                    TransactionType.Credit,
+                    $"واریز بابت فاکتور فروش شماره {salesInvoice.InvoiceNumber}",
                     salesInvoice.Id,
-                    InvoiceType.Purchase
+                    InvoiceType.Sales
                 );
 
                 bankAccount.AddTransaction(financialTx);
@@ -122,10 +153,10 @@ public class CreateSalesInvoiceCommandHandler(
                     var downPaymentTx = new FinancialTransaction(
                         bankAccount,
                         details.DownPayment,
-                        TransactionType.Debit, // پرداخت از حساب ما
-                        $"پیش‌پرداخت فاکتور خرید شماره {salesInvoice.InvoiceNumber}",
+                        TransactionType.Credit, // واریز به حساب ما
+                        $"پیش‌پرداخت فاکتور فروش شماره {salesInvoice.InvoiceNumber}",
                         salesInvoice.Id,
-                        InvoiceType.Purchase
+                        InvoiceType.Sales
                     );
                     bankAccount.AddTransaction(downPaymentTx);
                     await bankAccountRepository.UpdateAsync(bankAccount, cancellationToken);
@@ -147,11 +178,11 @@ public class CreateSalesInvoiceCommandHandler(
                     {
                         var installment = new Installment(
                             salesInvoice.Id,
-                            InvoiceType.Purchase,
+                            InvoiceType.Sales,
                             i, // شماره قسط
                             request.InvoiceDate.AddMonths(i), // تاریخ سررسید
                             installmentAmount, // مبلغ قسط
-                            0 // مبلغ پرداخت شده اولیه صفر است
+                            0 // مبلغ واریز شده اولیه صفر است
                         );
                         await installmentRepository.AddAsync(installment, cancellationToken);
                     }
@@ -161,7 +192,7 @@ public class CreateSalesInvoiceCommandHandler(
             await invoiceRepository.UpdateAsync(salesInvoice, cancellationToken);
             await invoiceRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
 
-            logger.LogInformation("فاکتور خرید با شماره {InvoiceNumber} با موفقیت ایجاد شد.", request.InvoiceNumber);
+            logger.LogInformation("فاکتور فروش با شماره {InvoiceNumber} با موفقیت ایجاد شد.", request.InvoiceNumber);
 
             return salesInvoice.Id;
         }
