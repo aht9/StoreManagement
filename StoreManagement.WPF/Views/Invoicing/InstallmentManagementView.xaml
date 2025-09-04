@@ -21,7 +21,7 @@
                     <DataGridTextColumn Header="تاریخ سررسید" Binding="{Binding DueDate, StringFormat='yyyy/MM/dd'}" />
                     <DataGridTextColumn Header="مبلغ قسط" Binding="{Binding AmountDue, StringFormat='{}{0:N0} ریال'}" />
                     <DataGridTextColumn Header="پرداخت شده" Binding="{Binding AmountPaid, StringFormat='{}{0:N0} ریال'}" />
-                    <DataGridTextColumn Header="وضعیت" Binding="{Binding StatusText}" />
+                    <DataGridTextColumn Header="وضعیت" Binding="{Binding Status, Converter={StaticResource EnumToDescriptionConverter}}" />
                     <DataGridTemplateColumn Header="عملیات">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>

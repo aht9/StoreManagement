@@ -8,5 +8,4 @@ public class InstallmentDto
     public decimal AmountDue { get; set; }
     public decimal AmountPaid { get; set; }
     public InstallmentStatus Status { get; set; }
-    public string StatusText => Status.ToString();
 }

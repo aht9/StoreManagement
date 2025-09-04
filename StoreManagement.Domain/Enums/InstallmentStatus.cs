@@ -2,8 +2,15 @@
 
 public enum InstallmentStatus
 {
-    NotDue,     //سررسید نشده
-    Debit,      //بدهکار
-    Paid,       //پرداخت شده
-    Overdue     //معوق
+    [Description("سررسید نشده")]
+    NotDue,
+
+    [Description("بدهکار")]
+    Debit,
+
+    [Description("پرداخت شده")]
+    Paid,
+
+    [Description("معوق")]
+    Overdue
 }
