@@ -37,7 +37,7 @@
 
             <StackPanel Margin="0,8" Visibility="{Binding IsInstallmentPayment, Converter={StaticResource BoolToVisibilityConverter}}">
                 <TextBlock Text="پیش پرداخت" Style="{StaticResource LabelTextStyle}" Margin="0,10,0,0"/>
-                <TextBox Style="{StaticResource SearchBoxStyle}" Text="{Binding DownPayment}" Margin="0,5,0,10"/>
+                <TextBox Style="{StaticResource SearchBoxStyle}" Text="{Binding DownPayment , Converter={StaticResource DecimalFormattingConverter}}" Margin="0,5,0,10"/>
 
                 <TextBlock Text="تعداد اقساط (ماه)" Style="{StaticResource LabelTextStyle}" />
                 <TextBox Style="{StaticResource SearchBoxStyle}" Text="{Binding InstallmentMonths}" Margin="0,5,0,10"/>
@@ -51,8 +51,7 @@
                         Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
                         CommandParameter="{x:Null}"/>
                 <Button Content="تایید و ثبت نهایی" Style="{StaticResource PrimaryActionButtonStyle}"
-                        Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
-                        CommandParameter="{Binding}"/>
+                        Command="{Binding ConfirmCommand}"/>
             </StackPanel>
         </StackPanel>
     </Border>

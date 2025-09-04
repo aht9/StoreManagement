@@ -21,7 +21,9 @@ public partial class PaymentDialogViewModel : ViewModelBase
 
 
     [ObservableProperty] private ObservableCollection<BankAccountDto> _bankAccounts;
-    [ObservableProperty] private BankAccountDto _selectedBankAccount;
+    [ObservableProperty] 
+    [NotifyCanExecuteChangedFor(nameof(ConfirmCommand))]
+    private BankAccountDto _selectedBankAccount;
 
     [ObservableProperty] private decimal _downPayment;
     [ObservableProperty] private int _installmentMonths = 1;
@@ -67,4 +69,19 @@ public partial class PaymentDialogViewModel : ViewModelBase
         }
         return result;
     }
+    
+    private bool CanConfirm()
+    {
+        // دکمه فقط زمانی فعال است که یک حساب بانکی انتخاب شده باشد
+        return SelectedBankAccount != null;
+    }
+    
+    
+    [RelayCommand(CanExecute = nameof(CanConfirm))]
+    private void Confirm()
+    {
+        // دیالوگ را می‌بندد و خود ViewModel را به عنوان نتیجه برمی‌گرداند
+        DialogHost.CloseDialogCommand.Execute(this, null);
+    }
+    
 }
