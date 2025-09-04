@@ -114,9 +114,9 @@ public class InventoryTransaction : BaseEntity, IAggregateRoot
 
     private decimal CalculatedTotalPrice(decimal unitPrice,int discount, int tax)
     {
-        decimal priceAfterDiscount = unitPrice * (1 - discount / 100m);
-        decimal priceAfterTax = priceAfterDiscount * (1 + tax / 100m);
-        return  priceAfterTax * Quantity;
+        //decimal priceAfterDiscount = unitPrice * (1 - discount / 100m);
+        decimal priceAfterTax = unitPrice * (1 + tax / 100m);
+        return  priceAfterTax;
     }
 
     public void SetDescription(string description)
