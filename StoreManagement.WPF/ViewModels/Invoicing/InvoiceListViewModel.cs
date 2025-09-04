@@ -46,7 +46,6 @@ public partial class InvoiceListViewModel : ViewModelBase
                 InvoiceType = InvoiceType,
                 StartDate = StartDate,
                 EndDate = EndDate,
-                Status = this.SelectedStatus
             };
             var result = await _mediator.Send(query);
             _allInvoices = result.ToList();
