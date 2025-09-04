@@ -13,7 +13,7 @@
 
             <TextBlock Text="مبلغ پرداخت" Style="{StaticResource LabelTextStyle}" />
             <TextBox Style="{StaticResource SearchBoxStyle}" 
-                     Text="{Binding AmountToPay, StringFormat=N0 , Converter={StaticResource DecimalFormattingConverter}}" 
+                     Text="{Binding AmountToPay, StringFormat=N0, UpdateSourceTrigger=PropertyChanged  , Converter={StaticResource DecimalFormattingConverter}}" 
                      Margin="0,5,0,15"/>
             <TextBlock Text="واریز به / پرداخت از حساب" Style="{StaticResource LabelTextStyle}" />
             <ComboBox ItemsSource="{Binding BankAccounts}" SelectedItem="{Binding SelectedBankAccount}" 
