@@ -12,8 +12,9 @@
             <TextBlock Text="ثبت پرداخت قسط" Style="{StaticResource CardTitleStyle}" Margin="0,0,0,20"/>
 
             <TextBlock Text="مبلغ پرداخت" Style="{StaticResource LabelTextStyle}" />
-            <TextBox Style="{StaticResource SearchBoxStyle}" Text="{Binding AmountToPay}" Margin="0,5,0,15"/>
-
+            <TextBox Style="{StaticResource SearchBoxStyle}" 
+                     Text="{Binding AmountToPay, Converter={StaticResource DecimalFormattingConverter}}" 
+                     Margin="0,5,0,15"/>
             <TextBlock Text="واریز به / پرداخت از حساب" Style="{StaticResource LabelTextStyle}" />
             <ComboBox ItemsSource="{Binding BankAccounts}" SelectedItem="{Binding SelectedBankAccount}" 
                       DisplayMemberPath="AccountName" Margin="0,5,0,0"/>
