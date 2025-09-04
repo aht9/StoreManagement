@@ -128,7 +128,7 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="تاریخ" Binding="{Binding TransactionDate, StringFormat='yyyy/MM/dd HH:mm'}" Width="*"/>
                         <DataGridTextColumn Header="شرح" Binding="{Binding Description}" Width="2*"/>
-                        <DataGridTextColumn Header="نوع" Binding="{Binding TransactionType}" Width="Auto"/>
+                        <DataGridTextColumn Header="نوع" Binding="{Binding TransactionType, Converter={StaticResource EnumToDescriptionConverter}}" Width="Auto"/>
                         <DataGridTextColumn Header="مبلغ" Binding="{Binding Amount, StringFormat={}{0:N0}}" Width="*"/>
                         <DataGridTemplateColumn Header="عملیات">
                             <DataGridTemplateColumn.CellTemplate>
