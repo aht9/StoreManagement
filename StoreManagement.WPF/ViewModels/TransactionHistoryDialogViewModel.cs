@@ -6,6 +6,8 @@ public partial class TransactionHistoryDialogViewModel : ViewModelBase
     private List<InventoryTransactionHistoryDto> _allHistoryItems = new();
 
     [ObservableProperty] private ObservableCollection<InventoryTransactionHistoryDto> _pagedHistory;
+   
+    [ObservableProperty] private bool _isBusy;
 
     public string ProductName { set; get; }
     public long ProductVariantId { get; }
@@ -36,15 +38,29 @@ public partial class TransactionHistoryDialogViewModel : ViewModelBase
 
     private async Task LoadHistory(long productVariantId)
     {
-        var query = new GetTransactionHistoryQuery { ProductVariantId = productVariantId };
-        var result = await _mediator.Send(query);
-        if (result.IsSuccess)
+        IsBusy = true;
+        try
         {
-            _allHistoryItems = result.Value;
-            CurrentPage = 1; // Reset to first page
-            OnPropertyChanged(nameof(TotalPages)); // Notify UI that total pages might have changed
-            UpdatePagedHistory(); // Display the first page        }
+            var query = new GetTransactionHistoryQuery { ProductVariantId = productVariantId };
+            var result = await _mediator.Send(query);
+            if (result.IsSuccess)
+            {
+                _allHistoryItems = result.Value;
+                CurrentPage = 1; // Reset to first page
+                OnPropertyChanged(nameof(TotalPages)); // Notify UI that total pages might have changed
+                UpdatePagedHistory(); // Display the first page        
+            }
         }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"An unexpected error occurred: {ex.Message}", "System Error", MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+
     }
 
     private void UpdatePagedHistory()

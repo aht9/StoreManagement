@@ -22,7 +22,7 @@
                 <Run Text="{Binding ProductName}" FontWeight="Bold"/>
             </TextBlock>
 
-            <DataGrid Grid.Row="1" ItemsSource="{Binding History}" Style="{StaticResource ModernDataGridStyle}" IsReadOnly="True">
+            <DataGrid Grid.Row="1" ItemsSource="{Binding PagedHistory}" Style="{StaticResource ModernDataGridStyle}" IsReadOnly="True">
                 
                 <DataGrid.RowStyle>
                     <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
