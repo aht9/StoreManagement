@@ -4,8 +4,10 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)  
 [![Version](https://img.shields.io/github/v/release/YourUserName/StoreManagement)](https://github.com/YourUserName/StoreManagement/releases)
 
-A modern WPF desktop application for small retail businesses, built with  
-Domain-Driven Design, CQRS/MediatR, EF Core, AutoMapper and Material Design in XAML.
+🏪 Store Management System | سیستم مدیریت فروشگاه
+🔧 Built with Clean Architecture, Rich Domain Model, and modern .NET technologies
+🔧 ساخته‌شده با معماری تمیز، مدل دامنه غنی و تکنولوژی‌های مدرن دات‌نت
+
 
 ---
 ## Table of Contents
@@ -85,5 +87,6 @@ Domain-Driven Design, CQRS/MediatR, EF Core, AutoMapper and Material Design in X
 6. Ensure all CI checks (build + tests) pass
 
 **Please respect the existing code style and add tests for any new functionality.**
+
 
 
