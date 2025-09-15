@@ -6,8 +6,8 @@
 
 ## 🏪 Store Management System | سیستم مدیریت فروشگاه
 
-🔧 Built with Clean Architecture, Rich Domain Model, and modern .NET technologies
-🔧 ساخته‌شده با معماری تمیز، مدل دامنه غنی و تکنولوژی‌های مدرن دات‌نت
+-🔧 Built with Clean Architecture, Rich Domain Model, and modern .NET technologies
+🔧 ساخته‌شده با معماری تمیز، مدل دامنه غنی و تکنولوژی‌های مدرن دات‌نت-
 
 
 ---
@@ -88,6 +88,7 @@
 6. Ensure all CI checks (build + tests) pass
 
 **Please respect the existing code style and add tests for any new functionality.**
+
 
 
 
