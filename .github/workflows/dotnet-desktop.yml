@@ -1,0 +1,39 @@
+name: .NET WPF Build & Test
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x   # یا نسخه‌ای که پروژه‌ات استفاده می‌کنه
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Restore NuGet packages
+      run: dotnet restore
+
+    - name: Build solution
+      run: msbuild StoreManagement.sln /p:Configuration=${{ matrix.configuration }}
+
+    - name: Run tests
+      run: dotnet test --configuration ${{ matrix.configuration }}
