@@ -1,89 +1,102 @@
-﻿# StoreManagement
+# StoreManagement | 🏪 Store Management System | سیستم مدیریت فروشگاه
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/YourUserName/StoreManagement/ci.yml?branch=main)](https://github.com/YourUserName/StoreManagement/actions)  
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)  
 [![Version](https://img.shields.io/github/v/release/YourUserName/StoreManagement)](https://github.com/YourUserName/StoreManagement/releases)
 
-A modern WPF desktop application for small retail businesses, built with  
-Domain-Driven Design, CQRS/MediatR, EF Core, AutoMapper and Material Design in XAML.
-
 ---
-## Table of Contents
 
-1. [Features](#features)  
-2. [Prerequisites](#prerequisites)  
-3. [Installation](#installation)  
-4. [Configuration](#configuration)  
-5. [Usage](#usage)  
-6. [Sample Code](#sample-code)  
-7. [Running Tests](#running-tests)  
-8. [Contributing](#contributing)  
-9. [License](#license)  
-10. [Contact & Acknowledgements](#contact--acknowledgements)
+## 🚀 Overview | معرفی کلی
+
+This is a full-featured **Store Management System** built using **.NET Core 9**, **WPF**, and a rich set of architectural patterns and libraries. Designed with scalability, maintainability, and clean separation of concerns in mind.
+
+این پروژه یک سیستم کامل مدیریت فروشگاه است که با استفاده از **.NET Core 9**، **WPF** و مجموعه‌ای از الگوهای معماری مدرن طراحی شده. هدف آن ایجاد ساختاری قابل توسعه، قابل نگهداری و با جداسازی مسئولیت‌هاست.
 
 ---
 
-## Features
+## 🧠 Architecture & Technologies | معماری و تکنولوژی‌ها
 
-- Full **Domain-Driven** architecture  
-- **CQRS** + **MediatR** for commands & queries  
-- **EF Core** with Specification pattern  
-- **AutoMapper** for DTO ⇆ Entity mapping  
-- **Material Design** UI (MaterialDesignInXamlToolkit)  
-- Dependency Injection via Microsoft.Extensions.DependencyInjection  
-- Dialog & notification service abstraction  
-- Unit- & integration- test friendly
-
----
-
-## Prerequisites
-
-- .NET 6 SDK or higher  
-- Visual Studio 2022 / Rider / VS Code  
-- SQL Server (LocalDB or full)  
-- (Optional) Docker for containerized databases  
+| 🔧 تکنولوژی / Technology | 📌 توضیحات / Description |
+|--------------------------|---------------------------|
+| 🧱 **Rich Domain Model** | منطق کسب‌وکار در قلب دامنه |
+| 📚 **CQRS + MediatR** | جداسازی خواندن و نوشتن + مدیریت درخواست‌ها |
+| 🛢 **EF Core + Dapper** | ORM قدرتمند + دسترسی مستقیم به دیتابیس |
+| 🎯 **Specifications Pattern** | فیلترهای قابل ترکیب برای کوئری‌ها |
+| 🔄 **AutoMapper** | نگاشت خودکار بین DTO و مدل‌ها |
+| ✅ **FluentValidation** | اعتبارسنجی تمیز و قابل تست |
+| 🖼 **WPF + MVVM** | رابط کاربری مدرن با جداسازی منطقی |
+| 🎨 **MaterialDesignInXamlToolkit** | طراحی متریال برای UI زیبا و مدرن |
+| 🧪 **Dependency Injection** | تزریق وابستگی با Microsoft.Extensions.DependencyInjection |
+| 🧩 **Dialog & Notification Abstraction** | سرویس‌های قابل تست برای دیالوگ و اعلان‌ها |
+| 🧠 **Full Domain-Driven Design** | معماری کامل مبتنی بر DDD |
 
 ---
 
-## Installation
+## 📸 Screenshots | تصاویر محیط برنامه *(اختیاری)*
 
-1. **Clone the repository**
+### مدیریت تراکنش ها
+![Dashboard Screenshot](assets/Transaction.png)
 
-   ```bash
-   git clone https://github.com/aht9/StoreManagement.git
-   cd StoreManagement
-   
-2. **Restore NuGet packages**
+### مدیریت دسته بندی ها
+![Products Screenshot](assets/Category.png)
 
-   ```bash
-   dotnet restore
+### فروش
+![Sale Screenshot](assets/Sale.png)
 
-4. **Build the solution**
- 
-    ```bash
-    cd ../../
-    dotnet build
+### مدیریت اقساط
+![Installement Screenshot](assets/Installment.png)
 
-    
-## Configuration
+---
 
-- MediatR handlers and repositories are auto‐registered by scanning assemblies.
+## 🛠 How to Run | نحوه اجرا
 
-## Contributing
+```bash
+git clone https://github.com/aht9/StoreManagement.git
+cd StoreManagement
+# Open with Visual Studio 2022+
+# Make sure SQL Server is running
+# Apply EF migrations or configure Dapper connection
+```
 
-**We welcome contributions! Please follow these steps:**
-1. Fork the repo
+---
 
-2. Create a feature branch:
-   
-    ```bash
-    git checkout -b feature/YourFeature
+## 📦 Features | قابلیت‌ها
 
-3. Commit your changes
-4. Push to your fork and open a Pull Request against main
-5. Fill out the PR template, link any relevant issues
-6. Ensure all CI checks (build + tests) pass
+- ✅ مدیریت کالاها، مشتریان و فاکتورها
+- 📊 گزارش‌گیری از فروش‌ها
+- 🧠 منطق دامنه غنی و قابل تست
+- 🔄 معماری CQRS برای جداسازی عملیات‌ها
+- 🎨 رابط کاربری مدرن با طراحی متریال
+- 🔔 سرویس‌های اعلان و دیالوگ قابل تست
+- 🧪 اعتبارسنجی با FluentValidation
 
-**Please respect the existing code style and add tests for any new functionality.**
+---
 
+## 📄 License | مجوز
+
+This project is licensed under the MIT License.  
+این پروژه تحت مجوز MIT منتشر شده است.
+
+---
+
+## 📢 Release Notes | یادداشت‌های نسخه
+
+برای ایجاد نسخه جدید (Release) در GitHub:
+
+1. به تب **Releases** برو.
+2. روی **Draft a new release** کلیک کن.
+3. تگ مثل `v1.0.0` انتخاب کن.
+4. عنوانی مثل "نسخه اول پایدار" بنویس.
+5. این متن رو می‌تونی بذاری:
+
+```markdown
+🎉 First Stable Release - v1.0.0
+
+✅ Rich Domain Model with full DDD architecture  
+✅ CQRS with MediatR integration  
+✅ EF Core + Dapper hybrid data access  
+✅ FluentValidation and AutoMapper  
+✅ WPF UI with Material Design  
+✅ Dialog & Notification abstraction  
+```
 
