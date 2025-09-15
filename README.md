@@ -79,27 +79,6 @@ This project is licensed under the MIT License.
 
 ---
 
-## 📢 Release Notes | یادداشت‌های نسخه
-
-برای ایجاد نسخه جدید (Release) در GitHub:
-
-1. به تب **Releases** برو.
-2. روی **Draft a new release** کلیک کن.
-3. تگ مثل `v1.0.0` انتخاب کن.
-4. عنوانی مثل "نسخه اول پایدار" بنویس.
-5. این متن رو می‌تونی بذاری:
-
-```markdown
-🎉 First Stable Release - v1.0.0
-
-✅ Rich Domain Model with full DDD architecture  
-✅ CQRS with MediatR integration  
-✅ EF Core + Dapper hybrid data access  
-✅ FluentValidation and AutoMapper  
-✅ WPF UI with Material Design  
-✅ Dialog & Notification abstraction  
-```
-
 
 
 
